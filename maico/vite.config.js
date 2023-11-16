@@ -5,5 +5,5 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
   base:"",//"/maico/"
   plugins: [svelte()],
-  build: { chunkSizeWarningLimit: 4300, }
+  build: { chunkSizeWarningLimit: 6000, }
 })

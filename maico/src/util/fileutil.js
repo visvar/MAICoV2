@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver'
-import { Midi, fromMidi } from '@tonejs/midi'
+import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
 
 export function writeToMidi(melodies, bpm, mode) {
@@ -19,7 +19,8 @@ export function writeToMidi(melodies, bpm, mode) {
           track.addNote({
             midi: note.pitch,
             time: note.startTime + lastTiming,
-            duration: note.endTime - note.startTime
+            duration: note.endTime - note.startTime,
+            velocity: 100,
           })
         })
         lastTiming = mel.totalQuantizedSteps * 60 / 4 * bpm
@@ -33,11 +34,13 @@ export function writeToMidi(melodies, bpm, mode) {
           track.addNote({
             midi: note.pitch,
             time: note.startTime,
-            duration: note.endTime - note.startTime
+            duration: note.endTime - note.startTime,
+            velocity: 100,
           })
         })
       })
     } else if (mode === 0) {
+      console.log(melodies)
       melodies.forEach((mel, i) => {
         const track = midi.addTrack()
         newSec.notes = mel.notes
@@ -46,13 +49,16 @@ export function writeToMidi(melodies, bpm, mode) {
           track.addNote({
             midi: note.pitch,
             time: note.startTime,
-            duration: note.endTime - note.startTime
+            duration: note.endTime - note.startTime,
+            velocity: 100,
           })
         })
         const array = midi.toArray()
+        console.log(array)
         const buffer = array.buffer
         /* global Blob */
         const blob = new Blob([buffer], { type: 'audio/mid' })
+        console.log(blob)
         saveAs(blob, 'composedMidi' + i + '.mid')
       })
       return null

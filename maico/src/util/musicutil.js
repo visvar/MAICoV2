@@ -5,6 +5,20 @@ import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
 import * as glutil from './glyphutil.js'
 
+import EventEmitter from 'eventemitter3';
+
+
+let pbl, t, xe
+
+const testChangeEvent = new EventEmitter();
+function changePlay(newVal){
+  playline = newVal
+  if(newVal)
+  testChangeEvent.emit("play", pbl, t, xe)
+}
+
+let playline = false
+
 export function pitchDiff(rec) {
   const recNew = []
   let prev = 0
@@ -711,11 +725,21 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
   let player1 = get(player)
   if (player1 === null || player1 === undefined) {
     player1 = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
+    player1.callbackObject = {
+      run: (note) => {
+        if(!playline)
+          changePlay(true)
+      },
+      stop: () =>{
+        changePlay(false)
+      }
+    }
     player1.loadAllSamples(1, false).then(() => { console.log('playerLoaded'); player.set(player1) })
     //player.set(player1)
   } else if (player1.isPlaying()) {
     player1.stop()
-    playbackline.attr("stroke", null).attr("x1", reset)
+    changePlay(false)
+    playbackline.transition().attr("stroke", null).attr("x1", reset)
       .attr("x2", reset)
     return null
   }
@@ -751,7 +775,6 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
   }
   // sample holds the point so it is in seen already -> just edit seen
   if (sample !== undefined) {
-    console.log(sample)
     if (get(seen).filter(p1 => p1[2].index === sample.index).length === 0) {
       sample.userspecific.seen = 2
       seen.set(get(seen).push(sample))
@@ -782,18 +805,24 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
         playbackline.transition().attr("stroke", "blue")
 
       player1.loadSamples(seq).then(() => {
-        console.log(seq)
         player1.start(seq, 120).then(() => playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
           ?.attr("x2", reset))
 
         if (playbackline !== undefined) {
-          playbackline.transition().duration(time).ease(d3.easeLinear).attr("x1", xend)
-            .attr("x2", xend)
+          pbl = playbackline
+          t = time
+          xe = xend
         }
       })
     }
   }
 }
+
+testChangeEvent.on("play", (playbackline, time, xend) => {
+  if(playline)
+    playbackline.transition().duration(time).ease(d3.easeLinear).attr("x1", xend)
+    .attr("x2", xend)
+})
 
 
 // Hannes

@@ -155,8 +155,8 @@ export async function requestModels(allprimer) {
                                         modelsFinished++
                                     }
                                 }
-                                if (modelsFinished === models.length - 1) {
-                                    afterRequest(numOut * allprimer.length, queue)
+                                if (modelsFinished === get(models).length) {
+                                    afterRequest(numOut * allprimer.length, queue, modelsFinished)
                                 }
                             })
                     }
@@ -192,8 +192,8 @@ export async function requestModels(allprimer) {
                                         modelsFinished++
                                     }
                                 }
-                                if (modelsFinished === get(models).length - 1) {
-                                    afterRequest(numOut * allprimer.length, queue)
+                                if (modelsFinished === get(models).length) {
+                                    afterRequest(numOut * allprimer.length, queue, modelsFinished)
                                 }
                             });
                     }
@@ -211,8 +211,8 @@ export async function requestModels(allprimer) {
 
 let threshhold = 0.1
 
-function afterRequest(total, queue) {
-    samplingstatus.set('sampling ended with ' + (total - queue.length) / total + "% missing")
+function afterRequest(total, queue, modell) {
+    samplingstatus.set('sampling ended with ' + (queue.length / total).toFixed(2) + "% missing")
     if (queue.length > total * threshhold) {
         requestModelagain(queue, total, total * threshhold, 1)
     }
@@ -220,13 +220,14 @@ function afterRequest(total, queue) {
 
 
 export async function requestModelagain(q, total, percent, round) {
-    samplingstatus.set('resampling round ' + round + '; missed: ' + (total - q.length) / total + "%")
+    samplingstatus.set('resampling round ' + round + '; missed: ' + (q.length / total).toFixed(2) + "%")
     console.log("generate again round: " + round + " of 5")
     console.log("queuelength: " + q.length + ' of ' + total)
     console.log("last reach: " + (total - q.length) / total + "%")
     let queue = []
     let t = q.sort((a, b) => a.model.name - b.model.name);
     let url = ""
+    console.log(t)
     t.forEach(async (req) => {
         if (req.type === "music_rnn") {
             let musicRnn = undefined
@@ -234,6 +235,9 @@ export async function requestModelagain(q, total, percent, round) {
                 url = req.url
                 musicRnn = await new mm.MusicRNN(req.url)
                 await musicRnn.initialize()
+            }
+            while(musicRnn !== undefined && musicRnn.isInitialized()){
+
             }
             // chord needs to be calculated for some models
             await musicRnn
@@ -256,10 +260,13 @@ export async function requestModelagain(q, total, percent, round) {
 
         } else if (req.type === "music_vae") {
             let music_vae = undefined
-            if (url !== req.url) {
+            if (url !== req.url && music_vae === undefined) {
                 url = req.url
                 music_vae = await new mm.MusicVAE(req.url);
                 await music_vae.initialize()
+            }
+            while(music_vae !== undefined && music_vae.isInitialized()){
+                
             }
             // request, numOuts?, similarity, temperature
             await music_vae.similar(req.primer, 1, 0.90, req.temp)
@@ -282,10 +289,10 @@ export async function requestModelagain(q, total, percent, round) {
     })
 
     if (queue.length > percent) {
-        requestModelagain(queue, percent, round + 1)
+        requestModelagain(queue, total, percent, round+1)
     } else {
-        samplingstatus.set('resampling finished after round ' + round + '; missed: ' + (total - queue.length) / total + "%")
-        console.log("regenerate finished after " + round + " rounds")
+        samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (queue.length / total).toFixed(2) + "%")
+        console.log("regenerate finished after " + round + " rounds", queue)
     }
 }
 

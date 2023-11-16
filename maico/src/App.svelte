@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import * as mu from "./util/modelutil.js";
   import * as glutil from "./util/glyphutil.js";
   import * as flutil from "./util/fileutil.js";
@@ -56,6 +58,7 @@
     primerTodelete,
     filterextents,
     samplingstatus,
+    expfilter,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -153,8 +156,6 @@
   let oldmodelselected = null;
 
   let dataset = false;
-  let midi = false;
-  let devmode = false;
   let clustering = false;
   let visualization = false;
   let calculation = false;
@@ -203,6 +204,8 @@
       tdfilter.set(!$tdfilter);
     } else if (mode === 3) {
       listenfilter.set($listenfilter === 2 ? -2 : $listenfilter + 2);
+    } else if(mode === 4){
+      expfilter.set(!$expfilter)
     }
   }
 
@@ -221,32 +224,45 @@
   <div class="container container1">
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div on:click={() => (dataset = !dataset)}>
-        <h2>Generation</h2>
+        <h1>Import/Export</h1>
       </div>
       {#if dataset}
-        <button
-          on:click={() => document.querySelector("#datasetFiles").click()}
-        >
-          open dataset
-        </button>
+      Status: {$samplingstatus}
+        <h5>Import Midi as Primer</h5>
         <input
-          style="display: none"
           type="file"
-          id="datasetFiles"
-          on:change={(event) => mu.uploadDatasetFile(event)}
+          accept=".mid"
+          on:change={(e) => (lastid = flutil.importMidi(e, primerList, lastid))}
         />
-        <!-- {/if} -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- <div on:click={() => (devmode = !devmode)}>
-        <h2>Inference</h2>
-      </div>
-      $primerList
-      {#if devmode} -->
-        <button on:click={() => mu.exportModelJson()}> export dataset </button>
-        <button on:click={() => mu.addModel()}>add model files from dir</button>
+        <button on:click={() => primerList.clear()}> clear primer list </button>
+        <button
+          on:click={() => {
+            primerList.deleteMelo($primerTodelete);
+          }}
+        >
+          Delete Primer selected below
+        </button>
+        <div class="filter1">
+          <input
+            type="range"
+            bind:value={$primerTodelete}
+            min="0"
+            max={Math.max(0, $primerList.length - 1)}
+            step="1"
+            width="50%"
+          />
+          <PianorollSample
+            width={50}
+            height={50}
+            melody={$primerSelected}
+            fill="grey"
+          />
+        </div>
+        <button on:click={() => mu.addModel()}>Import Models (first)</button>
         <button on:click={() => mu.requestModels($primerList)}
-          >sample models</button
+          >Generate from Models (second)</button
         >
         <div class="label">melody length</div>
         <div class="filter">
@@ -268,16 +284,10 @@
             {$iter}
           </span>
         </div>
-        {$samplingstatus}
-        <div class="filter">
-          <input type="range" bind:value={$bpm} min="60" max="180" step="1" />
-          <span>
-            BPM: {$bpm}
-          </span>
-        </div>
-
+        
+        
         <div class="select">
-          <label for="selmidi">Format</label>
+          <label for="selmidi">Format to export as MIDI</label>
           <Select
             class="select"
             id="selmidi"
@@ -286,49 +296,38 @@
             clearable={false}
           />
         </div>
-
         <button
           on:click={() =>
-            flutil.writeToMidi($exportList, $bpm, exportmode.value)}
+            flutil.writeToMidi($exportList.map((m) => m.melody), $bpm, exportmode.value)}
         >
-          export Midis
+          export to Midi
         </button>
-
-        <input
-          type="file"
-          accept=".mid"
-          on:change={(e) => (lastid = flutil.importMidi(e, primerList, lastid))}
-        />
-        <button on:click={() => primerList.clear()}> clear primer list </button>
+        <h5>Dataset</h5>
         <button
-          on:click={() => {
-            primerList.deleteMelo($primerTodelete);
-          }}
+          on:click={() => document.querySelector("#datasetFiles").click()}
         >
-          delete primer number
+          open dataset
         </button>
-        <div class="filter">
-          <input
-            type="range"
-            bind:value={$primerTodelete}
-            min="0"
-            max={Math.max(0, $primerList.length - 1)}
-            step="1"
-            width="50%"
-          />
-          <PianorollSample
-            width={50}
-            height={50}
-            melody={$primerSelected}
-            fill="grey"
-          />
-        </div>
+        <input
+          style="display: none"
+          type="file"
+          id="datasetFiles"
+          on:change={(event) => mu.uploadDatasetFile(event)}
+        />
+        <!-- {/if} -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- <div on:click={() => (devmode = !devmode)}>
+        <h1>Inference</h1>
+      </div>
+      $primerList
+      {#if devmode} -->
+        <button on:click={() => mu.exportModelJson()}> export dataset </button>
       {/if}
     </div>
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (clustering = !clustering)}>
-        <h2>Clustering</h2>
+        <h1>Clustering</h1>
       </div>
       {#if clustering}
         <button on:click={() => brushClusterSwitch.switch()}>
@@ -373,7 +372,7 @@
     <div class="select">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (visualization = !visualization)}>
-        <h2>Visualization</h2>
+        <h1>Visualization</h1>
       </div>
       {#if visualization}
         <label for="selectvorcolor">point color</label>
@@ -505,7 +504,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (filter = !filter)}>
-        <h2>Filter</h2>
+        <h1>Filter</h1>
       </div>
       {#if filter}
         <div class="filtercontainer">
@@ -527,7 +526,7 @@
               values={filtervarint}
             />
           </div>
-          <div>
+          <div class='filterButtons'>
             <div
               class="option {$seenfilter === 1
                 ? 'selected'
@@ -561,6 +560,12 @@
             >
               👎
             </div>
+            <div
+              class="option {$expfilter ? 'selected' : ''}"
+              on:click={() => setFilters(4)}
+            >
+              📁
+            </div>
           </div>
         </div>
         <div>
@@ -574,7 +579,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (calculation = !calculation)}>
-        <h2>Features & Metrics</h2>
+        <h1>Features & Metrics</h1>
       </div>
       {#if calculation}
         Similarity
@@ -592,12 +597,19 @@
             {simval.toFixed(2)}
           </span>
         </div>
+        Geschwindigkeit
+        <div class="filter">
+          <input type="range" bind:value={$bpm} min="60" max="180" step="1" />
+          <span>
+            BPM: {$bpm}
+          </span>
+        </div>
       {/if}
     </div>
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div on:click={() => (layout = !layout)}>
-      <h2>Layout & Axes</h2>
+      <h1>Layout & Axes</h1>
     </div>
     {#if layout}
       <div>
@@ -667,7 +679,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (modeldesc = !modeldesc)}>
-        <h2>Model Description</h2>
+        <h1>Model Description</h1>
       </div>
       {#if modeldesc}
         <div class="select">
@@ -871,7 +883,7 @@
 </main>
 
 <style>
-  h2 {
+  h1 {
     font-size: 16px;
     margin: 18px 0 5px 0;
     color: #444;
@@ -879,6 +891,7 @@
   }
 
   .option {
+    margin: 0 0px;
     display: inline-block;
     padding: 10px;
     cursor: pointer;
@@ -900,7 +913,7 @@
     user-select: none;
   }
   .filtercontainer {
-    /* height: 300px; */
+    /*height: 300px;*/
     overflow: auto;
     overflow-x: hidden;
     margin: 0px 10px;
@@ -984,6 +997,10 @@
     margin: 10px 10px;
   }
 
+  .filterButtons {
+    margin: 10px;
+  }
+
   .select {
     --item-active-background: #c7c7c7;
     --margin: 5px 5%;
@@ -1001,6 +1018,20 @@
     gap: 10px;
     justify-items: center;
   }
+  .filter1 {
+    text-align: center;
+    place-items: center;
+    height: 60px;
+    margin: 0 15px;
+    display: grid;
+    grid-template-columns: auto 30px;
+    gap: 20px;
+    justify-items: center;
+  }
+  .filter1 input {
+    width: 100%;
+  }
+
   .filter input {
     width: 100%;
   }

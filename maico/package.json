@@ -22,6 +22,7 @@
     "@saehrimnir/hagrid": "^0.1.1",
     "d3": "^7.8.4",
     "d3-voronoi": "^1.1.4",
+    "eventemitter3": "^5.0.1",
     "file-saver": "^2.0.5",
     "mathjs": "^11.11.0",
     "musicvis-lib": "^0.57.1",

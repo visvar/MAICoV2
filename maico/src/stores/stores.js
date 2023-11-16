@@ -284,10 +284,11 @@ export const seenfilter = writable(0);
 export const listenfilter = writable(0);
 export const tufilter = writable(false);
 export const tdfilter = writable(false);
+export const expfilter = writable(false);
 
 
 export const currentpoints = derived(
-    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter],
+    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter],
     $stores => {
         permutation = new Array($stores[0]).fill(null)
         if ($stores[2] !== null && $stores[2] !== cpointchanged) {
@@ -313,6 +314,8 @@ export const currentpoints = derived(
                 .filter((point) => (!$stores[9] && !$stores[10]) || ($stores[9] && point[2].userspecific.rate === 1) || ($stores[10] && point[2].userspecific.rate === -1))
                 // listenfilter
                 .filter((point) => $stores[11] === 0 || point[2].userspecific.seen === $stores[11] || (point[2].userspecific.seen < 2 && $stores[11] === -2))
+                //exportfilter
+                .filter((point) => !$stores[12] || (point[2].userspecific.export))
             temp.forEach((p, i) => {
                 permutation[i] = p[2].index
             })

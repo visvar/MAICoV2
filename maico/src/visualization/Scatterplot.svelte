@@ -355,6 +355,7 @@
             userspecific: {
               seen: 0,
               rate: 0,
+              export: false,
             },
           };
           let temppoints = [
@@ -463,6 +464,7 @@
             userspecific: {
               seen: 0,
               rate: 0,
+              export: false,
             },
           };
           let temppoints = [

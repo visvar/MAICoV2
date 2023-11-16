@@ -6,7 +6,7 @@
     import * as muutil from "../../util/musicutil.js";
     import * as visutil from "../../util/visutil.js";
     import { onMount } from "svelte";
-    import { currentcolor, colors, rate } from "../../stores/stores.js";
+    import { currentcolor, colors, rate, exportList } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
 
@@ -66,6 +66,12 @@
             rate.setOpt(option, melody, true);
         }
     }
+
+    function exportChange(melody, add){
+        !add?exportList.addMelo(melody):exportList.deleteMelo(melody)
+        return !add
+    }
+    
 
     function changeColor() {
         if (svg !== undefined) {
@@ -223,14 +229,8 @@
     {#if melody?.melody?.primer !== undefined}
         <div
             class="info"
-            style:background-color={visutil.keyColors(
-                melody?.melody?.primer?.key
-            )}
-            style:color={glutil.getColorLightness(
-                visutil.keyColors(melody?.melody?.primer?.key)
-            ) < 50
-                ? "white"
-                : "black"}
+            style:background-color={'white'}
+            style:color={"black"}
         >
             <label>
                 <input
@@ -247,14 +247,18 @@
                         }
                     }}
                 />
-                Primer - {melody?.melody?.primer?.key?.tonic +
-                    " " +
-                    melody?.melody?.primer?.key?.type}
+                {#if melody?.isPrimer}
+                    this is Primer {melody.primerindex}
+                {:else}
+                    show Primer {melody.primerindex}
+                {/if}
+                
             </label>
         </div>
     {/if}
     <div class="liked">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
             class="option {melody.userspecific.rate === 1 ? 'selected' : ''}"
             on:click={() => selectOption(1)}
@@ -262,16 +266,30 @@
             👍
         </div>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
             class="option {melody.userspecific.rate === -1 ? 'selected' : ''}"
             on:click={() => selectOption(-1)}
         >
             👎
         </div>
+    </div>
+    <div class="liked">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div
+            class="option {melody.userspecific.export ? 'selected' : ''}"
+            on:click={() => {melody.userspecific.export = exportChange(melody, melody.userspecific.export)}}
+        >
+            📁
+        </div>
         {#if melody.userspecific.seen === 2}
             <div class="option">👂</div>{/if}
+    
+        
     </div>
 </div>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <svg
     id={"svgPRoll" + index}
     class={"context"}
