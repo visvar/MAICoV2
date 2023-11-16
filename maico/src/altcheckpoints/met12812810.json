@@ -1,0 +1,22 @@
+{
+    "checkpointURL": "http://127.0.0.1:5555/",
+    "name": "1met128",
+    "js": false,
+    "fixflags": [
+        {
+            "config": "attention_rnn",
+            "bundle": "./Models/met128_[128]_10k.mag",
+            "steps_per_iteration": 2,
+            "beam_size": 2,
+            "branch_factor": 2
+        }
+    ],
+    "needflags": [
+        {
+            "numOut": "numOut",
+            "numSteps": "numSteps",
+            "temperature": "temperature"
+        }
+    ],
+    "description": "attention_rnn trained on metallica with 128 batch and [128] layer size and 10000 steps"
+}

@@ -1,0 +1,6 @@
+{
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_vae/mel_4bar_med_lokl_q2",
+    "name": "mel_4bar_lokl",
+    "js": true,
+    "type": "music_vae"
+}

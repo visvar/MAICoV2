@@ -1,0 +1,588 @@
+[
+  {
+    "checkpointURL": "http://127.0.0.1:5001/",
+    "name": "AttentionRnnPy",
+    "js": false,
+    "fixflags": [
+      {
+        "config": "attention",
+        "bundle": "./Models/attention_rnn.mag",
+        "steps_per_iteration": 2,
+        "beam_size": 2,
+        "branch_factor": 2
+      }
+    ],
+    "needflags": [
+      {
+        "numOut": "numOut",
+        "numSteps": "numSteps",
+        "temperature": "temperature"
+      }
+    ],
+    "description": "pretrained attentionRNN from magenta python git",
+    "melodies": []
+  },
+  {
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn",
+    "name": "basic_rnn",
+    "js": true,
+    "melodies": [
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.2
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.7
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 63,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 15
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 22
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 22,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 31
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.3
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 10
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 10,
+            "quantizedEndStep": 14
+          },
+          {
+            "pitch": 57,
+            "quantizedStartStep": 14,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.6
+      }
+    ]
+  },
+  {
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/chord_pitches_improv",
+    "name": "improv_rnn",
+    "js": true,
+    "melodies": []
+  },
+  {
+    "checkpointURL": "http://127.0.0.1:5001/",
+    "name": "LookbackRnnPy",
+    "js": false,
+    "fixflags": [
+      {
+        "config": "lookback_rnn",
+        "bundle": "./Models/lookback_rnn.mag",
+        "steps_per_iteration": 2,
+        "beam_size": 2,
+        "branch_factor": 2
+      }
+    ],
+    "needflags": [
+      {
+        "numOut": "numOut",
+        "numSteps": "numSteps",
+        "temperature": "temperature"
+      }
+    ],
+    "description": "pretrained lookbackRNN from magenta python git",
+    "melodies": []
+  },
+  {
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/melody_rnn",
+    "name": "melody_rnn",
+    "js": true,
+    "melodies": [
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.2
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.7
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 67,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.3
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 57,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 57,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 31
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.6
+      }
+    ]
+  }
+]

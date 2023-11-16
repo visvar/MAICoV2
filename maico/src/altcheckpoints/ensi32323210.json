@@ -1,0 +1,22 @@
+{
+    "checkpointURL": "http://127.0.0.1:5555/",
+    "name": "2ensi3232",
+    "js": false,
+    "fixflags": [
+        {
+            "config": "attention_rnn",
+            "bundle": "./Models/ensi32_[32,32]_10k.mag",
+            "steps_per_iteration": 2,
+            "beam_size": 2,
+            "branch_factor": 2
+        }
+    ],
+    "needflags": [
+        {
+            "numOut": "numOut",
+            "numSteps": "numSteps",
+            "temperature": "temperature"
+        }
+    ],
+    "description": "attention_rnn trained on ensiferum with 32 batch and [32,32] layer size and 10000 steps"
+}

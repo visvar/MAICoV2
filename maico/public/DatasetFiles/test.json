@@ -1,0 +1,5954 @@
+[
+  {
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/melody_rnn",
+    "name": "melody_rnn",
+    "js": true,
+    "melodies": [
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.2,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.2,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.2,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.3,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.3,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.3,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.4,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.4,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.4,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.5,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.5,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.5,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.6,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.6,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 67,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.6,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.7,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.7,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.7,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.8,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.8,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.8,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.9,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.9,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 0.9,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 66,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 66,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 66,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 66,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 72,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.1,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.1,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 64,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.1,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 69,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.2,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 69,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 10
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 10,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 14
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 14,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 22
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 22,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 30
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.2,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 64,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 66,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.2,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 68,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 26
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 26,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 30
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 30,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.3,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 59,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 14
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 14,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 57,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.3,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 67,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.3,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 67,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 70,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.4,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 72,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 55,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 55,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.4,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.4,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 65,
+            "quantizedStartStep": 2,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 6
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 56,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 57,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 30
+          },
+          {
+            "pitch": 57,
+            "quantizedStartStep": 30,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.5,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 10
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 10,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 14
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 14,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 19
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 19,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 22
+          },
+          {
+            "pitch": 61,
+            "quantizedStartStep": 22,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 60,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 25
+          },
+          {
+            "pitch": 58,
+            "quantizedStartStep": 25,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.5,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 60,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 10
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 10,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 14
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 14,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 17
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 17,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 19
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 19,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 21
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 21,
+            "quantizedEndStep": 22
+          },
+          {
+            "pitch": 73,
+            "quantizedStartStep": 22,
+            "quantizedEndStep": 23
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 23,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 25
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 25,
+            "quantizedEndStep": 26
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 26,
+            "quantizedEndStep": 27
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 27,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 66,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 29
+          },
+          {
+            "pitch": 68,
+            "quantizedStartStep": 29,
+            "quantizedEndStep": 30
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 30,
+            "quantizedEndStep": 31
+          },
+          {
+            "pitch": 75,
+            "quantizedStartStep": 31,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.5,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 74,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 73,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 15
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 15,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 18,
+            "quantizedEndStep": 19
+          },
+          {
+            "pitch": 67,
+            "quantizedStartStep": 19,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 22
+          },
+          {
+            "pitch": 78,
+            "quantizedStartStep": 22,
+            "quantizedEndStep": 23
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 23,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 26
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 26,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 68,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 30
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 30,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.6,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 71,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 1
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 67,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 3
+          },
+          {
+            "pitch": 69,
+            "quantizedStartStep": 3,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 71,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 7
+          },
+          {
+            "pitch": 72,
+            "quantizedStartStep": 7,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 73,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 9
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 9,
+            "quantizedEndStep": 11
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 11,
+            "quantizedEndStep": 12
+          },
+          {
+            "pitch": 73,
+            "quantizedStartStep": 12,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 73,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 17
+          },
+          {
+            "pitch": 74,
+            "quantizedStartStep": 17,
+            "quantizedEndStep": 19
+          },
+          {
+            "pitch": 77,
+            "quantizedStartStep": 19,
+            "quantizedEndStep": 20
+          },
+          {
+            "pitch": 79,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 23
+          },
+          {
+            "pitch": 82,
+            "quantizedStartStep": 23,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 80,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 27
+          },
+          {
+            "pitch": 76,
+            "quantizedStartStep": 27,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 75,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 32
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.6,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 0
+        }
+      },
+      {
+        "tempos": [
+          {
+            "qpm": 120
+          }
+        ],
+        "notes": [
+          {
+            "pitch": 62,
+            "quantizedStartStep": 0,
+            "quantizedEndStep": 4
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 4,
+            "quantizedEndStep": 6
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 6,
+            "quantizedEndStep": 8
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 8,
+            "quantizedEndStep": 10
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 10,
+            "quantizedEndStep": 14
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 14,
+            "quantizedEndStep": 16
+          },
+          {
+            "pitch": 59,
+            "quantizedStartStep": 16,
+            "quantizedEndStep": 18
+          },
+          {
+            "pitch": 65,
+            "quantizedStartStep": 20,
+            "quantizedEndStep": 22
+          },
+          {
+            "pitch": 64,
+            "quantizedStartStep": 22,
+            "quantizedEndStep": 24
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 24,
+            "quantizedEndStep": 25
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 25,
+            "quantizedEndStep": 28
+          },
+          {
+            "pitch": 62,
+            "quantizedStartStep": 28,
+            "quantizedEndStep": 31
+          }
+        ],
+        "quantizationInfo": {
+          "stepsPerQuarter": 4
+        },
+        "totalQuantizedSteps": 32,
+        "temperature": 1.6,
+        "primer": {
+          "notes": [
+            {
+              "pitch": 60,
+              "quantizedStartStep": 0,
+              "quantizedEndStep": 4
+            },
+            {
+              "pitch": 60,
+              "quantizedStartStep": 4,
+              "quantizedEndStep": 8
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 8,
+              "quantizedEndStep": 12
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 12,
+              "quantizedEndStep": 16
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 16,
+              "quantizedEndStep": 20
+            },
+            {
+              "pitch": 69,
+              "quantizedStartStep": 20,
+              "quantizedEndStep": 24
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 24,
+              "quantizedEndStep": 32
+            },
+            {
+              "pitch": 67,
+              "quantizedStartStep": 32,
+              "quantizedEndStep": 36
+            },
+            {
+              "pitch": 65,
+              "quantizedStartStep": 36,
+              "quantizedEndStep": 40
+            },
+            {
+              "pitch": 64,
+              "quantizedStartStep": 40,
+              "quantizedEndStep": 44
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 44,
+              "quantizedEndStep": 48
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 48,
+              "quantizedEndStep": 52
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 52,
+              "quantizedEndStep": 56
+            },
+            {
+              "pitch": 62,
+              "quantizedStartStep": 56,
+              "quantizedEndStep": 64
+            }
+          ],
+          "totalTime": 8,
+          "totalQuantizedSteps": 64,
+          "index": 2
+        }
+      }
+    ]
+  }
+]

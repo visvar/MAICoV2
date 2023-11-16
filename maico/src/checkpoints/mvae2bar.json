@@ -1,0 +1,6 @@
+{
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_vae/mel_2bar_small",
+    "name": "mel_2bar",
+    "js": true,
+    "type": "music_vae"
+}

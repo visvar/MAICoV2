@@ -1,0 +1,6 @@
+{
+    "checkpointURL": "https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/melody_rnn",
+    "name": "melody_rnn",
+    "js": true,
+    "type": "music_rnn"
+}
