@@ -1,0 +1,1 @@
+const e="https://storage.googleapis.com/magentadata/js/checkpoints/music_vae/mel_4bar_med_q2",t="mel_4bar",s=!0,a="music_vae",c={checkpointURL:e,name:t,js:!0,type:a};export{e as checkpointURL,c as default,s as js,t as name,a as type};

@@ -1,0 +1,1 @@
+const n="https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/melody_rnn",t="melody_rnn",o=!0,e="music_rnn",s={checkpointURL:n,name:t,js:!0,type:e};export{n as checkpointURL,s as default,o as js,t as name,e as type};

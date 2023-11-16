@@ -1,0 +1,1 @@
+const e="https://storage.googleapis.com/magentadata/js/checkpoints/music_vae/mel_16bar_small_q2",t="mel_16bar",s=!0,a="music_vae",c={checkpointURL:e,name:t,js:!0,type:a};export{e as checkpointURL,c as default,s as js,t as name,a as type};
