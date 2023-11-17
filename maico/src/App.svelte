@@ -277,6 +277,12 @@
             {$genlength}
           </span>
         </div>
+        <div>
+          <PianorollFilter h={250} w={250} filtervalues={$filterextents} />
+        </div>
+        <div>
+          <PianoKeyFilter h={250} w={250} />
+        </div>
         <div class="label">iterations of 15 samples per model</div>
         <div class="filter">
           <input type="range" bind:value={$iter} min="1" max="10" step="1" />
@@ -567,12 +573,6 @@
               📁
             </div>
           </div>
-        </div>
-        <div>
-          <PianorollFilter h={250} w={250} filtervalues={$filterextents} />
-        </div>
-        <div>
-          <PianoKeyFilter h={250} w={250} />
         </div>
       {/if}
     </div>

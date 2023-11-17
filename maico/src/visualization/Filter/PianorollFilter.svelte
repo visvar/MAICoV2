@@ -173,7 +173,7 @@
         drawupper = d.sourceEvent.altKey ? false : true;
         let val = [
             Math.round(x.invert(d.x) - 3), //+ notewidth / 2,
-            Math.round(y.invert(d.y)),
+            Math.max(extent[0],Math.min(extent[1],Math.round(y.invert(d.y)))),
         ];
         // check for lower or upper
         // check if under or above the other
