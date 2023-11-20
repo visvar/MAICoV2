@@ -34,7 +34,7 @@ Verschiedene stufen, wieviele variationen in einen arbeitsschritt
 Selber labeln für exportlist (values)
 
 
--> reccommender based on labels (later) (active learning
+-> reccommender based on labels (later) (active learning)
 
 -> piano roll in map -> direkt see (geil hammer)
 
@@ -65,10 +65,10 @@ Oktavieren, halbton hoch/runter
 
 TODO: 
 
-Filter length (todo)
+Filter length (done)
 Regenerate not instantly (done)
 
 Length nicht nur 16 schritte (done)
 
-Option for adjust melodies by rules (oktavieren), halbton hoch (done)
+Option for adjust melodies by rules (oktavieren), halbton hoch (done but needs testing)
 Fremde töne erlauben (done)

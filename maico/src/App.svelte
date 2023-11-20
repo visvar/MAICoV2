@@ -61,9 +61,12 @@
     expfilter,
     strangers,
     adjustMode,
+    progress,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
+
+  import { Progressbar } from "flowbite-svelte";
 
   import Scatterplot from "./visualization/Scatterplot.svelte";
   import PianoRollofSelection from "./visualization/PianoRollofSelection.svelte";
@@ -239,6 +242,7 @@
       </div>
       {#if dataset}
         Status: {$samplingstatus}
+        <Progressbar progress={$progress} labelInside color="blue" />
         <h5>Import Midi as Primer</h5>
         <input
           type="file"

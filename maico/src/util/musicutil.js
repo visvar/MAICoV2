@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers } from '../stores/stores.js'
+import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey } from '../stores/stores.js'
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -998,50 +998,48 @@ export function passGenerateFilter(data, check, strangers) {
 
 export function adaptMelodiesWithRules(data, steps, adjustMode) {
   let temp = []
+  let strangernum = 0
   data.notes.forEach(n => {
     if (n.quantizedStartStep < steps) {
-      if (n.quantizedEndStep < steps) {
-        temp.push(n)
-      } else {
-        n.quantizedEndStep = steps
-        temp.push()
-      }
-    }
-  })
-  data.totalQuantizedSteps = steps
-  if (adjustMode) {
-    let filter = get(filterextents)
-    filter.forEach((v, i) => {
-      let is = temp.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i && n.pitch < v[0] && n.pitch > v[1])
-      if (is.length > 0) {
-        is.forEach((n) => {
-          while (n.pitch < v[0]) {
-            n.pitch = n.pitch + 12
+      let pitch = n.pitch
+      let startstep = n.quantizedStartStep
+      let endstep = n.quantizedEndStep < steps ? steps : n.quantizedEndStep
+      if (adjustMode) {
+        let filter = get(filterextents)
+        let change = false
+        let minvalue = 1000
+        for (let i = startstep; startstep < endstep; i++) {
+          if (pitch < filter[i][0] && pitch > filter[i][1]) {
+            change = true
+            if (minvalue > i)
+              minvalue = i
           }
-          while (n.pitch > v[1]) {
-            n.pitch = n.pitch - 12
+        }
+        if (change) {
+          while (pitch < filter[minvalue][0]) {
+            pitch = pitch + 12
           }
-          if (n.pitch < v[0] || n.pitch > v[1]) {
-            n.pitch = Math.round((v[1] - v[0]) / 2)
+          while (pitch > filter[minvalue][1]) {
+            pitch = pitch - 12
           }
-        })
-      }
-    })
-    filter = get(selectedKeys)
-    let strangernum = 0
-    temp.forEach(n => {
-      if (!filter[n.pitch % 12]) {
-        strangernum++
-        if (strangernum > get(strangers)) {
-          while (!filter[n.pitch % 12] || n.pitch === 129) {
-            n.pitch = n.pitch + 1
+          if (pitch < filter[minvalue][0] || pitch > filter[minvalue][1]) {
+            pitch = Math.round((filter[minvalue][1] - filter[minvalue][0]) / 2)
+          }
+        }
+        let kfilter = get(filterkey)
+        if (!kfilter[pitch % 12]) {
+          strangernum++
+          if (strangernum > get(strangers)) {
+            while (!filter[n.pitch % 12] || n.pitch === 129) {
+              n.pitch = n.pitch + 1
+            }
           }
         }
       }
-    })
-
-  }
-  console.log(temp)
+      temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep })
+    }
+  })
+  data.totalQuantizedSteps = steps
   data.notes = temp
   return data
 }

@@ -57,6 +57,8 @@ export const DRumap = writable({ label: "UMAP", value: true })
 
 export const bpm = writable(120)
 
+export const progress = writable(0)
+
 function createExportList() {
     const { subscribe, set, update } = writable([]);
 

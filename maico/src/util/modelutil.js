@@ -1,5 +1,5 @@
 // @ts-ignore
-import { adjustMode, models, modelselected, primerList, samplingstatus, selectedKeys, strangers } from '../stores/stores.js'
+import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers } from '../stores/stores.js'
 import { iter, genlength } from '../stores/devStores.js'
 import { get } from 'svelte/store';
 // @ts-ignore
@@ -62,6 +62,7 @@ export async function uploadDatasetFile(event) {
 
 export async function requestModels(allprimer) {
     samplingstatus.set('waiting for models')
+    progress.set(0)
     if (allprimer?.length <= 0)
         return null
     let resultdata = {}
@@ -73,6 +74,8 @@ export async function requestModels(allprimer) {
     }
     tempArray.sort((a, b) => a - b)
     const numOut = tempArray.length
+    let total = numOut * get(models).length * allprimer.length
+    let count = 0
     let modelsFinished = 0
     try {
         let queue = []
@@ -152,6 +155,9 @@ export async function requestModels(allprimer) {
                                         data.temperature = tempArray[i]
                                         data.primer = primer
                                         dataArray.push(data)
+                                        count++
+                                        console.log(count)
+                                        progress.set(100 * (count / total))
                                         if (i == numOut - 1 && index === allprimer.length - 1) {
                                             console.log(model.name + ' finished')
                                             modelsFinished++
@@ -198,6 +204,9 @@ export async function requestModels(allprimer) {
                                         data.temperature = tempArray[i]
                                         data.primer = primer
                                         dataArray.push(data)
+                                        count++
+                                        console.log(count)
+                                        progress.set(100 * (count / total))
                                         if (i == numOut - 1 && index === allprimer.length - 1) {
                                             console.log(model.name + ' finished')
                                             modelsFinished++
@@ -211,7 +220,7 @@ export async function requestModels(allprimer) {
                                         }
                                     }
                                 } if (modelsFinished === get(models).length) {
-                                    afterRequest(get(models).length * numOut * allprimer.length, queue, modelsFinished, rnnSteps)
+                                    afterRequest(get(models).length * numOut * allprimer.length, queue, modelsFinished, rnnSteps, count)
                                 }
                             });
                     }
@@ -229,16 +238,18 @@ export async function requestModels(allprimer) {
 
 let threshhold = 0.05
 
-function afterRequest(total, queue, modell, rnnSteps) {
+function afterRequest(total, queue, modell, rnnSteps, count) {
     samplingstatus.set('sampling ended with ' + (100 * (queue.length / total)).toFixed(1) + "% missing")
     console.log('afterRequest', total, queue)
     if (queue.length > total * threshhold) {
-        requestModelagain(queue, total, total * threshhold, 1, rnnSteps)
+        requestModelagain(queue, total, total * threshhold, 1, rnnSteps, count)
+    } else {
+        progress.set(100)
     }
 }
 
 
-export async function requestModelagain(q, total, percent, round, rnnSteps) {
+export async function requestModelagain(q, total, percent, round, rnnSteps, count) {
     samplingstatus.set('resampling round ' + round + '; missed: ' + (100 * (q.length / total)).toFixed(1) + "%")
     console.log("generate again round: " + round + " of 5")
     console.log("queuelength: " + q.length + ' of ' + total)
@@ -268,21 +279,24 @@ export async function requestModelagain(q, total, percent, round, rnnSteps) {
                                     if (mu.passGenerateFilter(data, true, get(strangers))) {
                                         data.temperature = req.temp
                                         data.primer = req.primer
-
+                                        count++
+                                        console.log(count)
+                                        progress.set(100 * (count / total))
                                         models.appendMelodiesToModel(req.model.name, [data])
                                     } else {
                                         queue.push(req)
                                     }
                                 } if (index === t.length - 1) {
                                     if (queue.length > percent) {
-                                        requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                        requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                     } else {
+                                        progress.set(100)
                                         samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                         console.log("regenerate finished after " + round + " rounds", queue)
                                     }
                                 }
                             } else {
-                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
+                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
                             }
                         })
                 })
@@ -300,7 +314,9 @@ export async function requestModelagain(q, total, percent, round, rnnSteps) {
                                 if (mu.passGenerateFilter(data, true, get(strangers))) {
                                     data.temperature = req.temp
                                     data.primer = req.primer
-
+                                    count++
+                                    console.log(count)
+                                    progress.set(100 * (count / total))
                                     models.appendMelodiesToModel(req.model.name, [data])
                                 } else {
                                     queue.push(req)
@@ -308,14 +324,15 @@ export async function requestModelagain(q, total, percent, round, rnnSteps) {
                             }
                             if (index === t.length - 1) {
                                 if (queue.length > percent) {
-                                    requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                    requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                 } else {
+                                    progress.set(100)
                                     samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                     console.log("regenerate finished after " + round + " rounds", queue)
                                 }
                             }
                         } else {
-                            models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
+                            models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
                         }
                     })
             }
@@ -339,20 +356,24 @@ export async function requestModelagain(q, total, percent, round, rnnSteps) {
                                     if (mu.passGenerateFilter(data, true, get(strangers))) {
                                         data.temperature = req.temp
                                         data.primer = req.primer
+                                        count++
+                                        console.log(count)
+                                        progress.set(100 * (count / total))
                                         models.appendMelodiesToModel(req.model.name, [data])
                                     } else {
                                         queue.push(req)
                                     }
                                 } if (index === t.length - 1) {
                                     if (queue.length > percent) {
-                                        requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                        requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                     } else {
+                                        progress.set(100)
                                         samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                         console.log("regenerate finished after " + round + " rounds", queue)
                                     }
                                 }
                             } else {
-                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
+                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
                             }
                         });
                 })
@@ -369,6 +390,9 @@ export async function requestModelagain(q, total, percent, round, rnnSteps) {
                                 if (mu.passGenerateFilter(data, true, get(strangers))) {
                                     data.temperature = req.temp
                                     data.primer = req.primer
+                                    count++
+                                    console.log(count)
+                                    progress.set(100 * (count / total))
                                     models.appendMelodiesToModel(req.model.name, [data])
                                 } else {
                                     queue.push(req)
@@ -376,14 +400,15 @@ export async function requestModelagain(q, total, percent, round, rnnSteps) {
                             }
                             if (index === t.length - 1) {
                                 if (queue.length > percent) {
-                                    requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                    requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                 } else {
+                                    progress.set(100)
                                     samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                     console.log("regenerate finished after " + round + " rounds", queue)
                                 }
                             }
                         } else {
-                            models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
+                            models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
                         }
                     });
             }
