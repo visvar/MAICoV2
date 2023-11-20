@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm } from '../stores/stores.js'
+import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers } from '../stores/stores.js'
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -135,23 +135,6 @@ export function avgIntervals(melo) {
     }
   })
   return addinterval / melo.notes.length
-}
-
-export function cropToSteps(data, steps) {
-  let temp = []
-  data.notes.forEach(n => {
-    if (n.quantizedStartStep < steps) {
-      if (n.quantizedEndStep < steps) {
-        temp.push(n)
-      } else {
-        n.quantizedEndStep = steps
-        temp.push()
-      }
-    }
-  })
-  data.notes = temp
-  data.totalQuantizedSteps = steps
-  return data
 }
 
 // wight 0 = rhythm -> 1 = melody
@@ -975,9 +958,10 @@ export function computeRhythmicComplexity(countOffBeat, countRhyhtmChange, pause
 
 }
 
-export function passGenerateFilter(data, check) {
+export function passGenerateFilter(data, check, strangers)  {
   let notes = data.notes
   let checkpassed = true
+  let strangernum = 0
   if (check) {
     // filter with range
     let filter = get(filterextents)
@@ -992,6 +976,8 @@ export function passGenerateFilter(data, check) {
     filter = get(selectedKeys)
     notes.forEach(n => {
       if (!filter[n.pitch % 12])
+        strangernum++
+        if(strangernum > strangers)
         checkpassed = false
     })
     return checkpassed
@@ -1007,4 +993,52 @@ export function passGenerateFilter(data, check) {
     data.notes = is.filter(n => filter[n.pitch % 12])
     return data
   }
+}
+
+export function adaptMelodiesWithRules(data, steps, adjustMode) {
+  let temp = []
+  data.notes.forEach(n => {
+    if (n.quantizedStartStep < steps) {
+      if (n.quantizedEndStep < steps) {
+        temp.push(n)
+      } else {
+        n.quantizedEndStep = steps
+        temp.push()
+      }
+    }
+  })
+  data.notes = temp
+  data.totalQuantizedSteps = steps
+  if(adjustMode){
+    let filter = get(filterextents)
+    filter.forEach((v, i) => {
+      let is = data.notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i)
+      if (is.length > 0) {
+        is.forEach((n) => {
+          while(n.pitch < v[0]){
+            n.pitch += 12
+          }
+          while(n.pitch > v[1]){
+            n.pitch -= 12
+          }
+          if(n.pitch < v[0] || n.pitch > v[1]){
+            n.pitch = Math.round((v[1] - v[0])/2)
+          }
+        })
+          
+      }
+    })
+    filter = get(selectedKeys)
+    let strangernum = 0
+    data.notes.forEach(n => {
+      if (!filter[n.pitch % 12])
+        strangernum++
+        if(strangernum > get(strangers)){
+          while(!filter[n.pitch % 12] || n.pitch === 129){
+            n.pitch += 1
+          }
+        }  
+    })
+  }
+  return data
 }

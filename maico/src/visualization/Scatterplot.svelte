@@ -246,6 +246,7 @@
       let varInt = undefined;
 
       flatten.forEach((melo, index) => {
+        if(index < mdspoints.length){
         if (index >= $primerList.length) {
           const sim = muutil.ourDistanceFunction(
             melo[0],
@@ -261,7 +262,6 @@
           // let countSyncope = muutil.computeSyncope(melo[0]);
           const countOffBeat = muutil.computeOffBeat(melo[0]);
           const pauses = muutil.computePauses(melo[0]);
-
           information = {
             isPrimer: false,
             melody: melo[0],
@@ -474,6 +474,9 @@
           ];
 
           pointarray.push(temppoints);
+        }
+        }else{
+          console.log(index, "failed")
         }
 
         // extents of metrics for filter

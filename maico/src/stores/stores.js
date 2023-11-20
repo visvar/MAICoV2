@@ -219,7 +219,11 @@ export const points = writable(undefined)
 
 export const samplingstatus = writable('waiting for user action')
 
-export const filterextents = writable(new Array(32).fill([40, 88]))
+export const filterextents = writable(new Array(64).fill([40, 88]))
+
+export const strangers = writable(0)
+
+export const adjustMode = writable(false)
 
 export const correlationData = derived(
     [points, models, primerList],

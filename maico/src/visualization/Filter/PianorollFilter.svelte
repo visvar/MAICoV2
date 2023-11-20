@@ -47,6 +47,9 @@
     onMount(() => {
         // create the main SVG element
         svg = d3.select("#svgFilter").style("fill", "grey");
+        for(let i = 0; i < length; i++) {
+            filtertemp[i] = [0, 128];
+        }
         for (let i = 0; i < filtervalues.length; i++) {
             filtertemp[i] = [filtervalues[i][0], filtervalues[i][1]];
         }

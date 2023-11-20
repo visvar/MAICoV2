@@ -59,6 +59,8 @@
     filterextents,
     samplingstatus,
     expfilter,
+    strangers,
+    adjustMode
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -84,6 +86,7 @@
   import FlowerGlyphModel from "./visualization/Glyphs/FlowerGlyphModel.svelte";
   import PianorollFilter from "./visualization/Filter/PianorollFilter.svelte";
   import PianoKeyFilter from "./visualization/Filter/PianoKeyFilter.svelte";
+    import { onMount } from "svelte";
 
   const glyphoptions = [
     { label: "Points", value: 0 },
@@ -213,6 +216,10 @@
    * <button on:click={() => mu.exportModelJson('basic_rnn')}>export model 'basic_rnn' as Json</button>
    *
    */
+
+  onMount(()=>{
+    mu.addModel()
+  })
 </script>
 
 <main>
@@ -264,25 +271,6 @@
         <button on:click={() => mu.requestModels($primerList)}
           >Generate from Models (second)</button
         >
-        <div class="label">melody length</div>
-        <div class="filter">
-          <input
-            type="range"
-            bind:value={$genlength}
-            min="16"
-            max="128"
-            step="16"
-          />
-          <span>
-            {$genlength}
-          </span>
-        </div>
-        <div>
-          <PianorollFilter h={250} w={250} filtervalues={$filterextents} />
-        </div>
-        <div>
-          <PianoKeyFilter h={250} w={250} />
-        </div>
         <div class="label">iterations of 15 samples per model</div>
         <div class="filter">
           <input type="range" bind:value={$iter} min="1" max="10" step="1" />
@@ -290,6 +278,37 @@
             {$iter}
           </span>
         </div>
+        <div class="label">melody length</div>
+        <div class="filter">
+          <input
+            type="range"
+            bind:value={$genlength}
+            min="16"
+            max="128"
+            step="1"
+          />
+          <span>
+            {$genlength} 16th
+          </span>
+        </div>
+        <div>
+          <PianorollFilter h={250} w={250} length={$genlength} filtervalues={$filterextents} />
+        </div>
+        <div>
+          <PianoKeyFilter h={250} w={250} />
+        </div>
+        <div class="label">allow tonality strangers</div>
+        <div class="filter">
+          <input type="range" bind:value={$strangers} min="0" max="12" step="1" />
+          <span>
+            {$strangers}
+          </span>
+        </div>
+        <div><input
+          type="checkbox"
+          bind:checked={$adjustMode}
+        />Allow to oktave and move notes</div>
+        
         
         
         <div class="select">
