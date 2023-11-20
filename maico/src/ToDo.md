@@ -73,3 +73,4 @@ Length nicht nur 16 schritte
 Option for adjust melodies by rules (oktavieren), halbton hoch
 Fremde töne erlauben
 
+export list mehrere melodien (test for multiple files, test all in one file )
