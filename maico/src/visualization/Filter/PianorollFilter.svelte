@@ -44,26 +44,22 @@
         .domain(extent)
         .range([height - margin.bottom, margin.top]);
 
+    $: length, init();
+
     onMount(() => {
+        init();
+    });
+
+    function init() {
         // create the main SVG element
         svg = d3.select("#svgFilter").style("fill", "grey");
-        for(let i = 0; i < length; i++) {
-            filtertemp[i] = [0, 128];
+        for (let i = 0; i < length; i++) {
+            filtertemp[i] = [extent[0], extent[1]];
         }
         for (let i = 0; i < filtervalues.length; i++) {
             filtertemp[i] = [filtervalues[i][0], filtervalues[i][1]];
         }
         drawPianoRoll();
-    });
-
-    function changeColor() {
-        if (svg !== undefined) {
-            console.log(melody);
-            svg.selectAll("rect").attr(
-                "fill",
-                visutil.getColor(melody, $currentcolor)
-            );
-        }
     }
 
     function drawPianoRoll() {
@@ -150,8 +146,8 @@
                     .append("circle")
                     .attr("id", "upper" + i)
                     .attr("cx", x(i) + notewidth / 2)
-                    .attr("cy", y(filtervalues[i][1]))
-                    .attr("r", notewidth / 3)
+                    .attr("cy", y(filtertemp[i][1]))
+                    .attr("r", Math.max(1, notewidth / 3))
                     .attr("fill", "red")
                     .attr("opacity", 0.3);
 
@@ -159,8 +155,8 @@
                     .append("circle")
                     .attr("id", "lower" + i)
                     .attr("cx", x(i) + notewidth / 2)
-                    .attr("cy", y(filtervalues[i][0]))
-                    .attr("r", notewidth / 3)
+                    .attr("cy", y(filtertemp[i][0]))
+                    .attr("r", Math.max(1, notewidth / 3))
                     .attr("fill", "blue")
                     .attr("opacity", 0.3);
             }
@@ -175,8 +171,11 @@
     function svgdrag(d, i, svg) {
         drawupper = d.sourceEvent.altKey ? false : true;
         let val = [
-            Math.round(x.invert(d.x) - 3), //+ notewidth / 2,
-            Math.max(extent[0],Math.min(extent[1],Math.round(y.invert(d.y)))),
+            Math.round(x.invert(d.sourceEvent.offsetX - notewidth / 2)), //+ notewidth / 2,
+            Math.max(
+                extent[0],
+                Math.min(extent[1], Math.round(y.invert(d.sourceEvent.offsetY)))
+            ),
         ];
         // check for lower or upper
         // check if under or above the other

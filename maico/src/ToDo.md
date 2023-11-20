@@ -65,12 +65,10 @@ Oktavieren, halbton hoch/runter
 
 TODO: 
 
-Filter length
-Regenerate not instantly
+Filter length (todo)
+Regenerate not instantly (done)
 
-Length nicht nur 16 schritte
+Length nicht nur 16 schritte (done)
 
-Option for adjust melodies by rules (oktavieren), halbton hoch
-Fremde töne erlauben
-
-export list mehrere melodien (test for multiple files, test all in one file )
+Option for adjust melodies by rules (oktavieren), halbton hoch (done)
+Fremde töne erlauben (done)

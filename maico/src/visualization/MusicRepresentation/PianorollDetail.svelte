@@ -6,9 +6,15 @@
     import * as muutil from "../../util/musicutil.js";
     import * as visutil from "../../util/visutil.js";
     import { onMount } from "svelte";
-    import { currentcolor, colors, rate, exportList } from "../../stores/stores.js";
+    import {
+        currentcolor,
+        colors,
+        rate,
+        exportList,
+    } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
+    import { melodies } from "@magenta/music";
 
     const margin = { top: 20, right: 10, bottom: 10, left: 25 };
 
@@ -67,11 +73,10 @@
         }
     }
 
-    function exportChange(melody, add){
-        !add?exportList.addMelo(melody):exportList.deleteMelo(melody)
-        return !add
+    function exportChange(melody, add) {
+        !add ? exportList.addMelo(melody) : exportList.deleteMelo(melody);
+        return !add;
     }
-    
 
     function changeColor() {
         if (svg !== undefined) {
@@ -224,12 +229,12 @@
             ? "white"
             : "black"}
     >
-        Temp: {melody.temperature}
+        Temp: {melody.temperature} <br /> ID: {melody.index}
     </div>
     {#if melody?.melody?.primer !== undefined}
         <div
             class="info"
-            style:background-color={'white'}
+            style:background-color={"white"}
             style:color={"black"}
         >
             <label>
@@ -252,7 +257,6 @@
                 {:else}
                     show Primer {melody.primerindex}
                 {/if}
-                
             </label>
         </div>
     {/if}
@@ -279,14 +283,17 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
             class="option {melody.userspecific.export ? 'selected' : ''}"
-            on:click={() => {melody.userspecific.export = exportChange(melody, melody.userspecific.export)}}
+            on:click={() => {
+                melody.userspecific.export = exportChange(
+                    melody,
+                    melody.userspecific.export
+                );
+            }}
         >
             📁
         </div>
         {#if melody.userspecific.seen === 2}
             <div class="option">👂</div>{/if}
-    
-        
     </div>
 </div>
 <!-- svelte-ignore a11y-no-static-element-interactions -->

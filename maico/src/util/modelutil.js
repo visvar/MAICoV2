@@ -140,24 +140,33 @@ export async function requestModels(allprimer) {
                             .continueSequence(request, rnnSteps, tempArray[i], chord)
                             .then((data) => {
                                 data = data.toJSON()
-                                if (data?.notes !== undefined && mu.passGenerateFilter(data, true, get(strangers))) {
-                                    data.temperature = tempArray[i]
-                                    data.primer = primer
-                                    dataArray.push(data)
-                                    if (i == numOut - 1 && index === allprimer.length - 1) {
-                                        console.log(model.name + ' finished')
-                                        modelsFinished++
-                                        models.addMelodiesToModel(model.name, dataArray)
-                                    }
-                                } else {
+                                if (data?.notes === undefined) {
                                     queue.push({ model: model, type: 'music_rnn', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: chord })
                                     if (i == numOut - 1 && index === allprimer.length - 1) {
                                         modelsFinished++
                                         models.addMelodiesToModel(model.name, dataArray)
                                     }
+                                } else {
+                                    data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                                    if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                        data.temperature = tempArray[i]
+                                        data.primer = primer
+                                        dataArray.push(data)
+                                        if (i == numOut - 1 && index === allprimer.length - 1) {
+                                            console.log(model.name + ' finished')
+                                            modelsFinished++
+                                            models.addMelodiesToModel(model.name, dataArray)
+                                        }
+                                    } else {
+                                        queue.push({ model: model, type: 'music_rnn', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: chord })
+                                        if (i == numOut - 1 && index === allprimer.length - 1) {
+                                            modelsFinished++
+                                            models.addMelodiesToModel(model.name, dataArray)
+                                        }
+                                    }
                                 }
                                 if (modelsFinished === get(models).length) {
-                                    afterRequest(get(models).length*numOut * allprimer.length, queue, modelsFinished)
+                                    afterRequest(get(models).length * numOut * allprimer.length, queue, modelsFinished, rnnSteps)
                                 }
                             })
                     }
@@ -177,25 +186,32 @@ export async function requestModels(allprimer) {
                         await music_vae.similar(request, 1, 0.90, tempArray[i])
                             .then((d) => d[0]) // we only create one so if multiple this is not a step
                             .then((data) => {
-                                if (data?.notes !== undefined && mu.passGenerateFilter(data, true, get(strangers))) {
-                                    mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
-                                    data.temperature = tempArray[i]
-                                    data.primer = primer
-                                    dataArray.push(data)
-                                    if (i == numOut - 1 && index === allprimer.length - 1) {
-                                        console.log(model.name + ' finished')
-                                        modelsFinished++
-                                        models.addMelodiesToModel(model.name, dataArray)
-                                    }
-                                } else {
+                                if (data?.notes === undefined) {
                                     queue.push({ model: model, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined })
                                     if (i == numOut - 1 && index === allprimer.length - 1) {
                                         modelsFinished++
                                         models.addMelodiesToModel(model.name, dataArray)
                                     }
-                                }
-                                if (modelsFinished === get(models).length) {
-                                    afterRequest(get(models).length*numOut * allprimer.length, queue, modelsFinished)
+                                } else {
+                                    data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                                    if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                        data.temperature = tempArray[i]
+                                        data.primer = primer
+                                        dataArray.push(data)
+                                        if (i == numOut - 1 && index === allprimer.length - 1) {
+                                            console.log(model.name + ' finished')
+                                            modelsFinished++
+                                            models.addMelodiesToModel(model.name, dataArray)
+                                        }
+                                    } else {
+                                        queue.push({ model: model, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined })
+                                        if (i == numOut - 1 && index === allprimer.length - 1) {
+                                            modelsFinished++
+                                            models.addMelodiesToModel(model.name, dataArray)
+                                        }
+                                    }
+                                } if (modelsFinished === get(models).length) {
+                                    afterRequest(get(models).length * numOut * allprimer.length, queue, modelsFinished, rnnSteps)
                                 }
                             });
                     }
@@ -213,20 +229,20 @@ export async function requestModels(allprimer) {
 
 let threshhold = 0.05
 
-function afterRequest(total, queue, modell) {
-    samplingstatus.set('sampling ended with ' + (queue.length / total).toFixed(2) + "% missing")
-    console.log('afterRequest', total, queue, modell)
+function afterRequest(total, queue, modell, rnnSteps) {
+    samplingstatus.set('sampling ended with ' + (100 * (queue.length / total)).toFixed(1) + "% missing")
+    console.log('afterRequest', total, queue)
     if (queue.length > total * threshhold) {
-        requestModelagain(queue, total, total * threshhold, 1)
+        requestModelagain(queue, total, total * threshhold, 1, rnnSteps)
     }
 }
 
 
-export async function requestModelagain(q, total, percent, round) {
-    samplingstatus.set('resampling round ' + round + '; missed: ' + (q.length / total).toFixed(2) + "%")
+export async function requestModelagain(q, total, percent, round, rnnSteps) {
+    samplingstatus.set('resampling round ' + round + '; missed: ' + (100 * (q.length / total)).toFixed(1) + "%")
     console.log("generate again round: " + round + " of 5")
     console.log("queuelength: " + q.length + ' of ' + total)
-    console.log("last reach: " + (total - q.length) / total + "%")
+    console.log("last reach: " + 100 * (total - q.length) / total + "%")
     let queue = []
     let t = q.sort((a, b) => a.model.name - b.model.name);
     let url = ""
@@ -235,83 +251,134 @@ export async function requestModelagain(q, total, percent, round) {
     let musicRnn = undefined
     t.forEach(async (req, index) => {
         if (req.type === "music_rnn") {
-            
+
             if (url !== req.url || musicRnn === undefined) {
                 url = req.url
                 musicRnn = await new mm.MusicRNN(req.url)
-                await musicRnn.initialize().then(()=>{
+                await musicRnn.initialize().then(() => {
                     musicRnn
+                        .continueSequence(req.primer, req.steps, req.temp, req.chord)
+                        .then((data) => {
+                            data = data.toJSON()
+                            if (round < 5) {
+                                if (data?.notes === undefined) {
+                                    queue.push(req)
+                                } else {
+                                    data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                                    if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                        data.temperature = req.temp
+                                        data.primer = req.primer
+
+                                        models.appendMelodiesToModel(req.model.name, [data])
+                                    } else {
+                                        queue.push(req)
+                                    }
+                                } if (index === t.length - 1) {
+                                    if (queue.length > percent) {
+                                        requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                    } else {
+                                        samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
+                                        console.log("regenerate finished after " + round + " rounds", queue)
+                                    }
+                                }
+                            } else {
+                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
+                            }
+                        })
+                })
+
+            } else {
+                await musicRnn
                     .continueSequence(req.primer, req.steps, req.temp, req.chord)
                     .then((data) => {
                         data = data.toJSON()
                         if (round < 5) {
-                            if (data?.notes !== undefined && mu.passGenerateFilter(data, true, get(strangers))) {
-                                data.temperature = req.temp
-                                data.primer = req.primer
-    
-                                models.appendMelodiesToModel(req.model.name, [data])
-                            } else {
+                            if (data?.notes === undefined) {
                                 queue.push(req)
+                            } else {
+                                data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                                if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                    data.temperature = req.temp
+                                    data.primer = req.primer
+
+                                    models.appendMelodiesToModel(req.model.name, [data])
+                                } else {
+                                    queue.push(req)
+                                }
+                            }
+                            if (index === t.length - 1) {
+                                if (queue.length > percent) {
+                                    requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                } else {
+                                    samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
+                                    console.log("regenerate finished after " + round + " rounds", queue)
+                                }
                             }
                         } else {
                             models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
                         }
                     })
-                })
-                
-            }else{
-                await musicRnn
-                .continueSequence(req.primer, req.steps, req.temp, req.chord)
-                .then((data) => {
-                    data = data.toJSON()
-                    if (round < 5) {
-                        if (data?.notes !== undefined && mu.passGenerateFilter(data, true, get(strangers))) {
-                            data.temperature = req.temp
-                            data.primer = req.primer
-
-                            models.appendMelodiesToModel(req.model.name, [data])
-                        } else {
-                            queue.push(req)
-                        }
-                        if (index === t.length) {
-                            if (queue.length > percent) {
-                                requestModelagain(queue, total, percent, round + 1)
-                            } else {
-                                samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (queue.length / total).toFixed(2) + "%")
-                                console.log("regenerate finished after " + round + " rounds", queue)
-                            }
-                        }
-                    } else {
-                        models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
-                    }
-                })
             }
-            
+
 
         } else if (req.type === "music_vae") {
-            
+
             if (url !== req.url || music_vae === undefined) {
                 url = req.url
                 music_vae = await new mm.MusicVAE(req.url);
-                await music_vae.initialize().then(()=>{
-                // request, numOuts?, similarity, temperature
+                await music_vae.initialize().then(() => {
+                    // request, numOuts?, similarity, temperature
                     music_vae.similar(req.primer, 1, 0.90, req.temp)
+                        .then((d) => d[0]) // we only create one so if multiple this is not a step
+                        .then((data) => {
+                            if (round < 5) {
+                                if (data?.notes === undefined) {
+                                    queue.push(req)
+                                } else {
+                                    data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                                    if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                        data.temperature = req.temp
+                                        data.primer = req.primer
+                                        models.appendMelodiesToModel(req.model.name, [data])
+                                    } else {
+                                        queue.push(req)
+                                    }
+                                } if (index === t.length - 1) {
+                                    if (queue.length > percent) {
+                                        requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                    } else {
+                                        samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
+                                        console.log("regenerate finished after " + round + " rounds", queue)
+                                    }
+                                }
+                            } else {
+                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
+                            }
+                        });
+                })
+            } else {
+                // request, numOuts?, similarity, temperature
+                await music_vae.similar(req.primer, 1, 0.90, req.temp)
                     .then((d) => d[0]) // we only create one so if multiple this is not a step
                     .then((data) => {
                         if (round < 5) {
-                            if (data?.notes !== undefined && mu.passGenerateFilter(data, true, get(strangers))) {
-                                data = mu.adaptMelodiesWithRules(data, req.steps, get(adjustMode))
-                                data.temperature = req.temp
-                                data.primer = req.primer
-                                models.appendMelodiesToModel(req.model.name, [data])
-                            } else {
+                            if (data?.notes === undefined) {
                                 queue.push(req)
-                            }
-                            if (index === t.length) {
-                                if (queue.length > percent) {
-                                    requestModelagain(queue, total, percent, round + 1)
+                            } else {
+                                data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                                if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                    data.temperature = req.temp
+                                    data.primer = req.primer
+                                    models.appendMelodiesToModel(req.model.name, [data])
                                 } else {
-                                    samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (queue.length / total).toFixed(2) + "%")
+                                    queue.push(req)
+                                }
+                            }
+                            if (index === t.length - 1) {
+                                if (queue.length > percent) {
+                                    requestModelagain(queue, total, percent, round + 1, rnnSteps)
+                                } else {
+                                    samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                     console.log("regenerate finished after " + round + " rounds", queue)
                                 }
                             }
@@ -319,27 +386,8 @@ export async function requestModelagain(q, total, percent, round) {
                             models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
                         }
                     });
-                })
-            }else{
-                // request, numOuts?, similarity, temperature
-                await music_vae.similar(req.primer, 1, 0.90, req.temp)
-                .then((d) => d[0]) // we only create one so if multiple this is not a step
-                .then((data) => {
-                    if (round < 5) {
-                        if (data?.notes !== undefined && mu.passGenerateFilter(data, true, get(strangers))) {
-                            mu.adaptMelodiesWithRules(data, req.steps, get(adjustMode))
-                            data.temperature = req.temp
-                            data.primer = req.primer
-                            models.appendMelodiesToModel(req.model.name, [data])
-                        } else {
-                            queue.push(req)
-                        }
-                    } else {
-                        models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false)])
-                    }
-                });
             }
-            
+
         }
     })
 }

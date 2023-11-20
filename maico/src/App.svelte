@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import * as mu from "./util/modelutil.js";
   import * as glutil from "./util/glyphutil.js";
@@ -60,7 +60,7 @@
     samplingstatus,
     expfilter,
     strangers,
-    adjustMode
+    adjustMode,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -86,7 +86,7 @@
   import FlowerGlyphModel from "./visualization/Glyphs/FlowerGlyphModel.svelte";
   import PianorollFilter from "./visualization/Filter/PianorollFilter.svelte";
   import PianoKeyFilter from "./visualization/Filter/PianoKeyFilter.svelte";
-    import { onMount } from "svelte";
+  import { onMount } from "svelte";
 
   const glyphoptions = [
     { label: "Points", value: 0 },
@@ -168,6 +168,8 @@
 
   let lastid = 0;
 
+  let lengthtemp = 64;
+
   let selectkeyrange = 0;
 
   models.subscribe((value) => {
@@ -207,8 +209,8 @@
       tdfilter.set(!$tdfilter);
     } else if (mode === 3) {
       listenfilter.set($listenfilter === 2 ? -2 : $listenfilter + 2);
-    } else if(mode === 4){
-      expfilter.set(!$expfilter)
+    } else if (mode === 4) {
+      expfilter.set(!$expfilter);
     }
   }
 
@@ -217,9 +219,9 @@
    *
    */
 
-  onMount(()=>{
-    mu.addModel()
-  })
+  onMount(() => {
+    mu.addModel();
+  });
 </script>
 
 <main>
@@ -236,7 +238,7 @@
         <h1>Import/Export</h1>
       </div>
       {#if dataset}
-      Status: {$samplingstatus}
+        Status: {$samplingstatus}
         <h5>Import Midi as Primer</h5>
         <input
           type="file"
@@ -282,35 +284,48 @@
         <div class="filter">
           <input
             type="range"
-            bind:value={$genlength}
+            bind:value={lengthtemp}
             min="16"
             max="128"
             step="1"
+            on:mouseup={(e) => {
+              genlength.set(lengthtemp);
+            }}
           />
           <span>
-            {$genlength} 16th
+            {lengthtemp} 16th
           </span>
         </div>
         <div>
-          <PianorollFilter h={250} w={250} length={$genlength} filtervalues={$filterextents} />
+          <PianorollFilter
+            h={250}
+            w={250}
+            length={$genlength}
+            filtervalues={$filterextents}
+          />
         </div>
         <div>
           <PianoKeyFilter h={250} w={250} />
         </div>
         <div class="label">allow tonality strangers</div>
         <div class="filter">
-          <input type="range" bind:value={$strangers} min="0" max="12" step="1" />
+          <input
+            type="range"
+            bind:value={$strangers}
+            min="0"
+            max="12"
+            step="1"
+          />
           <span>
             {$strangers}
           </span>
         </div>
-        <div><input
-          type="checkbox"
-          bind:checked={$adjustMode}
-        />Allow to oktave and move notes</div>
-        
-        
-        
+        <div>
+          <input type="checkbox" bind:checked={$adjustMode} />Allow to oktave
+          and move notes
+        </div>
+
+        <div>-</div>
         <div class="select">
           <label for="selmidi">Format to export as MIDI</label>
           <Select
@@ -323,7 +338,7 @@
         </div>
         <button
           on:click={() =>
-            flutil.writeToMidi($exportList.map((m) => m.melody), $bpm, exportmode.value)}
+            flutil.writeToMidi($exportList, $bpm, exportmode.value)}
         >
           export to Midi
         </button>
@@ -551,7 +566,7 @@
               values={filtervarint}
             />
           </div>
-          <div class='filterButtons'>
+          <div class="filterButtons">
             <div
               class="option {$seenfilter === 1
                 ? 'selected'

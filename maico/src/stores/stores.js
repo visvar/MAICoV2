@@ -65,12 +65,13 @@ function createExportList() {
         get: (n) => get(n),
         clear: (n) => set([]),
         addMelo: (mel) => update(n => {
-            if (n.findIndex(v => v.id === mel.id) === -1)
+            let p = n.findIndex(v => v.index === mel.index)
+            if (p === -1)
                 n.push(mel)
             return n
         }),
         deleteMelo: (mel) => update(n => {
-            const index = n.findIndex(v => v.id === mel.id)
+            const index = n.findIndex(v => v.index === mel.index)
             const res = n.splice(index, 1)
             return res
         })

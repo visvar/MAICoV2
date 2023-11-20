@@ -11,10 +11,10 @@ import EventEmitter from 'eventemitter3';
 let pbl, t, xe
 
 const testChangeEvent = new EventEmitter();
-function changePlay(newVal){
+function changePlay(newVal) {
   playline = newVal
-  if(newVal)
-  testChangeEvent.emit("play", pbl, t, xe)
+  if (newVal)
+    testChangeEvent.emit("play", pbl, t, xe)
 }
 
 let playline = false
@@ -710,10 +710,10 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
     player1 = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
     player1.callbackObject = {
       run: (note) => {
-        if(!playline)
+        if (!playline)
           changePlay(true)
       },
-      stop: () =>{
+      stop: () => {
         changePlay(false)
       }
     }
@@ -802,9 +802,9 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
 }
 
 testChangeEvent.on("play", (playbackline, time, xend) => {
-  if(playline)
+  if (playline)
     playbackline.transition().duration(time).ease(d3.easeLinear).attr("x1", xend)
-    .attr("x2", xend)
+      .attr("x2", xend)
 })
 
 
@@ -958,7 +958,7 @@ export function computeRhythmicComplexity(countOffBeat, countRhyhtmChange, pause
 
 }
 
-export function passGenerateFilter(data, check, strangers)  {
+export function passGenerateFilter(data, check, strangers) {
   let notes = data.notes
   let checkpassed = true
   let strangernum = 0
@@ -977,9 +977,10 @@ export function passGenerateFilter(data, check, strangers)  {
     notes.forEach(n => {
       if (!filter[n.pitch % 12])
         strangernum++
-        if(strangernum > strangers)
+      if (strangernum > strangers)
         checkpassed = false
     })
+    console.log(data, checkpassed)
     return checkpassed
   } else {
     // maybe make mode that modifies the melody to fit the requirements (maybe after 5th round)
@@ -1007,38 +1008,40 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
       }
     }
   })
-  data.notes = temp
   data.totalQuantizedSteps = steps
-  if(adjustMode){
+  if (adjustMode) {
     let filter = get(filterextents)
     filter.forEach((v, i) => {
-      let is = data.notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i)
+      let is = temp.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i && n.pitch < v[0] && n.pitch > v[1])
       if (is.length > 0) {
         is.forEach((n) => {
-          while(n.pitch < v[0]){
-            n.pitch += 12
+          while (n.pitch < v[0]) {
+            n.pitch = n.pitch + 12
           }
-          while(n.pitch > v[1]){
-            n.pitch -= 12
+          while (n.pitch > v[1]) {
+            n.pitch = n.pitch - 12
           }
-          if(n.pitch < v[0] || n.pitch > v[1]){
-            n.pitch = Math.round((v[1] - v[0])/2)
+          if (n.pitch < v[0] || n.pitch > v[1]) {
+            n.pitch = Math.round((v[1] - v[0]) / 2)
           }
         })
-          
       }
     })
     filter = get(selectedKeys)
     let strangernum = 0
-    data.notes.forEach(n => {
-      if (!filter[n.pitch % 12])
+    temp.forEach(n => {
+      if (!filter[n.pitch % 12]) {
         strangernum++
-        if(strangernum > get(strangers)){
-          while(!filter[n.pitch % 12] || n.pitch === 129){
-            n.pitch += 1
+        if (strangernum > get(strangers)) {
+          while (!filter[n.pitch % 12] || n.pitch === 129) {
+            n.pitch = n.pitch + 1
           }
-        }  
+        }
+      }
     })
+
   }
+  console.log(temp)
+  data.notes = temp
   return data
 }

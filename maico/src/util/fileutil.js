@@ -2,29 +2,37 @@ import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
 
-export function writeToMidi(melodies, bpm, mode) {
-  if (melodies.length === 0)
+export function writeToMidi(melodies1, bpm, mode) {
+  if (melodies1.length === 0)
     return null
   try {
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
     let sec
+    let melodies = melodies1.map((m) => m.melody)
     if (mode === 2) {
       const track = midi.addTrack()
       let lastTiming = 0
       melodies.forEach((mel) => {
-        newSec.notes = mel.notes
-        sec = mm.sequences.unquantizeSequence(newSec, bpm)
-        sec.notes.forEach((note) => {
-          track.addNote({
-            midi: note.pitch,
-            time: note.startTime + lastTiming,
-            duration: note.endTime - note.startTime,
-            velocity: 100,
-          })
+        mel.notes.forEach(n => {
+          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming })
         })
-        lastTiming = mel.totalQuantizedSteps * 60 / 4 * bpm
+        lastTiming += mel.totalQuantizedSteps
       })
+      sec = mm.sequences.unquantizeSequence(newSec, bpm)
+      sec.notes.forEach((note) => {
+        track.addNote({
+          midi: note.pitch,
+          time: note.startTime,
+          duration: note.endTime - note.startTime,
+          velocity: 100,
+        })
+      })
+      const array = midi.toArray()
+      const buffer = array.buffer
+      /* global Blob */
+      const blob = new Blob([buffer], { type: 'audio/mid' })
+      saveAs(blob, 'composedMidi.mid')
     } else if (mode === 1) {
       melodies.forEach((mel) => {
         const track = midi.addTrack()
@@ -39,31 +47,31 @@ export function writeToMidi(melodies, bpm, mode) {
           })
         })
       })
-    } else if (mode === 0) {
-      console.log(melodies)
-      melodies.forEach((mel, i) => {
-        writeMidifile(midi, newSec, mel, sec, bpm)
-      })
-      return null
-    }
-
-    if (mode > 0) {
       const array = midi.toArray()
       const buffer = array.buffer
       /* global Blob */
       const blob = new Blob([buffer], { type: 'audio/mid' })
       saveAs(blob, 'composedMidi.mid')
+    } else if (mode === 0) {
+      melodies.forEach((mel, i) => {
+        writeMidifile(mel, bpm, melodies1[i].index)
+      })
+      return null
     }
   } catch (e) {
     console.log(e)
   }
 }
 
-function writeMidifile(midi, newSec, mel, sec, bpm){
-  return new Promise(()=> {
+function writeMidifile(mel, bpm, i) {
+  return new Promise(() => {
+    const midi = new Midi()
+    let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
+    let sec
     const track = midi.addTrack()
     newSec.notes = mel.notes
     sec = mm.sequences.unquantizeSequence(newSec, bpm)
+    console.log(sec)
     sec.notes.forEach((note) => {
       track.addNote({
         midi: note.pitch,
@@ -73,11 +81,9 @@ function writeMidifile(midi, newSec, mel, sec, bpm){
       })
     })
     const array = midi.toArray()
-    console.log(array)
     const buffer = array.buffer
     /* global Blob */
     const blob = new Blob([buffer], { type: 'audio/mid' })
-    console.log(blob)
     saveAs(blob, 'composedMidi' + i + '.mid')
   })
 }
