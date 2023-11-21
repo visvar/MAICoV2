@@ -12,8 +12,13 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
     "@types/webpack-env": "^1.18.0",
+    "autoprefixer": "^10.4.16",
+    "flowbite": "^2.1.1",
+    "flowbite-svelte": "^0.44.19",
     "gh-pages": "^6.0.0",
+    "postcss": "^8.4.31",
     "svelte": "^4.0.5",
+    "tailwindcss": "^3.3.5",
     "vite": "^4.4.5"
   },
   "dependencies": {
@@ -24,7 +29,6 @@
     "d3-voronoi": "^1.1.4",
     "eventemitter3": "^5.0.1",
     "file-saver": "^2.0.5",
-    "flowbite-svelte": "^0.44.19",
     "mathjs": "^11.11.0",
     "musicvis-lib": "^0.57.1",
     "svelte-canvas": "^0.9.3",

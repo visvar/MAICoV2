@@ -67,7 +67,6 @@
   import { genlength, iter } from "./stores/devStores.js";
 
   import { Progressbar } from "flowbite-svelte";
-  import { ProgressBar } from "@skeletonlabs/skeleton";
 
   import Scatterplot from "./visualization/Scatterplot.svelte";
   import PianoRollofSelection from "./visualization/PianoRollofSelection.svelte";
@@ -91,6 +90,7 @@
   import PianorollFilter from "./visualization/Filter/PianorollFilter.svelte";
   import PianoKeyFilter from "./visualization/Filter/PianoKeyFilter.svelte";
   import { onMount } from "svelte";
+  import { sineOut } from "svelte/easing";
 
   const glyphoptions = [
     { label: "Points", value: 0 },
@@ -239,24 +239,23 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div on:click={() => (dataset = !dataset)}>
-        <h1>Import/Export</h1>
+        <h1 class="mb-4 text-3xl font-bold">Import/Export</h1>
       </div>
       {#if dataset}
-        Generating Melodies
         <div class="my-4">
           <Progressbar
             animate
             tweenDuration={500}
             progress={$progress}
+            easing={sineOut}
             size="h-4"
             color="blue"
-            class="my-4"
             labelInside
           />
         </div>
-        <ProgressBar value={$progress} max={100} />
-        <h5>Import Midi as Primer</h5>
+        <h5 class="mb-4 text-l font-bold">Import Midi as Primer</h5>
         <input
+          class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
           type="file"
           accept=".mid"
           on:change={(e) => (lastid = flutil.importMidi(e, primerList, lastid))}
@@ -337,8 +336,11 @@
           </span>
         </div>
         <div>
-          <input type="checkbox" bind:checked={$adjustMode} />Allow to oktave
-          and move notes
+          <input
+            type="checkbox"
+            bind:checked={$adjustMode}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          /> Allow to oktave and move notes
         </div>
 
         <div>-</div>
@@ -358,7 +360,7 @@
         >
           export to Midi
         </button>
-        <h5>Dataset</h5>
+        <h5 class="mb-4 text-l font-bold">Dataset</h5>
         <button
           on:click={() => document.querySelector("#datasetFiles").click()}
         >
@@ -383,7 +385,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (clustering = !clustering)}>
-        <h1>Clustering</h1>
+        <h1 class="mb-4 text-3xl font-bold">Clustering</h1>
       </div>
       {#if clustering}
         <button on:click={() => brushClusterSwitch.switch()}>
@@ -393,7 +395,11 @@
           rep mce: {!$repSwitch}
         </button>
         <label>
-          <input type="checkbox" bind:checked={$glyphinclude} />
+          <input
+            type="checkbox"
+            bind:checked={$glyphinclude}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
           show representative and point glyphs at same time
         </label>
         <div class="filters">
@@ -428,7 +434,7 @@
     <div class="select">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (visualization = !visualization)}>
-        <h1>Visualization</h1>
+        <h1 class="mb-4 text-3xl font-bold">Visualization</h1>
       </div>
       {#if visualization}
         <label for="selectvorcolor">point color</label>
@@ -458,7 +464,11 @@
 
         {#if $currentcolor === 2 || $vorcolorselect.value === 2}
           <label>
-            <input type="checkbox" bind:checked={$modeactive} />
+            <input
+              type="checkbox"
+              bind:checked={$modeactive}
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
             Donut: Major=full, Minor=half
           </label>
         {/if}
@@ -547,11 +557,19 @@
         </div>
 
         <label>
-          <input type="checkbox" bind:checked={$lensmode} />
+          <input
+            type="checkbox"
+            bind:checked={$lensmode}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
           Lens mode
         </label>
         <label>
-          <input type="checkbox" bind:checked={$seenratemode} />
+          <input
+            type="checkbox"
+            bind:checked={$seenratemode}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
           Seen/Rate
         </label>
       {/if}
@@ -560,7 +578,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (filter = !filter)}>
-        <h1>Filter</h1>
+        <h1 class="mb-4 text-3xl font-bold">Filter</h1>
       </div>
       {#if filter}
         <div class="filtercontainer">
@@ -629,7 +647,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (calculation = !calculation)}>
-        <h1>Features & Metrics</h1>
+        <h1 class="mb-4 text-3xl font-bold">Features & Metrics</h1>
       </div>
       {#if calculation}
         Similarity
@@ -659,7 +677,7 @@
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div on:click={() => (layout = !layout)}>
-      <h1>Layout & Axes</h1>
+      <h1 class="mb-4 text-3xl font-bold">Layout & Axes</h1>
     </div>
     {#if layout}
       <div>
@@ -705,6 +723,7 @@
                 axisselect.updateAxis(axisoptions[0], 2);
               }
             }}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
           use metric-based layout
         </label>
@@ -729,7 +748,7 @@
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (modeldesc = !modeldesc)}>
-        <h1>Model Description</h1>
+        <h1 class="mb-4 text-3xl font-bold">Model Description</h1>
       </div>
       {#if modeldesc}
         <div class="select">
@@ -871,6 +890,7 @@
                           somethingChanged.set(false);
                         }
                       }}
+                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
                     <!--//track changes so if everything is back do not calc-->
                   {/if}

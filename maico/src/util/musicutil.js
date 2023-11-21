@@ -1000,37 +1000,50 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
   let strangernum = 0
   data.notes.forEach(n => {
     if (n.quantizedStartStep < steps) {
-      let pitch = n.pitch
-      let startstep = n.quantizedStartStep
-      let endstep = n.quantizedEndStep < steps ? steps : n.quantizedEndStep
+      let pitch = parseInt(n.pitch)
+      let startstep = parseInt(n.quantizedStartStep)
+      let endstep = parseInt(n.quantizedEndStep) > steps ? steps : parseInt(n.quantizedEndStep)
       if (adjustMode) {
         let filter = get(filterextents)
-        let change = false
-        let minvalue = 1000
-        for (let i = startstep; startstep < endstep; i++) {
-          if (pitch < filter[i][0] && pitch > filter[i][1]) {
-            change = true
-            if (minvalue > i)
-              minvalue = i
+        let changemin = false
+        let changemax = false
+        let minvalue = undefined
+        let maxvalue = undefined
+        for (let i = startstep; i < endstep; i++) {
+          if (filter[i] !== undefined) {
+            if (minvalue === undefined || minvalue > filter[i][0])
+              minvalue = filter[i][0]
+            if (minvalue === undefined || maxvalue > filter[i][1])
+              maxvalue = filter[i][1]
+
+            if (pitch < filter[i][0]) {
+              changemin = true
+            } if (pitch > filter[i][1]) {
+              changemax = true
+            }
           }
         }
-        if (change) {
-          while (pitch < filter[minvalue][0]) {
+        if (changemin) {
+          while (pitch < minvalue) {
             pitch = pitch + 12
           }
-          while (pitch > filter[minvalue][1]) {
+        }
+        if (changemax) {
+          while (pitch > maxvalue) {
             pitch = pitch - 12
           }
-          if (pitch < filter[minvalue][0] || pitch > filter[minvalue][1]) {
-            pitch = Math.round((filter[minvalue][1] - filter[minvalue][0]) / 2)
-          }
         }
-        let kfilter = get(filterkey)
-        if (!kfilter[pitch % 12]) {
-          strangernum++
-          if (strangernum > get(strangers)) {
-            while (!filter[n.pitch % 12] || n.pitch === 129) {
-              n.pitch = n.pitch + 1
+        if (minvalue !== undefined && maxvalue !== undefined && (pitch < minvalue || pitch > maxvalue)) {
+          pitch = Math.round(minvalue + ((maxvalue - minvalue) / 2))
+        }
+        let kfilter = get(selectedKeys)
+        if (kfilter.filter(n => n).length !== 0) {
+          if (!kfilter[pitch % 12]) {
+            strangernum++
+            if (strangernum > get(strangers)) {
+              while (!kfilter[pitch % 12]) {
+                pitch = pitch + 1
+              }
             }
           }
         }

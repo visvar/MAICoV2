@@ -154,7 +154,7 @@ export async function requestModels(allprimer) {
                                         data.primer = primer
                                         dataArray.push(data)
                                         count++
-                                        console.log(count)
+
                                         progress.set(100 * (count / total))
                                         if (i == numOut - 1 && index === allprimer.length - 1) {
                                             console.log(model.name + ' finished')
@@ -202,7 +202,7 @@ export async function requestModels(allprimer) {
                                         data.primer = primer
                                         dataArray.push(data)
                                         count++
-                                        console.log(count)
+
                                         progress.set(100 * (count / total))
                                         if (i == numOut - 1 && index === allprimer.length - 1) {
                                             console.log(model.name + ' finished')
@@ -279,7 +279,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                         data.temperature = req.temp
                                         data.primer = req.primer
                                         count++
-                                        console.log(count)
+
                                         progress.set(100 * (count / total))
                                         models.appendMelodiesToModel(req.model.name, [data])
                                     } else {
@@ -314,7 +314,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                     data.temperature = req.temp
                                     data.primer = req.primer
                                     count++
-                                    console.log(count)
+
                                     progress.set(100 * (count / total))
                                     models.appendMelodiesToModel(req.model.name, [data])
                                 } else {
@@ -356,7 +356,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                         data.temperature = req.temp
                                         data.primer = req.primer
                                         count++
-                                        console.log(count)
+
                                         progress.set(100 * (count / total))
                                         models.appendMelodiesToModel(req.model.name, [data])
                                     } else {
@@ -390,7 +390,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                     data.temperature = req.temp
                                     data.primer = req.primer
                                     count++
-                                    console.log(count)
+
                                     progress.set(100 * (count / total))
                                     models.appendMelodiesToModel(req.model.name, [data])
                                 } else {

@@ -53,7 +53,7 @@
     function init() {
         // create the main SVG element
         svg = d3.select("#svgFilter").style("fill", "grey");
-        for (let i = 0; i < length; i++) {
+        for (let i = 0; i <= length; i++) {
             filtertemp[i] = [extent[0], extent[1]];
         }
         for (let i = 0; i < filtervalues.length; i++) {
@@ -145,7 +145,7 @@
                 filtg
                     .append("circle")
                     .attr("id", "upper" + i)
-                    .attr("cx", x(i) + notewidth / 2)
+                    .attr("cx", x(i))
                     .attr("cy", y(filtertemp[i][1]))
                     .attr("r", Math.max(1, notewidth / 3))
                     .attr("fill", "red")
@@ -154,7 +154,7 @@
                 filtg
                     .append("circle")
                     .attr("id", "lower" + i)
-                    .attr("cx", x(i) + notewidth / 2)
+                    .attr("cx", x(i))
                     .attr("cy", y(filtertemp[i][0]))
                     .attr("r", Math.max(1, notewidth / 3))
                     .attr("fill", "blue")
@@ -171,7 +171,7 @@
     function svgdrag(d, i, svg) {
         drawupper = d.sourceEvent.altKey ? false : true;
         let val = [
-            Math.round(x.invert(d.sourceEvent.offsetX - notewidth / 2)), //+ notewidth / 2,
+            Math.round(x.invert(d.sourceEvent.offsetX)), //+ notewidth / 2,
             Math.max(
                 extent[0],
                 Math.min(extent[1], Math.round(y.invert(d.sourceEvent.offsetY)))
