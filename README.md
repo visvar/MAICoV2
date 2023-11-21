@@ -13,6 +13,8 @@ Normal Browser window should work as well, as long as it keeps the size mentione
 3. Use the two filters to guide the generation: 
    - First draw the range of pitches allowed per step. Left click on mouse and drag to control top line, hold alt to draw the bottom line.
    - Click on the keys to allow or forbid them. Blue color indicates allowance.
+   - allow tonality strangers, the number of keys that are not allowed but can still appear.
+   - allow for music adjustments with rules, melodies that do not fit into the filters are adjusted by moving pitches in octaves or single steps to fit.
 4. Select the length of the generated sample (default 4 bars = 64 steps) and the number of iterations. Each iteration generates 15 Melodies with different Temperature values (AI Parameter) between 0.2 and 1.6 incrementing by 0.1.
 5. Click "Import Models" to initialize all models. These are then shown in "Model Description" at the bottom
 6. Click "Generate from Models" and wait for the generated melodies (currently an internet connection is needed)
