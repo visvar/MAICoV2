@@ -16,8 +16,9 @@ Normal Browser window should work as well, as long as it keeps the size mentione
    - allow tonality strangers, the number of keys that are not allowed but can still appear.
    - allow for music adjustments with rules, melodies that do not fit into the filters are adjusted by moving pitches in octaves or single steps to fit.
 4. Select the length of the generated sample (default 4 bars = 64 steps) and the number of iterations. Each iteration generates 15 Melodies with different Temperature values (AI Parameter) between 0.2 and 1.6 incrementing by 0.1.
-5. Click "Import Models" to initialize all models. These are then shown in "Model Description" at the bottom
-6. Click "Generate from Models" and wait for the generated melodies (currently an internet connection is needed)
+5. MusicVAE models have a similarity parameter which is used during generation and should influence how close the melodies are compared to the primer. You can choose a value between 0.7 and 1 which is used for every melody.
+6. Click "Import Models" to initialize all models. These are then shown in "Model Description" at the bottom
+7. Click "Generate from Models" and wait for the generated melodies (currently an internet connection is needed)
 
 The Map in the middle of the screen shows all samples. The Primer is a black dot with black/grey background.
 
