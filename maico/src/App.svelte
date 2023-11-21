@@ -67,6 +67,7 @@
   import { genlength, iter } from "./stores/devStores.js";
 
   import { Progressbar } from "flowbite-svelte";
+  import { ProgressBar } from "@skeletonlabs/skeleton";
 
   import Scatterplot from "./visualization/Scatterplot.svelte";
   import PianoRollofSelection from "./visualization/PianoRollofSelection.svelte";
@@ -241,8 +242,19 @@
         <h1>Import/Export</h1>
       </div>
       {#if dataset}
-        Status: {$samplingstatus}
-        <Progressbar progress={$progress} labelInside color="blue" />
+        Generating Melodies
+        <div class="my-4">
+          <Progressbar
+            animate
+            tweenDuration={500}
+            progress={$progress}
+            size="h-4"
+            color="blue"
+            class="my-4"
+            labelInside
+          />
+        </div>
+        <ProgressBar value={$progress} max={100} />
         <h5>Import Midi as Primer</h5>
         <input
           type="file"

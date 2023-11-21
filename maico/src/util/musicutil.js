@@ -980,7 +980,6 @@ export function passGenerateFilter(data, check, strangers) {
       if (strangernum > strangers)
         checkpassed = false
     })
-    console.log(data, checkpassed)
     return checkpassed
   } else {
     // maybe make mode that modifies the melody to fit the requirements (maybe after 5th round)

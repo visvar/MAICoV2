@@ -61,7 +61,6 @@ export async function uploadDatasetFile(event) {
 }
 
 export async function requestModels(allprimer) {
-    samplingstatus.set('waiting for models')
     progress.set(0)
     if (allprimer?.length <= 0)
         return null
@@ -126,7 +125,6 @@ export async function requestModels(allprimer) {
             } else if (model.js && model.name !== 'improv_rnn' && model.type === 'music_rnn') {
                 let dataArray = []
                 allprimer.forEach(async (primer, index) => {
-                    samplingstatus.set('started generating primer: ' + index)
                     const request = mm.sequences.createQuantizedNoteSequence()
                     request.tempos[0].qpm = 120
                     request.notes = primer.notes
@@ -180,7 +178,6 @@ export async function requestModels(allprimer) {
             } else if (model.js && model.type === 'music_vae') {
                 let dataArray = []
                 allprimer.forEach(async (primer, index) => {
-                    samplingstatus.set('started generating')
                     const request = mm.sequences.createQuantizedNoteSequence()
                     request.tempos[0].qpm = 120
                     request.notes = primer.notes
@@ -239,18 +236,18 @@ export async function requestModels(allprimer) {
 let threshhold = 0.05
 
 function afterRequest(total, queue, modell, rnnSteps, count) {
-    samplingstatus.set('sampling ended with ' + (100 * (queue.length / total)).toFixed(1) + "% missing")
+
     console.log('afterRequest', total, queue)
     if (queue.length > total * threshhold) {
         requestModelagain(queue, total, total * threshhold, 1, rnnSteps, count)
     } else {
         progress.set(100)
+
     }
 }
 
 
 export async function requestModelagain(q, total, percent, round, rnnSteps, count) {
-    samplingstatus.set('resampling round ' + round + '; missed: ' + (100 * (q.length / total)).toFixed(1) + "%")
     console.log("generate again round: " + round + " of 5")
     console.log("queuelength: " + q.length + ' of ' + total)
     console.log("last reach: " + 100 * (total - q.length) / total + "%")
@@ -260,6 +257,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
     console.log(t)
     let music_vae = undefined
     let musicRnn = undefined
+    let counter = 0
     t.forEach(async (req, index) => {
         if (req.type === "music_rnn") {
 
@@ -272,6 +270,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                         .then((data) => {
                             data = data.toJSON()
                             if (round < 5) {
+                                counter++
                                 if (data?.notes === undefined) {
                                     queue.push(req)
                                 } else {
@@ -286,13 +285,12 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                     } else {
                                         queue.push(req)
                                     }
-                                } if (index === t.length - 1) {
+                                } if (counter === t.length - 1) {
                                     if (queue.length > percent) {
                                         requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                     } else {
                                         progress.set(100)
-                                        samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
-                                        console.log("regenerate finished after " + round + " rounds", queue)
+                                        console.log("regenerate finished after " + round + " rounds", queue, get(progress))
                                     }
                                 }
                             } else {
@@ -307,6 +305,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                     .then((data) => {
                         data = data.toJSON()
                         if (round < 5) {
+                            counter++
                             if (data?.notes === undefined) {
                                 queue.push(req)
                             } else {
@@ -322,12 +321,11 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                     queue.push(req)
                                 }
                             }
-                            if (index === t.length - 1) {
+                            if (counter === t.length - 1) {
                                 if (queue.length > percent) {
                                     requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                 } else {
                                     progress.set(100)
-                                    samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                     console.log("regenerate finished after " + round + " rounds", queue)
                                 }
                             }
@@ -349,6 +347,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                         .then((d) => d[0]) // we only create one so if multiple this is not a step
                         .then((data) => {
                             if (round < 5) {
+                                counter++
                                 if (data?.notes === undefined) {
                                     queue.push(req)
                                 } else {
@@ -363,12 +362,11 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                     } else {
                                         queue.push(req)
                                     }
-                                } if (index === t.length - 1) {
+                                } if (counter === t.length - 1) {
                                     if (queue.length > percent) {
                                         requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                     } else {
                                         progress.set(100)
-                                        samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                         console.log("regenerate finished after " + round + " rounds", queue)
                                     }
                                 }
@@ -383,6 +381,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                     .then((d) => d[0]) // we only create one so if multiple this is not a step
                     .then((data) => {
                         if (round < 5) {
+                            counter++
                             if (data?.notes === undefined) {
                                 queue.push(req)
                             } else {
@@ -398,12 +397,11 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                     queue.push(req)
                                 }
                             }
-                            if (index === t.length - 1) {
+                            if (counter === t.length - 1) {
                                 if (queue.length > percent) {
                                     requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
                                 } else {
                                     progress.set(100)
-                                    samplingstatus.set('resampling finished, round ' + round + '; missed: ' + (100 * (queue.length / total)).toFixed(1) + "%")
                                     console.log("regenerate finished after " + round + " rounds", queue)
                                 }
                             }
