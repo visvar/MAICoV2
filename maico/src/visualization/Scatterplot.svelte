@@ -246,58 +246,59 @@
       let varInt = undefined;
 
       flatten.forEach((melo, index) => {
-        if(index < mdspoints.length){
-        if (index >= $primerList.length) {
-          const sim = muutil.ourDistanceFunction(
-            melo[0],
-            melo[0].primer,
-            1,
-            0.5
-          );
-          varInt = muutil.calcVariance(melo[0].notes);
+        if (index < mdspoints.length) {
+          if (index >= $primerList.length) {
+            const sim = muutil.ourDistanceFunction(
+              melo[0],
+              melo[0].primer,
+              1,
+              0.5
+            );
+            varInt = muutil.calcVariance(melo[0].notes);
 
-          const chromadata = glutil.calcDataPie(melo[0]);
+            const chromadata = glutil.calcDataPie(melo[0]);
 
-          const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
-          // let countSyncope = muutil.computeSyncope(melo[0]);
-          const countOffBeat = muutil.computeOffBeat(melo[0]);
-          const pauses = muutil.computePauses(melo[0]);
-          information = {
-            isPrimer: false,
-            melody: melo[0],
-            temperature: melo[1].temperature,
-            primerindex:
-              melo[0]?.primer?.id !== undefined ? melo[0]?.primer?.id : 0,
-            model: melo[1].model,
-            index: index,
-            // DR, Temperature, SimilarityPrimer, VarianceIntervals, NumberOfNotes
-            visdata: [
-              [
-                mdspoints[index][0],
-                mdsgpoints[index][0],
-                umappoints[index][0],
-                umapgpoints[index][0],
-                melo[1].temperature,
-                1 - sim,
-                varInt,
-                melo[0].notes.length,
+            const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
+            // let countSyncope = muutil.computeSyncope(melo[0]);
+            const countOffBeat = muutil.computeOffBeat(melo[0]);
+            const pauses = muutil.computePauses(melo[0]);
+            information = {
+              isPrimer: false,
+              melody: melo[0],
+              temperature: melo[1].temperature,
+              mvaesim: melo[0].mvaesim,
+              primerindex:
+                melo[0]?.primer?.id !== undefined ? melo[0]?.primer?.id : 0,
+              model: melo[1].model,
+              index: index,
+              // DR, Temperature, SimilarityPrimer, VarianceIntervals, NumberOfNotes
+              visdata: [
+                [
+                  mdspoints[index][0],
+                  mdsgpoints[index][0],
+                  umappoints[index][0],
+                  umapgpoints[index][0],
+                  melo[1].temperature,
+                  1 - sim,
+                  varInt,
+                  melo[0].notes.length,
+                ],
+                [
+                  mdspoints[index][1],
+                  mdsgpoints[index][1],
+                  umappoints[index][1],
+                  umapgpoints[index][1],
+                  melo[1].temperature,
+                  1 - sim,
+                  varInt,
+                  melo[0].notes.length,
+                ],
               ],
-              [
-                mdspoints[index][1],
-                mdsgpoints[index][1],
-                umappoints[index][1],
-                umapgpoints[index][1],
-                melo[1].temperature,
-                1 - sim,
-                varInt,
-                melo[0].notes.length,
-              ],
-            ],
-            starglyph: {
-              data: glutil.calcPolygonStar(melo[0], maxvalues, 0),
-              maxvalues: maxvalues,
-            },
-            /*
+              starglyph: {
+                data: glutil.calcPolygonStar(melo[0], maxvalues, 0),
+                maxvalues: maxvalues,
+              },
+              /*
             emotionfeatures: {
               isDur: emotionfeatures[index][0],
               isMoll: emotionfeatures[index][1],
@@ -312,102 +313,103 @@
               decMelody: emotionfeatures[index][10],
             },
             */
-            chromapie: { data: glutil.calcDataPie(melo[0]), major: true },
-            pianoroll: { data: glutil.calcMinMaxForRoll(melo[0]) },
-            histInterval: {
-              data: histdata[index],
-              max: glutil.getMaxOcc(histdata),
-            },
-            rhythm: {
-              rhythmDistribution: muutil.computeRhythmDistribution(melo[0]),
-              rhythmChanges: countRhyhtmChange,
-              // syncopeCount: countSyncope,
-              offBeatCount: countOffBeat,
-              pauses: pauses,
-              complexity: muutil.computeRhythmicComplexity(
-                countOffBeat,
-                countRhyhtmChange,
-                pauses,
-                melo[0]
-              ),
-              percentagePause: muutil.percentagePauses(melo[0]),
-              beatComplexity: muutil.computeBeatComplexity(melo[0]),
-            },
-            starglyphRhythm: {
-              data: glutil.calcPolygonStar(
-                [
-                  melo[0],
+              chromapie: { data: glutil.calcDataPie(melo[0]), major: true },
+              pianoroll: { data: glutil.calcMinMaxForRoll(melo[0]) },
+              histInterval: {
+                data: histdata[index],
+                max: glutil.getMaxOcc(histdata),
+              },
+              rhythm: {
+                rhythmDistribution: muutil.computeRhythmDistribution(melo[0]),
+                rhythmChanges: countRhyhtmChange,
+                // syncopeCount: countSyncope,
+                offBeatCount: countOffBeat,
+                pauses: pauses,
+                complexity: muutil.computeRhythmicComplexity(
                   countOffBeat,
-                  muutil.percentagePauses(melo[0]),
                   countRhyhtmChange,
+                  pauses,
+                  melo[0]
+                ),
+                percentagePause: muutil.percentagePauses(melo[0]),
+                beatComplexity: muutil.computeBeatComplexity(melo[0]),
+              },
+              starglyphRhythm: {
+                data: glutil.calcPolygonStar(
+                  [
+                    melo[0],
+                    countOffBeat,
+                    muutil.percentagePauses(melo[0]),
+                    countRhyhtmChange,
+                  ],
+                  maxRhythmValues,
+                  1
+                ),
+                maxvalues: maxRhythmValues,
+              },
+              additional: {
+                pace: muutil.calcPaceMelody(melo[0]),
+                isPolyphonic: muutil.isPolyphonic(melo[0]),
+                percentagePause: muutil.percentagePauses(melo[0]),
+                similarityprimer: 1 - sim,
+              },
+              userspecific: {
+                seen: 0,
+                rate: 0,
+                export: false,
+              },
+            };
+            let temppoints = [
+              information.visdata[0],
+              information.visdata[1],
+              information,
+            ];
+
+            pointarray.push(temppoints);
+          } else {
+            varInt = muutil.calcVariance(melo[0].notes);
+
+            const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
+            // let countSyncope = muutil.computeSyncope(melo[0]);
+            const countOffBeat = muutil.computeOffBeat(melo[0]);
+            const pauses = muutil.computePauses(melo[0]);
+
+            information = {
+              isPrimer: true,
+              melody: melo[0],
+              temperature: undefined,
+              mvaesim: undefined,
+              primerindex: undefined,
+              model: { name: "primer" },
+              index: index,
+              // DR, Temperature, SimilarityPrimer, VarianceIntervals, NumberOfNotes
+              visdata: [
+                [
+                  mdspoints[index][0],
+                  mdsgpoints[index][0],
+                  umappoints[index][0],
+                  umapgpoints[index][0],
+                  0,
+                  1,
+                  varInt,
+                  melo[0].notes.length,
                 ],
-                maxRhythmValues,
-                1
-              ),
-              maxvalues: maxRhythmValues,
-            },
-            additional: {
-              pace: muutil.calcPaceMelody(melo[0]),
-              isPolyphonic: muutil.isPolyphonic(melo[0]),
-              percentagePause: muutil.percentagePauses(melo[0]),
-              similarityprimer: 1 - sim,
-            },
-            userspecific: {
-              seen: 0,
-              rate: 0,
-              export: false,
-            },
-          };
-          let temppoints = [
-            information.visdata[0],
-            information.visdata[1],
-            information,
-          ];
-
-          pointarray.push(temppoints);
-        } else {
-          varInt = muutil.calcVariance(melo[0].notes);
-
-          const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
-          // let countSyncope = muutil.computeSyncope(melo[0]);
-          const countOffBeat = muutil.computeOffBeat(melo[0]);
-          const pauses = muutil.computePauses(melo[0]);
-
-          information = {
-            isPrimer: true,
-            melody: melo[0],
-            temperature: undefined,
-            primerindex: undefined,
-            model: { name: "primer" },
-            index: index,
-            // DR, Temperature, SimilarityPrimer, VarianceIntervals, NumberOfNotes
-            visdata: [
-              [
-                mdspoints[index][0],
-                mdsgpoints[index][0],
-                umappoints[index][0],
-                umapgpoints[index][0],
-                0,
-                1,
-                varInt,
-                melo[0].notes.length,
+                [
+                  mdspoints[index][1],
+                  mdsgpoints[index][1],
+                  umappoints[index][1],
+                  umapgpoints[index][1],
+                  0,
+                  1,
+                  varInt,
+                  melo[0].notes.length,
+                ],
               ],
-              [
-                mdspoints[index][1],
-                mdsgpoints[index][1],
-                umappoints[index][1],
-                umapgpoints[index][1],
-                0,
-                1,
-                varInt,
-                melo[0].notes.length,
-              ],
-            ],
-            starglyph: {
-              data: glutil.calcPolygonStar(melo[0], maxvalues, 0),
-              maxvalues: maxvalues,
-            },
-            /*
+              starglyph: {
+                data: glutil.calcPolygonStar(melo[0], maxvalues, 0),
+                maxvalues: maxvalues,
+              },
+              /*
             emotionfeatures: {
               isDur: emotionfeatures[index][0],
               isMoll: emotionfeatures[index][1],
@@ -421,62 +423,62 @@
               incMelody: emotionfeatures[index][9],
               decMelody: emotionfeatures[index][10],
             },*/
-            chromapie: { data: glutil.calcDataPie(melo[0]), major: true },
-            pianoroll: { data: glutil.calcMinMaxForRoll(melo[0]) },
-            histInterval: {
-              data: histdata[index],
-              max: glutil.getMaxOcc(histdata),
-            },
-            rhythm: {
-              rhythmDistribution: muutil.computeRhythmDistribution(melo[0]),
-              rhythmChanges: countRhyhtmChange,
-              // syncopeCount: countSyncope,
-              offBeatCount: countOffBeat,
-              pauses: pauses,
-              complexity: muutil.computeRhythmicComplexity(
-                countOffBeat,
-                countRhyhtmChange,
-                pauses,
-                melo[0]
-              ),
-              percentagePause: muutil.percentagePauses(melo[0]),
-              beatComplexity: muutil.computeBeatComplexity(melo[0]),
-            },
-            starglyphRhythm: {
-              data: glutil.calcPolygonStar(
-                [
-                  melo[0],
+              chromapie: { data: glutil.calcDataPie(melo[0]), major: true },
+              pianoroll: { data: glutil.calcMinMaxForRoll(melo[0]) },
+              histInterval: {
+                data: histdata[index],
+                max: glutil.getMaxOcc(histdata),
+              },
+              rhythm: {
+                rhythmDistribution: muutil.computeRhythmDistribution(melo[0]),
+                rhythmChanges: countRhyhtmChange,
+                // syncopeCount: countSyncope,
+                offBeatCount: countOffBeat,
+                pauses: pauses,
+                complexity: muutil.computeRhythmicComplexity(
                   countOffBeat,
-                  muutil.percentagePauses(melo[0]),
                   countRhyhtmChange,
-                ],
-                maxRhythmValues,
-                1
-              ),
-              maxvalues: maxRhythmValues,
-            },
-            additional: {
-              pace: muutil.calcPaceMelody(melo[0]),
-              isPolyphonic: muutil.isPolyphonic(melo[0]),
-              percentagePause: muutil.percentagePauses(melo[0]),
-              similarityprimer: 1,
-            },
-            userspecific: {
-              seen: 0,
-              rate: 0,
-              export: false,
-            },
-          };
-          let temppoints = [
-            information.visdata[0],
-            information.visdata[1],
-            information,
-          ];
+                  pauses,
+                  melo[0]
+                ),
+                percentagePause: muutil.percentagePauses(melo[0]),
+                beatComplexity: muutil.computeBeatComplexity(melo[0]),
+              },
+              starglyphRhythm: {
+                data: glutil.calcPolygonStar(
+                  [
+                    melo[0],
+                    countOffBeat,
+                    muutil.percentagePauses(melo[0]),
+                    countRhyhtmChange,
+                  ],
+                  maxRhythmValues,
+                  1
+                ),
+                maxvalues: maxRhythmValues,
+              },
+              additional: {
+                pace: muutil.calcPaceMelody(melo[0]),
+                isPolyphonic: muutil.isPolyphonic(melo[0]),
+                percentagePause: muutil.percentagePauses(melo[0]),
+                similarityprimer: 1,
+              },
+              userspecific: {
+                seen: 0,
+                rate: 0,
+                export: false,
+              },
+            };
+            let temppoints = [
+              information.visdata[0],
+              information.visdata[1],
+              information,
+            ];
 
-          pointarray.push(temppoints);
-        }
-        }else{
-          console.log(index, "failed")
+            pointarray.push(temppoints);
+          }
+        } else {
+          console.log(index, "failed");
         }
 
         // extents of metrics for filter

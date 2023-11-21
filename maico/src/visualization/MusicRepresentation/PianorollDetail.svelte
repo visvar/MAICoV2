@@ -216,7 +216,8 @@
             ? "white"
             : "black"}
     >
-        {melody.model.name.slice(0, 8)}
+        {melody.model.name.slice(0, 8)} <br />
+        {melody.mvaesim !== undefined ? "VaeSim: " + melody.mvaesim : ""}
     </div>
     <div
         class="info"

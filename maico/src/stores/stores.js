@@ -59,6 +59,8 @@ export const bpm = writable(120)
 
 export const progress = writable(0)
 
+export const mvaesim = writable(0.90)
+
 function createExportList() {
     const { subscribe, set, update } = writable([]);
 

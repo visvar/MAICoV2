@@ -1,5 +1,5 @@
 // @ts-ignore
-import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers } from '../stores/stores.js'
+import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim } from '../stores/stores.js'
 import { iter, genlength } from '../stores/devStores.js'
 import { get } from 'svelte/store';
 // @ts-ignore
@@ -72,6 +72,8 @@ export async function requestModels(allprimer) {
         tempArray = tempArray.concat(starting)
     }
     tempArray.sort((a, b) => a - b)
+    let vaesim = get(mvaesim)
+    console.log(vaesim)
     const numOut = tempArray.length
     let total = numOut * get(models).length * allprimer.length
     let count = 0
@@ -142,7 +144,7 @@ export async function requestModels(allprimer) {
                             .then((data) => {
                                 data = data.toJSON()
                                 if (data?.notes === undefined) {
-                                    queue.push({ model: model, type: 'music_rnn', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: chord })
+                                    queue.push({ name: model.name, model: musicRnn, type: 'music_rnn', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: chord, mvaesim: undefined })
                                     if (i == numOut - 1 && index === allprimer.length - 1) {
                                         modelsFinished++
                                         models.addMelodiesToModel(model.name, dataArray)
@@ -152,6 +154,7 @@ export async function requestModels(allprimer) {
                                     if (mu.passGenerateFilter(data, true, get(strangers))) {
                                         data.temperature = tempArray[i]
                                         data.primer = primer
+                                        data.mvaesim = undefined
                                         dataArray.push(data)
                                         count++
 
@@ -162,7 +165,7 @@ export async function requestModels(allprimer) {
                                             models.addMelodiesToModel(model.name, dataArray)
                                         }
                                     } else {
-                                        queue.push({ model: model, type: 'music_rnn', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: chord })
+                                        queue.push({ name: model.name, model: musicRnn, type: 'music_rnn', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: chord, mvaesim: undefined })
                                         if (i == numOut - 1 && index === allprimer.length - 1) {
                                             modelsFinished++
                                             models.addMelodiesToModel(model.name, dataArray)
@@ -186,11 +189,11 @@ export async function requestModels(allprimer) {
                     await music_vae.initialize()
                     for (let i = 0; i < numOut; i++) {
                         // request, numOuts?, similarity, temperature
-                        await music_vae.similar(request, 1, 0.90, tempArray[i])
+                        await music_vae.similar(request, 1, vaesim, tempArray[i])
                             .then((d) => d[0]) // we only create one so if multiple this is not a step
                             .then((data) => {
                                 if (data?.notes === undefined) {
-                                    queue.push({ model: model, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined })
+                                    queue.push({ name: model.name, model: music_vae, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined, mvaesim: vaesim })
                                     if (i == numOut - 1 && index === allprimer.length - 1) {
                                         modelsFinished++
                                         models.addMelodiesToModel(model.name, dataArray)
@@ -200,6 +203,7 @@ export async function requestModels(allprimer) {
                                     if (mu.passGenerateFilter(data, true, get(strangers))) {
                                         data.temperature = tempArray[i]
                                         data.primer = primer
+                                        data.mvaesim = vaesim
                                         dataArray.push(data)
                                         count++
 
@@ -210,7 +214,7 @@ export async function requestModels(allprimer) {
                                             models.addMelodiesToModel(model.name, dataArray)
                                         }
                                     } else {
-                                        queue.push({ model: model, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined })
+                                        queue.push({ name: model.name, model: music_vae, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined, mvaesim: vaesim })
                                         if (i == numOut - 1 && index === allprimer.length - 1) {
                                             modelsFinished++
                                             models.addMelodiesToModel(model.name, dataArray)
@@ -254,164 +258,88 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
     let queue = []
     let t = q.sort((a, b) => a.model.name - b.model.name);
     let url = ""
-    console.log(t)
     let music_vae = undefined
     let musicRnn = undefined
     let counter = 0
     t.forEach(async (req, index) => {
         if (req.type === "music_rnn") {
-
-            if (url !== req.url || musicRnn === undefined) {
-                url = req.url
-                musicRnn = await new mm.MusicRNN(req.url)
-                await musicRnn.initialize().then(() => {
-                    musicRnn
-                        .continueSequence(req.primer, req.steps, req.temp, req.chord)
-                        .then((data) => {
-                            data = data.toJSON()
-                            if (round < 5) {
-                                counter++
-                                if (data?.notes === undefined) {
-                                    queue.push(req)
-                                } else {
-                                    data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
-                                    if (mu.passGenerateFilter(data, true, get(strangers))) {
-                                        data.temperature = req.temp
-                                        data.primer = req.primer
-                                        count++
-
-                                        progress.set(100 * (count / total))
-                                        models.appendMelodiesToModel(req.model.name, [data])
-                                    } else {
-                                        queue.push(req)
-                                    }
-                                } if (counter === t.length - 1) {
-                                    if (queue.length > percent) {
-                                        requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
-                                    } else {
-                                        progress.set(100)
-                                        console.log("regenerate finished after " + round + " rounds", queue, get(progress))
-                                    }
-                                }
-                            } else {
-                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
-                            }
-                        })
-                })
-
-            } else {
-                await musicRnn
-                    .continueSequence(req.primer, req.steps, req.temp, req.chord)
-                    .then((data) => {
-                        data = data.toJSON()
-                        if (round < 5) {
-                            counter++
-                            if (data?.notes === undefined) {
-                                queue.push(req)
-                            } else {
-                                data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
-                                if (mu.passGenerateFilter(data, true, get(strangers))) {
-                                    data.temperature = req.temp
-                                    data.primer = req.primer
-                                    count++
-
-                                    progress.set(100 * (count / total))
-                                    models.appendMelodiesToModel(req.model.name, [data])
-                                } else {
-                                    queue.push(req)
-                                }
-                            }
-                            if (counter === t.length - 1) {
-                                if (queue.length > percent) {
-                                    requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
-                                } else {
-                                    progress.set(100)
-                                    console.log("regenerate finished after " + round + " rounds", queue)
-                                }
-                            }
+            await req.model
+                .continueSequence(req.primer, req.steps, req.temp, req.chord)
+                .then((data) => {
+                    data = data.toJSON()
+                    if (round < 5) {
+                        counter++
+                        if (data?.notes === undefined) {
+                            queue.push(req)
                         } else {
-                            models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
-                        }
-                    })
-            }
+                            data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                            if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                data.mvaesim = undefined
+                                data.temperature = req.temp
+                                data.primer = req.primer
+                                count++
 
+                                progress.set(100 * (count / total))
+                                models.appendMelodiesToModel(req.name, [data])
+                            } else {
+                                queue.push(req)
+                            }
+                        }
+                        if (counter === t.length) {
+                            if (queue.length > percent) {
+                                requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
+                            } else {
+                                progress.set(100)
+                                console.log("regenerate finished after " + round + " rounds", queue)
+                            }
+                        }
+                    } else {
+                        count++
+                        progress.set(100 * (count / total))
+                        models.appendMelodiesToModel(req.name, [mu.passGenerateFilter(data, false, true)])
+                    }
+                })
 
         } else if (req.type === "music_vae") {
-
-            if (url !== req.url || music_vae === undefined) {
-                url = req.url
-                music_vae = await new mm.MusicVAE(req.url);
-                await music_vae.initialize().then(() => {
-                    // request, numOuts?, similarity, temperature
-                    music_vae.similar(req.primer, 1, 0.90, req.temp)
-                        .then((d) => d[0]) // we only create one so if multiple this is not a step
-                        .then((data) => {
-                            if (round < 5) {
-                                counter++
-                                if (data?.notes === undefined) {
-                                    queue.push(req)
-                                } else {
-                                    data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
-                                    if (mu.passGenerateFilter(data, true, get(strangers))) {
-                                        data.temperature = req.temp
-                                        data.primer = req.primer
-                                        count++
-
-                                        progress.set(100 * (count / total))
-                                        models.appendMelodiesToModel(req.model.name, [data])
-                                    } else {
-                                        queue.push(req)
-                                    }
-                                } if (counter === t.length - 1) {
-                                    if (queue.length > percent) {
-                                        requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
-                                    } else {
-                                        progress.set(100)
-                                        console.log("regenerate finished after " + round + " rounds", queue)
-                                    }
-                                }
-                            } else {
-                                models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
-                            }
-                        });
-                })
-            } else {
-                // request, numOuts?, similarity, temperature
-                await music_vae.similar(req.primer, 1, 0.90, req.temp)
-                    .then((d) => d[0]) // we only create one so if multiple this is not a step
-                    .then((data) => {
-                        if (round < 5) {
-                            counter++
-                            if (data?.notes === undefined) {
-                                queue.push(req)
-                            } else {
-                                data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
-                                if (mu.passGenerateFilter(data, true, get(strangers))) {
-                                    data.temperature = req.temp
-                                    data.primer = req.primer
-                                    count++
-
-                                    progress.set(100 * (count / total))
-                                    models.appendMelodiesToModel(req.model.name, [data])
-                                } else {
-                                    queue.push(req)
-                                }
-                            }
-                            if (counter === t.length - 1) {
-                                if (queue.length > percent) {
-                                    requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
-                                } else {
-                                    progress.set(100)
-                                    console.log("regenerate finished after " + round + " rounds", queue)
-                                }
-                            }
+            // request, numOuts?, similarity, temperature
+            await req.model.similar(req.primer, 1, req.mvaesim, req.temp)
+                .then((d) => d[0]) // we only create one so if multiple this is not a step
+                .then((data) => {
+                    if (round < 5) {
+                        counter++
+                        if (data?.notes === undefined) {
+                            queue.push(req)
                         } else {
-                            models.appendMelodiesToModel(req.model.name, [mu.passGenerateFilter(data, false, true)])
+                            data = mu.adaptMelodiesWithRules(data, rnnSteps, get(adjustMode))
+                            if (mu.passGenerateFilter(data, true, get(strangers))) {
+                                data.mvaesim = req.mvaesim
+                                data.temperature = req.temp
+                                data.primer = req.primer
+                                count++
+                                progress.set(100 * (count / total))
+                                models.appendMelodiesToModel(req.name, [data])
+                            } else {
+                                queue.push(req)
+                            }
                         }
-                    });
-            }
+                        if (counter === t.length) {
+                            if (queue.length > percent) {
+                                requestModelagain(queue, total, percent, round + 1, rnnSteps, count)
+                            } else {
+                                progress.set(100)
+                                console.log("regenerate finished after " + round + " rounds", queue)
+                            }
+                        }
+                    } else {
+                        count++
+                        progress.set(100 * (count / total))
+                        models.appendMelodiesToModel(req.name, [mu.passGenerateFilter(data, false, true)])
+                    }
+                });
+
 
         }
+
     })
 }
 

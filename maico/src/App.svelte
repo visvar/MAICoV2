@@ -62,6 +62,7 @@
     strangers,
     adjustMode,
     progress,
+    mvaesim
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -293,6 +294,13 @@
           <input type="range" bind:value={$iter} min="1" max="10" step="1" />
           <span>
             {$iter}
+          </span>
+        </div>
+        <div class="label">mvae Similarity</div>
+        <div class="filter">
+          <input type="range" bind:value={$mvaesim} min="0.7" max="1" step="0.01" />
+          <span>
+            {$mvaesim}
           </span>
         </div>
         <div class="label">melody length</div>
