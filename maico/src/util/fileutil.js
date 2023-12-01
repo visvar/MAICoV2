@@ -32,7 +32,7 @@ export function writeToMidi(melodies1, bpm, mode) {
       const buffer = array.buffer
       /* global Blob */
       const blob = new Blob([buffer], { type: 'audio/mid' })
-      saveAs(blob, 'composedMidi.mid')
+      writeName(blob, melodies[0].primer.name, melodies.length, "variations_sequence")
     } else if (mode === 1) {
       melodies.forEach((mel) => {
         const track = midi.addTrack()
@@ -51,10 +51,10 @@ export function writeToMidi(melodies1, bpm, mode) {
       const buffer = array.buffer
       /* global Blob */
       const blob = new Blob([buffer], { type: 'audio/mid' })
-      saveAs(blob, 'composedMidi.mid')
+      writeName(blob, melodies[0].primer.name, melodies.length, "variations_tracks")
     } else if (mode === 0) {
       melodies.forEach((mel, i) => {
-        writeMidifile(mel, bpm, melodies1[i].index)
+        writeMidifile(mel, bpm, i, mel.primer.name)
       })
       return null
     }
@@ -63,7 +63,12 @@ export function writeToMidi(melodies1, bpm, mode) {
   }
 }
 
-function writeMidifile(mel, bpm, i) {
+function writeName(blob, primerfile, num, zusatz){
+  const d = new Date().toISOString();
+  saveAs(blob, d.substring(2,10)+"_"+primerfile+"_anzahl_"+num+"_"+zusatz+'.mid')
+}
+
+function writeMidifile(mel, bpm, i, primerfile="") {
   return new Promise(() => {
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
@@ -71,7 +76,6 @@ function writeMidifile(mel, bpm, i) {
     const track = midi.addTrack()
     newSec.notes = mel.notes
     sec = mm.sequences.unquantizeSequence(newSec, bpm)
-    console.log(sec)
     sec.notes.forEach((note) => {
       track.addNote({
         midi: note.pitch,
@@ -84,7 +88,8 @@ function writeMidifile(mel, bpm, i) {
     const buffer = array.buffer
     /* global Blob */
     const blob = new Blob([buffer], { type: 'audio/mid' })
-    saveAs(blob, 'composedMidi' + i + '.mid')
+    const d = new Date().toISOString();
+    saveAs(blob, d.substring(2,10)+"_"+primerfile+"_"+i+"_variation.mid")
   })
 }
 
@@ -102,6 +107,7 @@ export function importMidi(event, primerList, lastid) {
       let quan = mm.sequences.quantizeNoteSequence(sequence, 4)
       quan.notes = quan.notes.map(n => { return { pitch: n.pitch, quantizedEndStep: n.quantizedEndStep, quantizedStartStep: n.quantizedStartStep, velocity: n.velocity } })
       quan.id = lastid
+      quan.name = file.name.substring(0, file.name.length-4)
       primerList.addMelo(quan)
     };
 
@@ -109,4 +115,18 @@ export function importMidi(event, primerList, lastid) {
     return lastid + 1
   }
   return lastid
+}
+
+
+export function makeid(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.round(Math.random() * charactersLength));
+    counter += 1;
+  }
+  result += '#' + new Date().toISOString()
+  return result;
 }

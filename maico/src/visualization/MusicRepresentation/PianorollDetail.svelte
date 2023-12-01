@@ -11,6 +11,7 @@
         colors,
         rate,
         exportList,
+        bpm
     } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
@@ -105,7 +106,7 @@
             false,
             playbackline,
             x(shownmelody.totalQuantizedSteps),
-            (shownmelody.totalQuantizedSteps / 4) * 500, // if 120 bpm but we only use that
+            ((60000) / ($bpm * 4)) * (shownmelody.totalQuantizedSteps ), // if 120 bpm but we only use that
             x(0),
             melody
         );

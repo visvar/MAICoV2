@@ -10,6 +10,9 @@
         meloselected,
         brushClusterSwitch,
         selectedClusterData,
+        filterextents,
+        heatmapinfo,
+        progress,
     } from "../stores/stores.js";
     import { get } from "svelte/store";
 
@@ -28,6 +31,7 @@
     import { brush, selection } from "d3";
     import * as d3 from "d3";
     import ColorLegend from "../colorlegends/ColorLegend.svelte";
+    import Pianoheatmap from "./MusicRepresentation/Pianoheatmap.svelte";
 
     const margin = { top: 10, right: 10, bottom: 25, left: 25 };
 
@@ -75,6 +79,9 @@
                     />
                 </div>
             {/each}
+        {/if}
+        {#if $meloselected === null && $heatmapinfo !== null && $filterextents !== null && $progress === 100}
+            <Pianoheatmap w={w} h={h * 0.75} />   
         {/if}
     </div>
 {:else}

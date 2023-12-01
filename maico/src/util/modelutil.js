@@ -9,6 +9,8 @@ import { keysLookup } from '../stores/globalValues.js';
 
 import * as mu from "./musicutil.js"
 
+import { makeid } from './fileutil.js';
+
 export async function addModel(model) {
     try {
         // resolve import meta glob to load files
@@ -52,8 +54,9 @@ export async function uploadDatasetFile(event) {
         reader.readAsText(event.target.files[0], "UTF-8");
         reader.onload = function (evt) {
             const obj = JSON.parse(String(evt.target.result))
-            console.log(obj)
-            models.setAll(obj)
+            console.log(obj.modelList.data, obj.primerList.primer)
+            models.setAll(obj.modelList.data)
+            primerList.set(obj.primerList.primer)
         }
     } catch (e) {
         console.log(e)
@@ -155,6 +158,7 @@ export async function requestModels(allprimer) {
                                         data.temperature = tempArray[i]
                                         data.primer = primer
                                         data.mvaesim = undefined
+                                        data.uniqueID = makeid(8)
                                         dataArray.push(data)
                                         count++
 
@@ -192,6 +196,7 @@ export async function requestModels(allprimer) {
                         await music_vae.similar(request, 1, vaesim, tempArray[i])
                             .then((d) => d[0]) // we only create one so if multiple this is not a step
                             .then((data) => {
+                                data = data.toJSON()
                                 if (data?.notes === undefined) {
                                     queue.push({ name: model.name, model: music_vae, type: 'music_vae', url: checkpointURL, temp: tempArray[i], primer: request, steps: rnnSteps, chord: undefined, mvaesim: vaesim })
                                     if (i == numOut - 1 && index === allprimer.length - 1) {
@@ -204,6 +209,7 @@ export async function requestModels(allprimer) {
                                         data.temperature = tempArray[i]
                                         data.primer = primer
                                         data.mvaesim = vaesim
+                                        data.uniqueID = makeid(8)
                                         dataArray.push(data)
                                         count++
 
@@ -277,6 +283,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                 data.mvaesim = undefined
                                 data.temperature = req.temp
                                 data.primer = req.primer
+                                data.uniqueID = makeid(8)
                                 count++
 
                                 progress.set(100 * (count / total))
@@ -305,6 +312,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
             await req.model.similar(req.primer, 1, req.mvaesim, req.temp)
                 .then((d) => d[0]) // we only create one so if multiple this is not a step
                 .then((data) => {
+                    data = data.toJSON()
                     if (round < 5) {
                         counter++
                         if (data?.notes === undefined) {
@@ -315,6 +323,7 @@ export async function requestModelagain(q, total, percent, round, rnnSteps, coun
                                 data.mvaesim = req.mvaesim
                                 data.temperature = req.temp
                                 data.primer = req.primer
+                                data.uniqueID = makeid(8)
                                 count++
                                 progress.set(100 * (count / total))
                                 models.appendMelodiesToModel(req.name, [data])
@@ -409,12 +418,15 @@ function replace(key, value) {
 
 export function exportModelJson(modelname) {
     const data = modelname !== undefined ? getModel(modelname, models)[0] : get(models)
-    const jsonString = JSON.stringify(data, replace, 2)
-    const blob = new Blob([jsonString], { type: 'application/json' })
+    //const primerString = JSON.stringify(get(primerList), replace, 2)
+    //const jsonString = JSON.stringify(data, replace, 2)
+    const primer = get(primerList)
+    const complete = JSON.stringify({primerList:{primer},modelList:{data}},replace,2)
+    const blob = new Blob([complete], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = modelname || 'dataset' + '.json'
+    link.download = modelname || new Date().toISOString().substring(2,19)+"_dataset" + '.json'
     link.click()
     URL.revokeObjectURL(url)
 }

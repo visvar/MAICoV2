@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey } from '../stores/stores.js'
+import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick } from '../stores/stores.js'
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -707,7 +707,7 @@ import { allPrimer, keysLookup } from '../stores/globalValues.js';
 export function playMelody(e, event, playbackline, xend, time, reset, sample) {
   let player1 = get(player)
   if (player1 === null || player1 === undefined) {
-    player1 = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
+    player1 = new mm.Player(true)//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
     player1.callbackObject = {
       run: (note) => {
         if (!playline)
@@ -717,8 +717,8 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
         changePlay(false)
       }
     }
-    player1.loadAllSamples(1, false).then(() => { console.log('playerLoaded'); player.set(player1) })
-    //player.set(player1)
+    //player1.loadAllSamples(1, false).then(() => { console.log('playerLoaded'); player.set(player1) })
+    player.set(player1)
   } else if (player1.isPlaying()) {
     player1.stop()
     changePlay(false)
@@ -781,14 +781,15 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
   // play melody
   if (player1 !== undefined && player1 !== null) {
     if (notes?.length > 0) {
-      const seq = mm.sequences.createQuantizedNoteSequence(4, get(bpm))
+      const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
       seq.notes = notes
 
       if (playbackline !== undefined)
         playbackline.transition().attr("stroke", "blue")
 
-      player1.loadSamples(seq).then(() => {
-        player1.start(seq, 120).then(() => playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
+      player1.playClick = get(playclick)
+      //player1.loadSamples(seq).then(() => {
+        player1.start(seq, get(bpm)).then(() => playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
           ?.attr("x2", reset))
 
         if (playbackline !== undefined) {
@@ -796,7 +797,7 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
           t = time
           xe = xend
         }
-      })
+      //})
     }
   }
 }

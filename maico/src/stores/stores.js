@@ -4,6 +4,7 @@ import { getSelectedMelodies } from '../util/visutil';
 import { distanceMatrix } from '../util/drutil';
 import { averageOfGlyphs, calcInformation, calcVariancesCluster, getMiddlePosition, calcModelFromCluster } from '../util/glyphutil';
 import { axisoptions, axisoptionsCor, keysLookup } from './globalValues';
+import { writeToMidi } from '../util/fileutil';
 
 let oldAxis = [{ value: 0, label: 'DR' }, { value: 0, label: 'DR' }, false]
 
@@ -57,7 +58,7 @@ export const DRumap = writable({ label: "UMAP", value: true })
 
 export const bpm = writable(120)
 
-export const progress = writable(0)
+export const progress = writable(100)
 
 export const mvaesim = writable(0.90)
 
@@ -82,6 +83,8 @@ function createExportList() {
     };
 }
 
+export const heatmapinfo = writable(null)
+
 export const exportList = createExportList()
 
 function createPrimerList() {
@@ -91,6 +94,7 @@ function createPrimerList() {
         subscribe,
         get: (n) => get(n),
         clear: (n) => set([]),
+        set: (n) => set(n),
         addMelo: (mel) => update(n => {
             n.push(mel)
             return n
@@ -156,7 +160,7 @@ function createAxis() {
     };
 }
 
-export const glyphselect = writable({ value: 0, label: 'Points' })
+export const glyphselect = writable({ label: "Pianoroll", value: 3 })
 
 export const glyphmodelselect = writable({ value: 0, label: 'Correlation' })
 
@@ -164,9 +168,11 @@ export const grid = writable(false)
 
 export const keydetectselect = writable({ value: 0, label: 'Temperley adapted' })
 
-export const glyphsize = writable(0.3)
+export const glyphsize = writable(1.1)
 
 export const repsize = writable(0.3)
+
+export const playclick = writable(false)
 
 export const similarityweight = writable(0.5)
 

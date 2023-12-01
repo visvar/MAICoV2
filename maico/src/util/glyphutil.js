@@ -427,7 +427,7 @@ function objDist(data) {
   return temp
 }
 
-function calcPianoHeatmap(data) {
+export function calcPianoHeatmap(data) {
 
   if (data.length > 0) {
     let pitchext = [128, 0]

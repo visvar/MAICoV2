@@ -62,7 +62,8 @@
     strangers,
     adjustMode,
     progress,
-    mvaesim
+    mvaesim,
+    playclick
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -364,7 +365,7 @@
         </div>
         <button
           on:click={() =>
-            flutil.writeToMidi($exportList, $bpm, exportmode.value)}
+            flutil.writeToMidi($exportList, $bpm, exportmode.value, )}
         >
           export to Midi
         </button>
@@ -680,6 +681,12 @@
             BPM: {$bpm}
           </span>
         </div>
+        <div
+              class="option {$playclick ? 'selected' : ''}"
+              on:click={() => playclick.set(!$playclick)}
+            >
+              Play with click
+            </div>
       {/if}
     </div>
 

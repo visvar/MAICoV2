@@ -29,6 +29,7 @@
     primerkey,
     outercircle,
     primerList,
+    heatmapinfo,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -244,6 +245,8 @@
 
       let information = undefined;
       let varInt = undefined;
+
+      heatmapinfo.set(glutil.calcPianoHeatmap(flatten.filter((v,i) => i >= $primerList.length).map((p) => p[0])))
 
       flatten.forEach((melo, index) => {
         if (index < mdspoints.length) {

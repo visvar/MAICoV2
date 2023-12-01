@@ -159,7 +159,7 @@
                 const defs = svg.append("defs");
                 const filter = defs
                     .append("filter")
-                    .attr("id", "blur")
+                    .attr("id", "filterblur")
                     .append("feGaussianBlur")
                     .attr("stdDeviation", 6);
 
@@ -173,19 +173,19 @@
                 .attr("class", "clip1")
                 .append("path")
                 .attr("d", line(expandedHull.map((v) => [v[0], v[1]])));
-s
 */
+
                 mask.append("path")
                     .attr("d", line(expandedHull.map((v) => [v[0], v[1]])))
                     .attr("fill", "white")
-                    .attr("filter", "url(#blur)");
+                    .attr("filter", "url(#filterblur)");
 
                 vorpol
                     .selectAll("path")
                     .data(polygons)
                     .enter()
                     .append("path")
-                    .attr("class", "blur")
+                    .attr("class", "blurpoly")
                     .attr("id", (d, i) => "poly" + i)
                     .attr("d", (d) => {
                         return d ? "M" + d.join("L") + "Z" : null;
@@ -217,7 +217,7 @@ s
      */
     function newOpacity() {
         vorpol
-            ?.selectAll(".blur")
+            ?.selectAll(".blurpoly")
             .transition()
             .duration(100)
             .attr("opacity", opacity);
