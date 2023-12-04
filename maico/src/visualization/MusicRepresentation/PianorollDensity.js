@@ -2,6 +2,7 @@
 import * as d3 from 'd3'
 import * as muutil from '../../util/musicutil.js'
 import { onMount } from 'svelte';
+import { oktaveLookup } from '../../stores/globalValues.js';
 
 export function PianorollDensity(data, svg, h, w, xDomain, yDomain, maxocc) {
 
@@ -115,7 +116,7 @@ export function PianorollHeatmap(data, svg, h, w, xDomain, yDomain, maxocc) {
                 .style('font', Math.max(Math.min(noteheight, 16), 11) + 'px times')
                 .call(d3.axisLeft(y).ticks((yDomain[1] - yDomain[0])).tickFormat((t) => {
                     if (t % 12 === 0 || t % 12 === 5 || t % 12 === 9) {
-                        return t
+                        return oktaveLookup[t].label
                     }
                 }).tickSize(-x(xDomain[1]) + margin.left))
 
