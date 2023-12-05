@@ -47,6 +47,7 @@
   import * as drutil from "../util/drutil.js";
   import * as glutil from "../util/glyphutil.js";
   import * as visutil from "../util/visutil.js";
+  import { log } from "../util/fileutil.js";
   import * as d3 from "d3";
   import DonutForValue from "./Glyphs/DonutForValue.svelte";
   import ModelPie from "./Glyphs/ModelPie.svelte";
@@ -60,7 +61,10 @@
   const marginaxis = { top: 25, right: 25, bottom: 25, left: 25 };
 
   let currentaxis = [{ value: 0 }, { value: 0 }];
-  axisselect.subscribe((v) => (currentaxis = v));
+  axisselect.subscribe((v) => {
+    log("axis changed: " + v);
+    currentaxis = v;
+  });
 
   let selectedSize = 30;
 
@@ -114,6 +118,9 @@
       pointcolorselect.set({ value: 6, label: "Rate" });
     }
   });
+
+  // if colors etc change log it -> also glyphs;
+  // set selected melodies in function log
 
   /**
    * <DonutForValue

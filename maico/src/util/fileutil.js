@@ -1,6 +1,7 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
+import { actionlog } from '../stores/stores'
 
 export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
@@ -63,12 +64,12 @@ export function writeToMidi(melodies1, bpm, mode) {
   }
 }
 
-function writeName(blob, primerfile, num, zusatz){
+function writeName(blob, primerfile, num, zusatz) {
   const d = new Date().toISOString();
-  saveAs(blob, d.substring(2,10)+"_"+primerfile+"_anzahl_"+num+"_"+zusatz+'.mid')
+  saveAs(blob, d.substring(2, 10) + "_" + primerfile + "_anzahl_" + num + "_" + zusatz + '.mid')
 }
 
-function writeMidifile(mel, bpm, i, primerfile="") {
+function writeMidifile(mel, bpm, i, primerfile = "") {
   return new Promise(() => {
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
@@ -89,7 +90,7 @@ function writeMidifile(mel, bpm, i, primerfile="") {
     /* global Blob */
     const blob = new Blob([buffer], { type: 'audio/mid' })
     const d = new Date().toISOString();
-    saveAs(blob, d.substring(2,10)+"_"+primerfile+"_"+i+"_variation.mid")
+    saveAs(blob, d.substring(2, 10) + "_" + primerfile + "_" + i + "_variation.mid")
   })
 }
 
@@ -107,7 +108,7 @@ export function importMidi(event, primerList, lastid) {
       let quan = mm.sequences.quantizeNoteSequence(sequence, 4)
       quan.notes = quan.notes.map(n => { return { pitch: n.pitch, quantizedEndStep: n.quantizedEndStep, quantizedStartStep: n.quantizedStartStep, velocity: n.velocity } })
       quan.id = lastid
-      quan.name = file.name.substring(0, file.name.length-4)
+      quan.name = file.name.substring(0, file.name.length - 4)
       primerList.addMelo(quan)
     };
 
@@ -129,4 +130,8 @@ export function makeid(length) {
   }
   result += '#' + new Date().toISOString()
   return result;
+}
+
+export function log(action) {
+  actionlog.add(new Date().toISOString().substring(11, 19), action)
 }

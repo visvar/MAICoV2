@@ -83,6 +83,21 @@ function createExportList() {
     };
 }
 
+function createActionlog() {
+    const { subscribe, set, update } = writable({ date: new Date().toISOString().substring(2, 10), actions: [] });
+
+    return {
+        subscribe,
+        get: (n) => get(n),
+        add: (key, a) => update(n => {
+            n.actions.push({ time: key, action: a })
+            return n
+        })
+    };
+}
+
+export const actionlog = createActionlog()
+
 export const heatmapinfo = writable(null)
 
 export const exportList = createExportList()

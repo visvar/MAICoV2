@@ -63,7 +63,7 @@
     adjustMode,
     progress,
     mvaesim,
-    playclick
+    playclick,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -262,9 +262,17 @@
           accept=".mid"
           on:change={(e) => (lastid = flutil.importMidi(e, primerList, lastid))}
         />
-        <button on:click={() => primerList.clear()}> clear primer list </button>
         <button
           on:click={() => {
+            flutil.log("primer clear");
+            primerList.clear();
+          }}
+        >
+          clear primer list
+        </button>
+        <button
+          on:click={() => {
+            flutil.log("delete primer: " + $primerTodelete);
             primerList.deleteMelo($primerTodelete);
           }}
         >
@@ -287,8 +295,30 @@
           />
         </div>
         <button on:click={() => mu.addModel()}>Import Models (first)</button>
-        <button on:click={() => mu.requestModels($primerList)}
-          >Generate from Models (second)</button
+        <button
+          on:click={() => {
+            flutil.log(
+              "generate with " +
+                $mvaesim +
+                "mvaesim and length " +
+                lengthtemp +
+                " for " +
+                $iter +
+                " iterations from list: " +
+                $primerList
+            );
+            flutil.log(
+              "strangers: " +
+                $strangers +
+                " ; adjust mode: " +
+                $adjustMode +
+                " ; filterextent: " +
+                $filterextents +
+                " ; keys: " +
+                $selectedKeys
+            );
+            mu.requestModels($primerList);
+          }}>Generate from Models (second)</button
         >
         <div class="label">iterations of 15 samples per model</div>
         <div class="filter">
@@ -299,7 +329,13 @@
         </div>
         <div class="label">mvae Similarity</div>
         <div class="filter">
-          <input type="range" bind:value={$mvaesim} min="0.7" max="1" step="0.01" />
+          <input
+            type="range"
+            bind:value={$mvaesim}
+            min="0.7"
+            max="1"
+            step="0.01"
+          />
           <span>
             {$mvaesim}
           </span>
@@ -364,8 +400,17 @@
           />
         </div>
         <button
-          on:click={() =>
-            flutil.writeToMidi($exportList, $bpm, exportmode.value, )}
+          on:click={() => {
+            flutil.log(
+              "writeToMidi " +
+                $exportList +
+                " with " +
+                $bpm +
+                " bpm and store to mode " +
+                exportmode.value
+            );
+            flutil.writeToMidi($exportList, $bpm, exportmode.value);
+          }}
         >
           export to Midi
         </button>
@@ -379,7 +424,10 @@
           style="display: none"
           type="file"
           id="datasetFiles"
-          on:change={(event) => mu.uploadDatasetFile(event)}
+          on:change={(event) => {
+            flutil.log("import dataset");
+            mu.uploadDatasetFile(event);
+          }}
         />
         <!-- {/if} -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -388,7 +436,14 @@
       </div>
       $primerList
       {#if devmode} -->
-        <button on:click={() => mu.exportModelJson()}> export dataset </button>
+        <button
+          on:click={() => {
+            flutil.log("export dataset");
+            mu.exportModelJson();
+          }}
+        >
+          export dataset
+        </button>
       {/if}
     </div>
     <div>
@@ -682,11 +737,11 @@
           </span>
         </div>
         <div
-              class="option {$playclick ? 'selected' : ''}"
-              on:click={() => playclick.set(!$playclick)}
-            >
-              Play with click
-            </div>
+          class="option {$playclick ? 'selected' : ''}"
+          on:click={() => playclick.set(!$playclick)}
+        >
+          Play with click
+        </div>
       {/if}
     </div>
 
