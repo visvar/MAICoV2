@@ -16,6 +16,7 @@
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
     import { melodies } from "@magenta/music";
+    import { log } from "../../util/fileutil.js";
 
     const margin = { top: 20, right: 10, bottom: 10, left: 25 };
 
@@ -65,6 +66,7 @@
     $: shownmelody, drawPianoRoll();
 
     function selectOption(option) {
+        log("rating changed", {melody,option})
         if (melody.userspecific.rate === option) {
             melody.userspecific.rate = 0;
             rate.setOpt(option, melody, false);

@@ -89,8 +89,8 @@ function createActionlog() {
     return {
         subscribe,
         get: (n) => get(n),
-        add: (key, a) => update(n => {
-            n.actions.push({ time: key, action: a })
+        add: (key, a,d) => update(n => {
+            n.actions.push({ time: key, action: a, data:d })
             return n
         })
     };

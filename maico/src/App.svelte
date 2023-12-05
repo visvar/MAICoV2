@@ -64,6 +64,7 @@
     progress,
     mvaesim,
     playclick,
+    selectedKeys
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -272,7 +273,7 @@
         </button>
         <button
           on:click={() => {
-            flutil.log("delete primer: " + $primerTodelete);
+            flutil.log("delete primer", {primerList:$primerTodelete});
             primerList.deleteMelo($primerTodelete);
           }}
         >
@@ -298,24 +299,12 @@
         <button
           on:click={() => {
             flutil.log(
-              "generate with " +
-                $mvaesim +
-                "mvaesim and length " +
-                lengthtemp +
-                " for " +
-                $iter +
-                " iterations from list: " +
-                $primerList
+              "generate with mvaesim and length for iterations from list ",
+                {$mvaesim,lengthtemp,$iter,$primerList}
             );
             flutil.log(
-              "strangers: " +
-                $strangers +
-                " ; adjust mode: " +
-                $adjustMode +
-                " ; filterextent: " +
-                $filterextents +
-                " ; keys: " +
-                $selectedKeys
+              "strangers; adjust mode; filterextent; keys:",
+                {$strangers,$adjustMode,$filterextents,$selectedKeys}
             );
             mu.requestModels($primerList);
           }}>Generate from Models (second)</button
@@ -402,17 +391,20 @@
         <button
           on:click={() => {
             flutil.log(
-              "writeToMidi " +
-                $exportList +
-                " with " +
-                $bpm +
-                " bpm and store to mode " +
-                exportmode.value
+              "writeToMidi with bpm and store to mode",
+                {$exportList,$bpm,exportmode}
             );
             flutil.writeToMidi($exportList, $bpm, exportmode.value);
           }}
         >
           export to Midi
+        </button>
+        <button
+          on:click={() => {
+            flutil.writeLogs();
+          }}
+        >
+          export Logs
         </button>
         <h5 class="mb-4 text-l font-bold">Dataset</h5>
         <button

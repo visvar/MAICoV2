@@ -2,6 +2,7 @@ import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
 import { actionlog } from '../stores/stores'
+import { get } from 'svelte/store'
 
 export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
@@ -132,6 +133,17 @@ export function makeid(length) {
   return result;
 }
 
-export function log(action) {
-  actionlog.add(new Date().toISOString().substring(11, 19), action)
+export function log(action, data) {
+  actionlog.add(new Date().toISOString().substring(11, 19), action, data)
+}
+
+export function writeLogs(){
+    const complete = JSON.stringify(get(actionlog))
+    const blob = new Blob([complete], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = new Date().toISOString().substring(2,19)+"_logs" + '.json'
+    link.click()
+    URL.revokeObjectURL(url)
 }

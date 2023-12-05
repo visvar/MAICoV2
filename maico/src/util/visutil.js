@@ -5,6 +5,7 @@ import * as d3 from 'd3'
 import * as modelutil from './modelutil.js';
 import * as druid from '@saehrimnir/druidjs/dist/druid.esm.js'
 import { keysLookup } from '../stores/globalValues.js';
+import { log } from './fileutil.js';
 
 export function isBrushed(x, y, b, p) {
   if (b === null || b === undefined || (p !== undefined && !p[2]?.isPrimer && !get(modelselected)[p[2].model.name])) {
@@ -19,8 +20,11 @@ export function isBrushed(x, y, b, p) {
 
 // xScale, yScale, pointData
 export function getSelectedMelodies(x, y, points) {
-  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null)
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null){
+    log("delete brush")
     return null
+  }
+  let b = get(brushselection)
   let selpoints = points.filter((point) => isBrushed(x(point[0][get(axisselect)[0].value]), y(point[1][get(axisselect)[1].value]), get(brushselection), point))
   let newpoints = []
   selpoints.forEach(p => {
@@ -30,6 +34,7 @@ export function getSelectedMelodies(x, y, points) {
     }
   })
   seen.set(get(seen).concat(newpoints))
+  log("select brush results in points",{b,selpoints})
   return selpoints
 }
 

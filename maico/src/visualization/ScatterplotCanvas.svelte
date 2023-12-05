@@ -22,6 +22,16 @@
     rate,
     seenratemode,
     outercircle,
+    filtersim,
+    filternumbernotes,
+    filterinscale,
+    filtervarint,
+    seenfilter,
+    listenfilter,
+    tufilter,
+    tdfilter,
+    expfilter,
+    modelselected,
   } from "../stores/stores.js";
   import { get } from "svelte/store";
 
@@ -62,7 +72,7 @@
 
   let currentaxis = [{ value: 0 }, { value: 0 }];
   axisselect.subscribe((v) => {
-    log("axis changed: " + v);
+    log("axis changed: " ,{v});
     currentaxis = v;
   });
 
@@ -121,7 +131,19 @@
 
   // if colors etc change log it -> also glyphs;
   // set selected melodies in function log
-
+  glyphselect.subscribe((v)=>log("glyph changed: " ,{v}))
+  pointcolorselect.subscribe((v)=>log("pointcolor changed: " ,{v}))
+  vorcolorselect.subscribe((v)=>log("voronoicolor changed: " ,{v}))
+  filtersim.subscribe((v)=>log("filtersim: " ,{v}))
+  filternumbernotes.subscribe((v)=>log("filter number of notes: " ,{v}))
+  filtervarint.subscribe((v)=>log("filter variance: " ,{v}))
+  seenfilter.subscribe((v)=>log("filter seen: " ,{v}))
+  listenfilter.subscribe((v)=>log("filter listened: " ,{v}))
+  tufilter.subscribe((v)=>log("filter like: " ,{v}))
+  tdfilter.subscribe((v)=>log("filter dislike: " ,{v}))
+  expfilter.subscribe((v)=>log("filter export: " ,{v}))
+  axisselect.subscribe((v)=>log("axis selected: " ,{v}))
+  modelselected.subscribe((v)=>log("model selected or tuned off: " ,{v}))
   /**
    * <DonutForValue
           x={x(data[0][currentaxis[0].value])}

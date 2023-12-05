@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import {
     models,
     points,
@@ -46,6 +48,7 @@
   import * as drutil from "../util/drutil.js";
   import * as glutil from "../util/glyphutil.js";
   import * as visutil from "../util/visutil.js";
+    import { log } from "../util/fileutil.js";
 
   // @ts-ignore
   // const margin = { top: 10, right: 10, bottom: 25, left: 25 };
@@ -567,6 +570,7 @@
           <input
             type="range"
             bind:value={opacityGlyph}
+            on:mouseup={log("opacity glyph changed",opacityGlyph)}
             min="0"
             max="1"
             step="0.05"
@@ -580,6 +584,7 @@
             max="0.5"
             step="0.05"
             bind:value={opacityVoronoi}
+            on:mouseup={log("opacity voronoi changed",opacityVoronoi)}
           />
         </label>
         <label>
@@ -600,6 +605,7 @@
             min="0.2"
             max="2"
             step="0.05"
+            on:mouseup={log("glyphsize changed",$glyphsize)}
           />
         </label>
         <label>
