@@ -134,16 +134,15 @@
   glyphselect.subscribe((v)=>log("glyph changed: " ,{v}))
   pointcolorselect.subscribe((v)=>log("pointcolor changed: " ,{v}))
   vorcolorselect.subscribe((v)=>log("voronoicolor changed: " ,{v}))
-  filtersim.subscribe((v)=>log("filtersim: " ,{v}))
-  filternumbernotes.subscribe((v)=>log("filter number of notes: " ,{v}))
-  filtervarint.subscribe((v)=>log("filter variance: " ,{v}))
+//  filtersim.subscribe((v)=>log("filtersim: " ,{v}))
+//  filternumbernotes.subscribe((v)=>log("filter number of notes: " ,{v}))
+//  filtervarint.subscribe((v)=>log("filter variance: " ,{v}))
   seenfilter.subscribe((v)=>log("filter seen: " ,{v}))
   listenfilter.subscribe((v)=>log("filter listened: " ,{v}))
   tufilter.subscribe((v)=>log("filter like: " ,{v}))
   tdfilter.subscribe((v)=>log("filter dislike: " ,{v}))
   expfilter.subscribe((v)=>log("filter export: " ,{v}))
   axisselect.subscribe((v)=>log("axis selected: " ,{v}))
-  modelselected.subscribe((v)=>log("model selected or tuned off: " ,{v}))
   /**
    * <DonutForValue
           x={x(data[0][currentaxis[0].value])}

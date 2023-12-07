@@ -1,4 +1,4 @@
-import { vorcolorselect, brushClusterSwitch, clusterdata, models, axisselect, brushselection, modelselected, currentcolor, colors, points, side, setcpoints, currentpoints, seen } from '../stores/stores.js'
+import { vorcolorselect, brushClusterSwitch, clusterdata, models, axisselect, brushselection, modelselected, currentcolor, colors, points, side, setcpoints, currentpoints, seen, meloselected } from '../stores/stores.js'
 import { get } from 'svelte/store';
 import { extent } from 'd3-array';
 import * as d3 from 'd3'
@@ -21,7 +21,8 @@ export function isBrushed(x, y, b, p) {
 // xScale, yScale, pointData
 export function getSelectedMelodies(x, y, points) {
   if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null){
-    log("delete brush")
+    if(get(meloselected) !== null)
+      log("delete brush")
     return null
   }
   let b = get(brushselection)

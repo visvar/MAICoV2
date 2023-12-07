@@ -7,6 +7,7 @@
 	let end = 1;
 	export let values;
 	export let title;
+	export let change;
 
 	let leftHandle;
 	let body;
@@ -118,11 +119,16 @@
 				1
 			);
 			if (which === "start") {
+				change([[scale.invert(p), scale.invert(Math.max(end, p))],extend])
 				values.set([
 					[scale.invert(p), scale.invert(Math.max(end, p))],
 					extend,
 				]);
 			} else {
+				change([
+					[scale.invert(Math.min(p, start)), scale.invert(p)],
+					extend,
+				])
 				values.set([
 					[scale.invert(Math.min(p, start)), scale.invert(p)],
 					extend,

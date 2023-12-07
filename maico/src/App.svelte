@@ -642,18 +642,24 @@
             <DoubleRangeSlider
               title={"Similarity to Primer"}
               values={filtersim}
+              change={(value)=>{
+                flutil.log("filter similarity to primer",{value})}}
             />
           </div>
           <div class="doubleslider">
             <DoubleRangeSlider
               title={"Number of Notes"}
               values={filternumbernotes}
+              change={(value)=>{
+                flutil.log("filter number of notes",{value})}}
             />
           </div>
           <div class="doubleslider">
             <DoubleRangeSlider
               title={"Variance of Intervals"}
               values={filtervarint}
+              change={(value)=>{
+                flutil.log("filter variance of intervals",{value})}}
             />
           </div>
           <div class="filterButtons">
@@ -871,6 +877,7 @@
           <button
             class="innerButton"
             on:click={() => {
+              flutil.log("all model selected -> all true" ,{})
               modelselected.set(
                 Object.fromEntries(
                   Object.entries($modelselected).map((entry) => [
@@ -896,6 +903,7 @@
           <button
             class="innerButton"
             on:click={() => {
+              flutil.log("no model selected -> all false" ,{})
               modelselected.set(
                 Object.fromEntries(
                   Object.entries($modelselected).map((entry) => [
@@ -951,6 +959,8 @@
                           clusterSelect.set(null);
                           somethingChanged.set(false);
                         }
+                        const modelselect = Object.values($modelselected)
+                        flutil.log("modelselection: " + model.name + " changed" ,{modelselect})
                       }}
                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />

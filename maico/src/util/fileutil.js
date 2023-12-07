@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
-import { actionlog } from '../stores/stores'
+import { actionlog, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 
 export function writeToMidi(melodies1, bpm, mode) {
@@ -110,6 +110,7 @@ export function importMidi(event, primerList, lastid) {
       quan.notes = quan.notes.map(n => { return { pitch: n.pitch, quantizedEndStep: n.quantizedEndStep, quantizedStartStep: n.quantizedStartStep, velocity: n.velocity } })
       quan.id = lastid
       quan.name = file.name.substring(0, file.name.length - 4)
+      log("load Midi", quan)
       primerList.addMelo(quan)
     };
 
@@ -134,7 +135,8 @@ export function makeid(length) {
 }
 
 export function log(action, data) {
-  actionlog.add(new Date().toISOString().substring(11, 19), action, data)
+  if(get(progress) !== 100 || get(progress) !== 0)
+    actionlog.add(new Date().toISOString().substring(11, 19), action, data)
 }
 
 export function writeLogs(){

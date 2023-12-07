@@ -84,13 +84,16 @@ function createExportList() {
 }
 
 function createActionlog() {
-    const { subscribe, set, update } = writable({ date: new Date().toISOString().substring(2, 10), actions: [] });
+    const { subscribe, set, update } = writable({ date: new Date().toISOString().substring(2, 10), actions: {} });
 
     return {
         subscribe,
         get: (n) => get(n),
         add: (key, a,d) => update(n => {
-            n.actions.push({ time: key, action: a, data:d })
+            if(n.actions[key] !== null && n.actions[key] !== undefined)
+                n.actions[key].actions.push({ time: key, action: a, data:d })
+            else
+                n.actions[key] = {actions:[{ time: key, action: a, data:d }]}
             return n
         })
     };
