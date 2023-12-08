@@ -66,7 +66,7 @@
     $: shownmelody, drawPianoRoll();
 
     function selectOption(option) {
-        log("rating changed", {melody,option})
+        log("rating changed", { melody:melody.melody, user:melody.userspecific, rating:option})
         if (melody.userspecific.rate === option) {
             melody.userspecific.rate = 0;
             rate.setOpt(option, melody, false);
@@ -110,7 +110,8 @@
             x(shownmelody.totalQuantizedSteps),
             ((60000) / ($bpm * 4)) * (shownmelody.totalQuantizedSteps ), // if 120 bpm but we only use that
             x(0),
-            melody
+            melody,
+            { melody:melody.melody, user:melody.userspecific}
         );
     }
 

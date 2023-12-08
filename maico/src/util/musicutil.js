@@ -705,7 +705,7 @@ import { getAxisScale } from '../util/visutil.js'
 import { allPrimer, keysLookup } from '../stores/globalValues.js';
 import { log } from './fileutil.js';
 
-export function playMelody(e, event, playbackline, xend, time, reset, sample) {
+export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq={}) {
   let player1 = get(player)
   if (player1 === null || player1 === undefined) {
     player1 = new mm.Player(true)//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
@@ -721,7 +721,7 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
     //player1.loadAllSamples(1, false).then(() => { console.log('playerLoaded'); player.set(player1) })
     player.set(player1)
   } else if (player1.isPlaying()) {
-    log("stoped listening", {})
+    log("stopped listening", {})
     player1.stop()
     changePlay(false)
     playbackline.transition().attr("stroke", null).attr("x1", reset)
@@ -785,7 +785,8 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample) {
     if (notes?.length > 0) {
       const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
       seq.notes = notes
-      log("listening", seq)
+      console.log(logseq)
+      log("listening", logseq)
       if (playbackline !== undefined)
         playbackline.transition().attr("stroke", "blue")
 

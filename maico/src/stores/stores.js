@@ -90,10 +90,12 @@ function createActionlog() {
         subscribe,
         get: (n) => get(n),
         add: (key, a,d) => update(n => {
-            if(n.actions[key] !== null && n.actions[key] !== undefined)
-                n.actions[key].actions.push({ time: key, action: a, data:d })
-            else
+            if(n.actions[key] !== null && n.actions[key] !== undefined){
+                if(n.actions[key].actions.indexOf({ time: key, action: a, data:d }) === -1)
+                    n.actions[key].actions.push({ time: key, action: a, data:d })
+            }else{
                 n.actions[key] = {actions:[{ time: key, action: a, data:d }]}
+            }
             return n
         })
     };

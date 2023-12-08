@@ -25,7 +25,7 @@ export function getSelectedMelodies(x, y, points) {
       log("delete brush")
     return null
   }
-  let b = get(brushselection)
+  let brush = get(brushselection)
   let selpoints = points.filter((point) => isBrushed(x(point[0][get(axisselect)[0].value]), y(point[1][get(axisselect)[1].value]), get(brushselection), point))
   let newpoints = []
   selpoints.forEach(p => {
@@ -35,7 +35,8 @@ export function getSelectedMelodies(x, y, points) {
     }
   })
   seen.set(get(seen).concat(newpoints))
-  log("select brush results in points",{b,selpoints})
+  const selectedpoints = selpoints.map((m) => { console.log(m); return {primer:m[2].isPrimer, melody:m[2].melody}})
+  log("select brush results in points",{brush,selected:selectedpoints})
   return selpoints
 }
 
