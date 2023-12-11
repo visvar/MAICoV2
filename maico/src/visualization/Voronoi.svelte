@@ -100,7 +100,7 @@
     $: opacity, newOpacity();
 
     function newPolygons() {
-        if ($currentpoints.length > 3) {
+        if ($currentpoints?.length > 3) {
             polygons = thisvoronoi($currentpoints).polygons();
             svg = d3.select("#voronoiSvg");
             if (

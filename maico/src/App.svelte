@@ -64,7 +64,11 @@
     progress,
     mvaesim,
     playclick,
-    selectedKeys
+    selectedKeys,
+    animate,
+    animation,
+    delay,
+    animatemode
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -157,6 +161,12 @@
     { label: "successively", value: 2 },
   ];
   let exportmode = { label: "seperate Files", value: 0 };
+
+  const animationoptions = [
+    { label: "Model", value: 0 },
+    { label: "Temperature", value: 1 },
+    { label: "Primer", value: 2 },
+  ];
 
   // maybe for selection
   let modeltemp = [];
@@ -309,6 +319,36 @@
             mu.requestModels($primerList);
           }}>Generate from Models (second)</button
         >
+        <div>
+          <input
+            type="checkbox"
+            bind:checked={$animate}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          /> Animate
+        </div>
+        
+        <button on:click={() => animation.set(!$animation)}>Play Animation</button>
+        <div class="label">delay per sample</div>
+        <div class="filter">
+          <input
+            type="range"
+            bind:value={$delay}
+            min="40"
+            max="200"
+            step="10"
+          />
+          <span>
+            {$delay}
+          </span>
+        </div>
+        <label for="animmode">Animation order</label>
+        <Select
+          class="select"
+          id="animmode"
+          items={animationoptions}
+          bind:value={$animatemode}
+          clearable={false}
+        />
         <div class="label">iterations of 15 samples per model</div>
         <div class="filter">
           <input type="range" bind:value={$iter} min="1" max="10" step="1" />

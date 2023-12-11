@@ -204,6 +204,8 @@ export const vorcolorselect = writable({ value: 0, label: 'Temperature' })
 
 export const pointcolorselect = writable({ value: 0, label: 'Model' })
 
+export const animate = writable(false)
+
 export const side = writable(500)
 
 function createRate() {
@@ -321,10 +323,14 @@ export const tufilter = writable(false);
 export const tdfilter = writable(false);
 export const expfilter = writable(false);
 
+export const animation = writable(false)
+export const delay = writable(50)
+export const animatemode = writable({ label: "Model", value: 0 })
+
 
 export const currentpoints = derived(
-    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter],
-    $stores => {
+    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter, animation],
+    ($stores, set) => {
         permutation = new Array($stores[0]).fill(null)
         if ($stores[2] !== null && $stores[2] !== cpointchanged) {
             $stores[2].forEach((p, i) => {
@@ -354,9 +360,35 @@ export const currentpoints = derived(
             temp.forEach((p, i) => {
                 permutation[i] = p[2].index
             })
-            return temp
+            if(get(animate)){
+                if(get(progress) === 100)
+                    if(get(animatemode).value === 0){
+                        temp.forEach((p,i) => {
+                            const timeoutId = setTimeout(() => {
+                                set(temp.slice(0,i+1));
+                            }, get(delay)*i);
+                        })
+                    }else if(get(animatemode).value === 1){
+                        temp = temp.sort((a,b) => a[2].temperature - b[2].temperature)
+                        temp.forEach((p,i) => {
+                            const timeoutId = setTimeout(() => {
+                                set(temp.slice(0,i+1));
+                            }, get(delay)*i);
+                        })
+                    }else if(get(animatemode).value === 2){
+                        temp = temp.sort((a,b) => a[2].primerindex - b[2].primerindex)
+                        temp.forEach((p,i) => {
+                            const timeoutId = setTimeout(() => {
+                                set(temp.slice(0,i+1));
+                            }, get(delay)*i);
+                        })
+                    }
+                    
+            }else{
+                set(temp)
+            }
         } else {
-            return []
+            set([])
         }
     }
 );
