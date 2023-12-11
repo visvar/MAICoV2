@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick } from '../stores/stores.js'
+import models, { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick } from '../stores/stores.js'
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -1058,4 +1058,17 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
   data.totalQuantizedSteps = steps
   data.notes = temp
   return data
+}
+
+export function adjustMelodiesToFilters(){
+  let temp = []
+  get(models).forEach(model => {
+    temp = []
+    console.log(model.melodies)
+    model.melodies.forEach(melody => {
+      temp.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
+    }) 
+    console.log(temp)
+    models.addMelodiesToModel(model.name, temp)
+  })
 }

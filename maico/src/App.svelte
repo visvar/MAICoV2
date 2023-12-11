@@ -81,6 +81,7 @@
   import InBigContainer from "./visualization/DetailedVersions/Inbigcontainer.svelte";
   import PianorollSample from "./visualization/Glyphs/PianorollSample.svelte";
 
+  import * as mutil from "./util/musicutil.js"
   import * as gu from "./util/glyphutil.js";
   import * as visutil from "./util/visutil.js";
   import * as d3 from "d3";
@@ -375,6 +376,13 @@
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           /> Allow to oktave and move notes
         </div>
+        <button
+          on:click={() => {
+            mutil.adjustMelodiesToFilters()
+          }}
+        >
+          Adjust Melodies to Filters
+        </button>
 
         <div>-</div>
         <div class="select">
