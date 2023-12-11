@@ -295,7 +295,6 @@
             fill="grey"
           />
         </div>
-        <button on:click={() => mu.addModel()}>Import Models (first)</button>
         <button
           on:click={() => {
             flutil.log(
@@ -307,7 +306,7 @@
                 {$strangers,$adjustMode,$filterextents,$selectedKeys}
             );
             mu.requestModels($primerList);
-          }}>Generate from Models (second)</button
+          }}>Generate from Models</button
         >
         <div class="label">iterations of 15 samples per model</div>
         <div class="filter">
@@ -402,6 +401,7 @@
         <button
           on:click={() => {
             flutil.writeLogs();
+            mu.exportModelJson();
           }}
         >
           export Logs
