@@ -467,9 +467,9 @@ export function calcPianoHeatmap(data) {
       }))
     }
 
-    return [occu, maxocc]
+    return [occu, maxocc, pitchext]
   }
   else {
-    return [[[0]], 0]
+    return [[[0]], 0, [0,0]]
   }
 }

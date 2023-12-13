@@ -242,6 +242,8 @@ export const selectedKeys = writable(new Array(12).fill(true))
 
 export const seen = writable([])
 
+export const polyoptions = writable([])
+
 export const seenratemode = writable(false)
 
 export const axisselect = createAxis()

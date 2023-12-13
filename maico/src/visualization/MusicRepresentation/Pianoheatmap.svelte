@@ -42,11 +42,10 @@
                 0,
                 info[0][0].length- 1
             ];
-            
-            const minPitch = Math.min(
+            const minPitch = Math.min(info[2][0],
                 ...filter.map((d, i) => d[0])
             )-1;
-            const maxPitch = Math.max(
+            const maxPitch = Math.max(info[2][1],
                 ...filter.map((d, i) => d[1])
             )+1;
 

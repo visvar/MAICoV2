@@ -32,6 +32,7 @@
     outercircle,
     primerList,
     heatmapinfo,
+    polyoptions,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -118,6 +119,7 @@
   $: $selectkey, recalcKeyInfo();
   $: $primerkey, recalcKeyInfo();
   $: $emotionbased, testMeloPoints();
+  $: $polyoptions, meloPointsNew();
 
   similarityweight.subscribe((v) => {
     testMeloPoints();
@@ -152,9 +154,9 @@
     let temp = $points;
 
     if (temp?.length > 0) {
-      if ($emotionbased) {
+      if ($emotionbased.value === 1) {
         testMeloPoints();
-      } else {
+      } else if($emotionbased.value  === 0) {
         temp
           .map((d) => d[2])
           .forEach((d, i) => {
@@ -187,6 +189,8 @@
             d.visdata[1][8] = muutil.getInScalePercent(harmonicInfo[0]);
           });
         points.set(temp);
+      }else if($emotionbased.value  === 2){
+
       }
     }
   }
@@ -194,6 +198,10 @@
   // calculate other information as well and encode them in points as well
   // do this for selected glyph or all selected glyphs directly in an object ==> [x, y, {temperature:0.5, model: 'basic_rnn', Starglyph:{the data for this}, Histogram:{data for histo}, ...}]
   async function testMeloPoints() {
+    if($emotionbased.value  === 2 && $polyoptions.length > 0){
+      meloPointsNew()
+      return null
+    }
     flatten = await moutil.flattenAllMelodies();
     let matrix = drutil.distanceMatrix(
       flatten.map((melo, i) => melo[0]),
@@ -205,21 +213,23 @@
     );
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
+    let p = new Array(flatten.length)
+    p.map((_,i) => [0.1 * i, 0.1 * i])
     let mdspoints =
       flatten.length < 3
-        ? new Array(flatten.length).fill([0.1, 0.1])
+        ? p
         : undefined;
     let umappoints =
       flatten.length < 3
-        ? new Array(flatten.length).fill([0.1, 0.1])
+        ? p
         : undefined;
     let mdsgpoints =
       flatten.length < 3
-        ? new Array(flatten.length).fill([0.1, 0.1])
+        ? p
         : undefined;
     let umapgpoints =
       flatten.length < 3
-        ? new Array(flatten.length).fill([0.1, 0.1])
+        ? p
         : undefined;
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
@@ -495,6 +505,203 @@
         if (varInt > intfilter[1]) intfilter[1] = varInt;
         if (varInt < intfilter[0]) intfilter[0] = varInt;
       });
+      updateFilterExtent(filternumbernotes, nnfilter);
+      updateFilterExtent(filtervarint, intfilter);
+      visutil.calcAllColorScales(pointarray);
+      points.set(pointarray);
+      //calcClusters();
+    }
+  }
+
+  async function meloPointsNew() {
+    console.log("poly")
+    flatten = get(polyoptions).map(n => [n,{model:null, temperature:null}]);
+    if(flatten.length === 0 || $emotionbased.value  !== 2)
+      return null
+    console.log(flatten)
+    let matrix = drutil.distanceMatrix(
+      flatten.map((melo, i) => melo[0]),
+      $similarityweight
+    );
+    distMatrix.set(matrix);
+    /*let emotionfeatures = muutil.calcEmotion(
+      flatten.map((melo, i) => melo[0])
+    );
+    $emotionbased.value ? (matrix = emotionfeatures) : null;
+    */
+    let p = new Array(flatten.length).fill([0,0])
+    p.map((_,i) => [0.1 * i, 0.1 * i])
+    console.log(p)
+    let mdspoints =
+      flatten.length < 3
+        ? p
+        : undefined;
+    let umappoints =
+      flatten.length < 3
+        ? p
+        : undefined;
+    let mdsgpoints =
+      flatten.length < 3
+        ? p
+        : undefined;
+    let umapgpoints =
+      flatten.length < 3
+        ? p
+        : undefined;
+    if (flatten.length >= 3) {
+      mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
+      umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
+      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, 0);
+    }
+    console.log(mdspoints,umappoints)
+    if (
+      mdspoints !== undefined &&
+      umappoints !== undefined &&
+      mdsgpoints !== undefined &&
+      umapgpoints !== undefined
+    ) {
+      let nnfilter = [1000, 0];
+      let intfilter = [1000, 0];
+      pointarray = [];
+      //currently global max
+      const maxvalues = muutil.calcGlyphMax(flatten.map((melo, i) => melo[0]));
+      const histdata = glutil.calcHistoGlyphData(flatten);
+
+      const maxRhythmValues = muutil.calcRhythmMax(
+        flatten.map((melo, i) => melo[0])
+      );
+      const rhytmicComplexities = maxRhythmValues.complexities;
+
+      let information = undefined;
+      let varInt = undefined;
+
+      flatten.forEach((melo, index) => {
+        console.log(melo, index)
+        if (index < mdspoints.length) {
+          varInt = muutil.calcVariance(melo[0].notes);
+
+          const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
+          // let countSyncope = muutil.computeSyncope(melo[0]);
+          const countOffBeat = muutil.computeOffBeat(melo[0]);
+          const pauses = muutil.computePauses(melo[0]);
+
+          information = {
+            isPrimer: true,
+            melody: melo[0],
+            temperature: undefined,
+            mvaesim: undefined,
+            primerindex: undefined,
+            model: { name: "poly" },
+            index: index,
+            // DR, Temperature, SimilarityPrimer, VarianceIntervals, NumberOfNotes
+            visdata: [
+              [
+                mdspoints[index][0],
+                mdsgpoints[index][0],
+                umappoints[index][0],
+                umapgpoints[index][0],
+                0,
+                1,
+                varInt,
+                melo[0].notes.length,
+              ],
+              [
+                mdspoints[index][1],
+                mdsgpoints[index][1],
+                umappoints[index][1],
+                umapgpoints[index][1],
+                0,
+                1,
+                varInt,
+                melo[0].notes.length,
+              ],
+            ],
+            starglyph: {
+              data: glutil.calcPolygonStar(melo[0], maxvalues, 0),
+              maxvalues: maxvalues,
+            },
+            /*
+          emotionfeatures: {
+            isDur: emotionfeatures[index][0],
+            isMoll: emotionfeatures[index][1],
+            rythmComplexity: emotionfeatures[index][2],
+            numberNotes: emotionfeatures[index][3],
+            melodyRange: emotionfeatures[index][4],
+            avgIntervals: emotionfeatures[index][5],
+            numberCleanIntervals: emotionfeatures[index][6],
+            numberUncleanPureIntervals: emotionfeatures[index][7],
+            avgHighNotes: emotionfeatures[index][8],
+            incMelody: emotionfeatures[index][9],
+            decMelody: emotionfeatures[index][10],
+          },*/
+            chromapie: { data: glutil.calcDataPie(melo[0]), major: true },
+            pianoroll: { data: glutil.calcMinMaxForRoll(melo[0]) },
+            histInterval: {
+              data: histdata[index],
+              max: glutil.getMaxOcc(histdata),
+            },
+            rhythm: {
+              rhythmDistribution: muutil.computeRhythmDistribution(melo[0]),
+              rhythmChanges: countRhyhtmChange,
+              // syncopeCount: countSyncope,
+              offBeatCount: countOffBeat,
+              pauses: pauses,
+              complexity: muutil.computeRhythmicComplexity(
+                countOffBeat,
+                countRhyhtmChange,
+                pauses,
+                melo[0]
+              ),
+              percentagePause: muutil.percentagePauses(melo[0]),
+              beatComplexity: muutil.computeBeatComplexity(melo[0]),
+            },
+            starglyphRhythm: {
+              data: glutil.calcPolygonStar(
+                [
+                  melo[0],
+                  countOffBeat,
+                  muutil.percentagePauses(melo[0]),
+                  countRhyhtmChange,
+                ],
+                maxRhythmValues,
+                1
+              ),
+              maxvalues: maxRhythmValues,
+            },
+            additional: {
+              pace: muutil.calcPaceMelody(melo[0]),
+              isPolyphonic: muutil.isPolyphonic(melo[0]),
+              percentagePause: muutil.percentagePauses(melo[0]),
+              similarityprimer: 1,
+            },
+            userspecific: {
+              seen: 0,
+              rate: 0,
+              export: false,
+            },
+          };
+          let temppoints = [
+            information.visdata[0],
+            information.visdata[1],
+            information,
+          ];
+          console.log(temppoints)
+          pointarray.push(temppoints);
+
+        } else {
+          console.log(index, "failed");
+        }
+
+        // extents of metrics for filter
+        if (information.melody.notes.length < nnfilter[0])
+          nnfilter[0] = information.melody.notes.length;
+        if (information.melody.notes.length > nnfilter[1])
+          nnfilter[1] = information.melody.notes.length;
+        if (varInt > intfilter[1]) intfilter[1] = varInt;
+        if (varInt < intfilter[0]) intfilter[0] = varInt;
+      });
+      console.log(pointarray, "poly")
       updateFilterExtent(filternumbernotes, nnfilter);
       updateFilterExtent(filtervarint, intfilter);
       visutil.calcAllColorScales(pointarray);

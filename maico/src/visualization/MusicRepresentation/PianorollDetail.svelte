@@ -11,7 +11,9 @@
         colors,
         rate,
         exportList,
-        bpm
+        bpm,
+        polyoptions,
+        emotionbased
     } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
@@ -297,6 +299,20 @@
         >
             📁
         </div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div
+            class="option"
+            on:click={() => {
+                polyoptions.set(muutil.findPolyMelodies(2, melody.melody, 0))
+                emotionbased.set({ label: "Polyoptions", value: 2 })
+            }}
+        >
+            Poly
+        </div>
+    </div>
+    <div class="liked">
+       
         {#if melody.userspecific.seen === 2}
             <div class="option">👂</div>{/if}
     </div>

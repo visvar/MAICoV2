@@ -781,8 +781,9 @@
             class="select"
             id="selmetric"
             items={[
-              { label: "Similarity", value: false },
-              { label: "Emotion", value: true },
+              { label: "Similarity", value: 0 },
+              { label: "Emotion", value: 1 },
+              { label: "Polyoptions", value: 2 },
             ]}
             bind:value={$emotionbased}
             clearable={false}
