@@ -1103,7 +1103,7 @@ export function findPolyMelodies(num, melody, rule){
   let current = [melody]
   let potential = []
   potential.push(get(currentpoints))
-  let combined = []
+  let combined = new Array(num - 1).fill([])
   let diff = []
   let iter = 1
   if(rule === 0){
@@ -1112,7 +1112,7 @@ export function findPolyMelodies(num, melody, rule){
         diff = potential[i].filter((m) => isDifferent(current1, m[2].melody))
         console.log(diff, current, potential, i)
         diff.forEach((m) => {
-          combined.push(combineMelo(current1,m[2].melody))
+          combined[i].push(combineMelo(current1,m[2].melody))
         })
         potential[i] = diff
       })

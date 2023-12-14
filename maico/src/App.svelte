@@ -64,7 +64,8 @@
     progress,
     mvaesim,
     playclick,
-    selectedKeys
+    selectedKeys,
+    numpoly
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -788,6 +789,14 @@
             bind:value={$emotionbased}
             clearable={false}
           />
+          {#if $emotionbased.value === 2}
+            <div class="filter">
+              <input type="range" bind:value={$numpoly} min="2" max="4" step="1" />
+              <span>
+                Number Poly {$numpoly}
+              </span>
+            </div>
+          {/if}
         </div>
         <label>
           <input

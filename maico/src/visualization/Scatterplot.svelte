@@ -33,6 +33,7 @@
     primerList,
     heatmapinfo,
     polyoptions,
+    numpoly
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -120,6 +121,7 @@
   $: $primerkey, recalcKeyInfo();
   $: $emotionbased, testMeloPoints();
   $: $polyoptions, meloPointsNew();
+  $: numpoly, meloPointsNew();
 
   similarityweight.subscribe((v) => {
     testMeloPoints();
@@ -514,11 +516,9 @@
   }
 
   async function meloPointsNew() {
-    console.log("poly")
-    flatten = get(polyoptions).map(n => [n,{model:null, temperature:null}]);
+    flatten = get(polyoptions)[get(numpoly) - 2].map(n => [n,{model:null, temperature:null}]);
     if(flatten.length === 0 || $emotionbased.value  !== 2)
       return null
-    console.log(flatten)
     let matrix = drutil.distanceMatrix(
       flatten.map((melo, i) => melo[0]),
       $similarityweight
@@ -531,7 +531,6 @@
     */
     let p = new Array(flatten.length).fill([0,0])
     p.map((_,i) => [0.1 * i, 0.1 * i])
-    console.log(p)
     let mdspoints =
       flatten.length < 3
         ? p
@@ -554,7 +553,6 @@
       mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
       umapgpoints = drutil.gridify(umappoints, 0);
     }
-    console.log(mdspoints,umappoints)
     if (
       mdspoints !== undefined &&
       umappoints !== undefined &&
@@ -577,7 +575,6 @@
       let varInt = undefined;
 
       flatten.forEach((melo, index) => {
-        console.log(melo, index)
         if (index < mdspoints.length) {
           varInt = muutil.calcVariance(melo[0].notes);
 
@@ -686,7 +683,6 @@
             information.visdata[1],
             information,
           ];
-          console.log(temppoints)
           pointarray.push(temppoints);
 
         } else {
@@ -701,7 +697,6 @@
         if (varInt > intfilter[1]) intfilter[1] = varInt;
         if (varInt < intfilter[0]) intfilter[0] = varInt;
       });
-      console.log(pointarray, "poly")
       updateFilterExtent(filternumbernotes, nnfilter);
       updateFilterExtent(filtervarint, intfilter);
       visutil.calcAllColorScales(pointarray);

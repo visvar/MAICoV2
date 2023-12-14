@@ -198,11 +198,13 @@ export const similarityweight = writable(0.5)
 
 export const glyphinclude = writable(false)
 
-export const emotionbased = writable({ label: "Similarity", value: false })
+export const emotionbased = writable({ label: "Similarity", value: 0 })
 
 export const vorcolorselect = writable({ value: 0, label: 'Temperature' })
 
 export const pointcolorselect = writable({ value: 0, label: 'Model' })
+
+export const numpoly = writable(2)
 
 export const side = writable(500)
 
@@ -242,7 +244,7 @@ export const selectedKeys = writable(new Array(12).fill(true))
 
 export const seen = writable([])
 
-export const polyoptions = writable([])
+export const polyoptions = writable([[],[],[]])
 
 export const seenratemode = writable(false)
 
@@ -261,7 +263,7 @@ export const adjustMode = writable(false)
 export const correlationData = derived(
     [points, models, primerList],
     s => {
-        if (s[0] !== undefined) {
+        if (s[0] !== undefined && get(emotionbased).value !== 2) {
             let corData = new Array(s[1].length).fill([])
             corData.forEach((a, i) => {
                 corData[i] = [[], [], [], []]

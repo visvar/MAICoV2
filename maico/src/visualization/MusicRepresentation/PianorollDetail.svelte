@@ -304,7 +304,7 @@
         <div
             class="option"
             on:click={() => {
-                polyoptions.set(muutil.findPolyMelodies(2, melody.melody, 0))
+                polyoptions.set(muutil.findPolyMelodies(4, melody.melody, 0))
                 emotionbased.set({ label: "Polyoptions", value: 2 })
             }}
         >

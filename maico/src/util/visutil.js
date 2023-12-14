@@ -35,7 +35,7 @@ export function getSelectedMelodies(x, y, points) {
     }
   })
   seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { console.log(m); return {primer:m[2].isPrimer, melody:m[2].melody}})
+  const selectedpoints = selpoints.map((m) => { return {primer:m[2].isPrimer, melody:m[2].melody}})
   log("select brush results in points",{brush,selected:selectedpoints})
   return selpoints
 }
