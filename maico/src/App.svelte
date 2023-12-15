@@ -65,7 +65,7 @@
     mvaesim,
     playclick,
     selectedKeys,
-    numpoly
+    numpoly,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -82,7 +82,7 @@
   import InBigContainer from "./visualization/DetailedVersions/Inbigcontainer.svelte";
   import PianorollSample from "./visualization/Glyphs/PianorollSample.svelte";
 
-  import * as mutil from "./util/musicutil.js"
+  import * as mutil from "./util/musicutil.js";
   import * as gu from "./util/glyphutil.js";
   import * as visutil from "./util/visutil.js";
   import * as d3 from "d3";
@@ -275,7 +275,7 @@
         </button>
         <button
           on:click={() => {
-            flutil.log("delete primer", {primerList:$primerTodelete});
+            flutil.log("delete primer", { primerList: $primerTodelete });
             primerList.deleteMelo($primerTodelete);
           }}
         >
@@ -301,12 +301,14 @@
           on:click={() => {
             flutil.log(
               "generate with mvaesim and length for iterations from list ",
-                {$mvaesim,lengthtemp,$iter,$primerList}
+              { $mvaesim, lengthtemp, $iter, $primerList },
             );
-            flutil.log(
-              "strangers; adjust mode; filterextent; keys:",
-                {$strangers,$adjustMode,$filterextents,$selectedKeys}
-            );
+            flutil.log("strangers; adjust mode; filterextent; keys:", {
+              $strangers,
+              $adjustMode,
+              $filterextents,
+              $selectedKeys,
+            });
             mu.requestModels($primerList);
           }}>Generate from Models</button
         >
@@ -379,7 +381,7 @@
         </div>
         <button
           on:click={() => {
-            mutil.adjustMelodiesToFilters()
+            mutil.adjustMelodiesToFilters();
           }}
         >
           Adjust Melodies to Filters
@@ -398,10 +400,11 @@
         </div>
         <button
           on:click={() => {
-            flutil.log(
-              "writeToMidi with bpm and store to mode",
-                {$exportList,$bpm,exportmode}
-            );
+            flutil.log("writeToMidi with bpm and store to mode", {
+              $exportList,
+              $bpm,
+              exportmode,
+            });
             flutil.writeToMidi($exportList, $bpm, exportmode.value);
           }}
         >
@@ -544,7 +547,7 @@
               title="Key legend"
               color={d3.scaleOrdinal(
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                gu.colormap12
+                gu.colormap12,
               )}
               tickFormat={(d) => {
                 const keys = [
@@ -571,7 +574,7 @@
             <ColorLegend
               title="Temperature legend"
               color={d3.scaleDiverging([0.2, 0.9, 1.6], (d) =>
-                d3.interpolateRdYlBu(1 - d)
+                d3.interpolateRdYlBu(1 - d),
               )}
               tickFormat={(d) => d}
               tickValues={[0.2, 0.45, 0.7, 0.9, 1.1, 1.35, 1.6]}
@@ -596,7 +599,7 @@
             <ColorLegend
               title="Interval legend"
               color={d3.scaleDiverging([0, 12, 24], (d) =>
-                gu.histogramColorLegend(d)
+                gu.histogramColorLegend(d),
               )}
               tickFormat={(d) => d - 12}
               tickSize={0}
@@ -609,7 +612,7 @@
               title="note tick length"
               color={d3.scaleSequentialQuantile(
                 [0, 1, 2, 3, 4],
-                visutil.divergingScale
+                visutil.divergingScale,
               )}
               tickFormat={(d) => {
                 const keys = [16, 8, 4, 2, 1];
@@ -651,24 +654,27 @@
             <DoubleRangeSlider
               title={"Similarity to Primer"}
               values={filtersim}
-              change={(value)=>{
-                flutil.log("filter similarity to primer",{value})}}
+              change={(value) => {
+                flutil.log("filter similarity to primer", { value });
+              }}
             />
           </div>
           <div class="doubleslider">
             <DoubleRangeSlider
               title={"Number of Notes"}
               values={filternumbernotes}
-              change={(value)=>{
-                flutil.log("filter number of notes",{value})}}
+              change={(value) => {
+                flutil.log("filter number of notes", { value });
+              }}
             />
           </div>
           <div class="doubleslider">
             <DoubleRangeSlider
               title={"Variance of Intervals"}
               values={filtervarint}
-              change={(value)=>{
-                flutil.log("filter variance of intervals",{value})}}
+              change={(value) => {
+                flutil.log("filter variance of intervals", { value });
+              }}
             />
           </div>
           <div class="filterButtons">
@@ -676,8 +682,8 @@
               class="option {$seenfilter === 1
                 ? 'selected'
                 : $seenfilter === -1
-                ? 'falseselected'
-                : ''}"
+                  ? 'falseselected'
+                  : ''}"
               on:click={() => setFilters(0)}
             >
               👁️
@@ -686,8 +692,8 @@
               class="option {$listenfilter === 2
                 ? 'selected'
                 : $listenfilter === -2
-                ? 'falseselected'
-                : ''}"
+                  ? 'falseselected'
+                  : ''}"
               on:click={() => setFilters(3)}
             >
               👂
@@ -791,9 +797,15 @@
           />
           {#if $emotionbased.value === 2}
             <div class="filter">
-              <input type="range" bind:value={$numpoly} min="2" max="4" step="1" />
+              <input
+                type="range"
+                bind:value={$numpoly}
+                min="2"
+                max="4"
+                step="1"
+              />
               <span>
-                Number Poly {$numpoly}
+                Poly {$numpoly}
               </span>
             </div>
           {/if}
@@ -853,7 +865,7 @@
               title="Key legend"
               color={d3.scaleOrdinal(
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                gu.colormap12
+                gu.colormap12,
               )}
               tickFormat={(d) => {
                 const keys = [
@@ -895,19 +907,19 @@
           <button
             class="innerButton"
             on:click={() => {
-              flutil.log("all model selected -> all true" ,{})
+              flutil.log("all model selected -> all true", {});
               modelselected.set(
                 Object.fromEntries(
                   Object.entries($modelselected).map((entry) => [
                     entry[0],
                     true,
-                  ])
-                )
+                  ]),
+                ),
               );
               if (
                 oldmodelselected !== null &&
                 Object.values($modelselected).filter(
-                  (d, i) => d !== Object.values(oldmodelselected)[i]
+                  (d, i) => d !== Object.values(oldmodelselected)[i],
                 ).length > 0
               ) {
                 somethingChanged.set(true);
@@ -921,19 +933,19 @@
           <button
             class="innerButton"
             on:click={() => {
-              flutil.log("no model selected -> all false" ,{})
+              flutil.log("no model selected -> all false", {});
               modelselected.set(
                 Object.fromEntries(
                   Object.entries($modelselected).map((entry) => [
                     entry[0],
                     false,
-                  ])
-                )
+                  ]),
+                ),
               );
               if (
                 oldmodelselected !== null &&
                 Object.values($modelselected).filter(
-                  (d, i) => d !== Object.values(oldmodelselected)[i]
+                  (d, i) => d !== Object.values(oldmodelselected)[i],
                 ).length > 0
               ) {
                 somethingChanged.set(true);
@@ -968,7 +980,7 @@
                         if (
                           oldmodelselected !== null &&
                           Object.values($modelselected).filter(
-                            (d, i) => d !== Object.values(oldmodelselected)[i]
+                            (d, i) => d !== Object.values(oldmodelselected)[i],
                           ).length > 0
                         ) {
                           clusterSelect.set(null);
@@ -977,8 +989,11 @@
                           clusterSelect.set(null);
                           somethingChanged.set(false);
                         }
-                        const modelselect = Object.values($modelselected)
-                        flutil.log("modelselection: " + model.name + " changed" ,{modelselect})
+                        const modelselect = Object.values($modelselected);
+                        flutil.log(
+                          "modelselection: " + model.name + " changed",
+                          { modelselect },
+                        );
                       }}
                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
@@ -990,19 +1005,19 @@
                   <br /> 👁️: {$seen?.filter(
                     (p) =>
                       p[2].model.name === model.name &&
-                      p[2].userspecific.seen >= 1
+                      p[2].userspecific.seen >= 1,
                   ).length} 👂: {$seen?.filter(
                     (p) =>
                       p[2].model.name === model.name &&
-                      p[2].userspecific.seen === 2
+                      p[2].userspecific.seen === 2,
                   ).length} 👍: {$rate[model.name] === undefined
                     ? 0
                     : $rate[model.name]?.filter(
-                        (p) => p.userspecific.rate === 1
+                        (p) => p.userspecific.rate === 1,
                       ).length} 👎: {$rate[model.name] === undefined
                     ? 0
                     : $rate[model.name]?.filter(
-                        (p) => p.userspecific.rate === -1
+                        (p) => p.userspecific.rate === -1,
                       ).length}
                 </label>
               </div>

@@ -13,7 +13,7 @@
         exportList,
         bpm,
         polyoptions,
-        emotionbased
+        emotionbased,
     } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
@@ -68,7 +68,11 @@
     $: shownmelody, drawPianoRoll();
 
     function selectOption(option) {
-        log("rating changed", { melody:melody.melody, user:melody.userspecific, rating:option})
+        log("rating changed", {
+            melody: melody.melody,
+            user: melody.userspecific,
+            rating: option,
+        });
         if (melody.userspecific.rate === option) {
             melody.userspecific.rate = 0;
             rate.setOpt(option, melody, false);
@@ -88,7 +92,7 @@
             console.log(melody);
             svg.selectAll("rect").attr(
                 "fill",
-                visutil.getColor(melody, $currentcolor)
+                visutil.getColor(melody, $currentcolor),
             );
         }
     }
@@ -110,10 +114,10 @@
             false,
             playbackline,
             x(shownmelody.totalQuantizedSteps),
-            ((60000) / ($bpm * 4)) * (shownmelody.totalQuantizedSteps ), // if 120 bpm but we only use that
+            (60000 / ($bpm * 4)) * shownmelody.totalQuantizedSteps, // if 120 bpm but we only use that
             x(0),
             melody,
-            { melody:melody.melody, user:melody.userspecific}
+            { melody: melody.melody, user: melody.userspecific },
         );
     }
 
@@ -137,7 +141,7 @@
                         .tickSize(-height + margin.bottom + margin.top)
                         .tickFormat((t) => {
                             return Math.round(t / 16);
-                        })
+                        }),
                 );
             }
 
@@ -159,7 +163,7 @@
                                     return oktaveLookup[t].label;
                                 }
                             })
-                            .tickSize(2)
+                            .tickSize(2),
                     );
             }
 
@@ -181,7 +185,7 @@
                 .append("rect")
                 .attr(
                     "transform",
-                    `translate(0,${-(y(extend[0]) - y(extend[0] + 1)) / 2})`
+                    `translate(0,${-(y(extend[0]) - y(extend[0] + 1)) / 2})`,
                 )
                 .attr("rx", 4)
                 .attr("ry", 4)
@@ -190,7 +194,7 @@
                 .attr("height", noteheight * 0.8)
                 .attr(
                     "width",
-                    (d) => x(d.quantizedEndStep) - x(d.quantizedStartStep)
+                    (d) => x(d.quantizedEndStep) - x(d.quantizedStartStep),
                 )
                 .attr("x", (d) => x(d.quantizedStartStep))
                 .attr("y", (d) => y(d.pitch) + noteheight * 0.1)
@@ -217,7 +221,7 @@
         class="info"
         style:background-color={$colors[0].scale({ model: melody.model })}
         style:color={glutil.getColorLightness(
-            $colors[0].scale({ model: melody.model })
+            $colors[0].scale({ model: melody.model }),
         ) < 50
             ? "white"
             : "black"}
@@ -231,7 +235,7 @@
             temperature: melody.temperature,
         })}
         style:color={glutil.getColorLightness(
-            $colors[1].scale({ temperature: melody.temperature })
+            $colors[1].scale({ temperature: melody.temperature }),
         ) < 50
             ? "white"
             : "black"}
@@ -293,7 +297,7 @@
             on:click={() => {
                 melody.userspecific.export = exportChange(
                     melody,
-                    melody.userspecific.export
+                    melody.userspecific.export,
                 );
             }}
         >
@@ -301,20 +305,32 @@
         </div>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
+        {#if melody.userspecific.seen === 2}
+            <div class="option">👂</div>{/if}
+    </div>
+    <div class="liked">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
             class="option"
             on:click={() => {
-                polyoptions.set(muutil.findPolyMelodies(4, melody.melody, 0))
-                emotionbased.set({ label: "Polyoptions", value: 2 })
+                polyoptions.set(muutil.findPolyMelodies(4, melody.melody, 0));
+                emotionbased.set({ label: "Polyoptions", value: 2 });
             }}
         >
-            Poly
+            PolyDiff
         </div>
-    </div>
-    <div class="liked">
-       
-        {#if melody.userspecific.seen === 2}
-            <div class="option">👂</div>{/if}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div
+            class="option"
+            on:click={() => {
+                polyoptions.set(muutil.findPolyMelodies(4, melody.melody, 1));
+                emotionbased.set({ label: "Polyoptions", value: 2 });
+            }}
+        >
+            PolyQuint
+        </div>
     </div>
 </div>
 <!-- svelte-ignore a11y-no-static-element-interactions -->

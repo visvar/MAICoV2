@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import {
     models,
@@ -33,7 +33,7 @@
     primerList,
     heatmapinfo,
     polyoptions,
-    numpoly
+    numpoly,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -50,7 +50,7 @@
   import * as drutil from "../util/drutil.js";
   import * as glutil from "../util/glyphutil.js";
   import * as visutil from "../util/visutil.js";
-    import { log } from "../util/fileutil.js";
+  import { log } from "../util/fileutil.js";
 
   // @ts-ignore
   // const margin = { top: 10, right: 10, bottom: 25, left: 25 };
@@ -121,7 +121,7 @@
   $: $primerkey, recalcKeyInfo();
   $: $emotionbased, testMeloPoints();
   $: $polyoptions, meloPointsNew();
-  $: numpoly, meloPointsNew();
+  $: $numpoly, meloPointsNew();
 
   similarityweight.subscribe((v) => {
     testMeloPoints();
@@ -134,7 +134,7 @@
       let clusters = visutil.getColorsViaClusteringFromDistances(
         $distMatrix,
         interpolateViridis,
-        $clusterslicer
+        $clusterslicer,
       );
       // clusters => [index of cluster, color of cluster]
       cluster.setCluster(clusters[0], clusters[1]);
@@ -146,7 +146,7 @@
       let clusterrepArrays = visutil.getColorsViaClusteringFromDistances(
         $distMatrix,
         interpolateViridis,
-        $clusterrepresentative
+        $clusterrepresentative,
       );
       clusterrep.setClusterRep(clusterrepArrays[0], clusterrepArrays[1]);
     }
@@ -158,7 +158,7 @@
     if (temp?.length > 0) {
       if ($emotionbased.value === 1) {
         testMeloPoints();
-      } else if($emotionbased.value  === 0) {
+      } else if ($emotionbased.value === 0) {
         temp
           .map((d) => d[2])
           .forEach((d, i) => {
@@ -169,30 +169,29 @@
               $keydetectselect.value === 1,
               $selectkey,
               $keymode,
-              $primerkey
+              $primerkey,
             );
             const key = muutil.getKeyfromScale(scale[0]);
             const harmonicInfo = muutil.getHarmonics(
               d.melody,
               key,
-              d.model.name
+              d.model.name,
             );
 
             (d.additional.altscales = scale[1](
-              (d.additional.harmonicInfo = harmonicInfo[0])
+              (d.additional.harmonicInfo = harmonicInfo[0]),
             )),
               (d.additional.outScaleNotes = harmonicInfo[1]),
               (d.additional.harmonicScore = muutil.getHarmonicScore(
                 d.melody,
-                harmonicInfo[0]
+                harmonicInfo[0],
               )),
               (d.additional.key = key);
             d.visdata[0][8] = muutil.getInScalePercent(harmonicInfo[0]);
             d.visdata[1][8] = muutil.getInScalePercent(harmonicInfo[0]);
           });
         points.set(temp);
-      }else if($emotionbased.value  === 2){
-
+      } else if ($emotionbased.value === 2) {
       }
     }
   }
@@ -200,14 +199,14 @@
   // calculate other information as well and encode them in points as well
   // do this for selected glyph or all selected glyphs directly in an object ==> [x, y, {temperature:0.5, model: 'basic_rnn', Starglyph:{the data for this}, Histogram:{data for histo}, ...}]
   async function testMeloPoints() {
-    if($emotionbased.value  === 2 && $polyoptions.length > 0){
-      meloPointsNew()
-      return null
+    if ($emotionbased.value === 2 && $polyoptions.length > 0) {
+      meloPointsNew();
+      return null;
     }
     flatten = await moutil.flattenAllMelodies();
     let matrix = drutil.distanceMatrix(
       flatten.map((melo, i) => melo[0]),
-      $similarityweight
+      $similarityweight,
     );
     distMatrix.set(matrix);
     /*let emotionfeatures = muutil.calcEmotion(
@@ -215,24 +214,12 @@
     );
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
-    let p = new Array(flatten.length)
-    p.map((_,i) => [0.1 * i, 0.1 * i])
-    let mdspoints =
-      flatten.length < 3
-        ? p
-        : undefined;
-    let umappoints =
-      flatten.length < 3
-        ? p
-        : undefined;
-    let mdsgpoints =
-      flatten.length < 3
-        ? p
-        : undefined;
-    let umapgpoints =
-      flatten.length < 3
-        ? p
-        : undefined;
+    let p = new Array(flatten.length);
+    p.map((_, i) => [0.1 * i, 0.1 * i]);
+    let mdspoints = flatten.length < 3 ? p : undefined;
+    let umappoints = flatten.length < 3 ? p : undefined;
+    let mdsgpoints = flatten.length < 3 ? p : undefined;
+    let umapgpoints = flatten.length < 3 ? p : undefined;
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
@@ -254,14 +241,18 @@
       const histdata = glutil.calcHistoGlyphData(flatten);
 
       const maxRhythmValues = muutil.calcRhythmMax(
-        flatten.map((melo, i) => melo[0])
+        flatten.map((melo, i) => melo[0]),
       );
       const rhytmicComplexities = maxRhythmValues.complexities;
 
       let information = undefined;
       let varInt = undefined;
 
-      heatmapinfo.set(glutil.calcPianoHeatmap(flatten.filter((v,i) => i >= $primerList.length).map((p) => p[0])))
+      heatmapinfo.set(
+        glutil.calcPianoHeatmap(
+          flatten.filter((v, i) => i >= $primerList.length).map((p) => p[0]),
+        ),
+      );
 
       flatten.forEach((melo, index) => {
         if (index < mdspoints.length) {
@@ -270,7 +261,7 @@
               melo[0],
               melo[0].primer,
               1,
-              0.5
+              0.5,
             );
             varInt = muutil.calcVariance(melo[0].notes);
 
@@ -347,7 +338,7 @@
                   countOffBeat,
                   countRhyhtmChange,
                   pauses,
-                  melo[0]
+                  melo[0],
                 ),
                 percentagePause: muutil.percentagePauses(melo[0]),
                 beatComplexity: muutil.computeBeatComplexity(melo[0]),
@@ -361,7 +352,7 @@
                     countRhyhtmChange,
                   ],
                   maxRhythmValues,
-                  1
+                  1,
                 ),
                 maxvalues: maxRhythmValues,
               },
@@ -457,7 +448,7 @@
                   countOffBeat,
                   countRhyhtmChange,
                   pauses,
-                  melo[0]
+                  melo[0],
                 ),
                 percentagePause: muutil.percentagePauses(melo[0]),
                 beatComplexity: muutil.computeBeatComplexity(melo[0]),
@@ -471,7 +462,7 @@
                     countRhyhtmChange,
                   ],
                   maxRhythmValues,
-                  1
+                  1,
                 ),
                 maxvalues: maxRhythmValues,
               },
@@ -516,12 +507,15 @@
   }
 
   async function meloPointsNew() {
-    flatten = get(polyoptions)[get(numpoly) - 2].map(n => [n,{model:null, temperature:null}]);
-    if(flatten.length === 0 || $emotionbased.value  !== 2)
-      return null
+    console.log($numpoly);
+    flatten = $polyoptions[$numpoly - 2].map((n) => [
+      n,
+      { model: null, temperature: null },
+    ]);
+    if (flatten.length === 0 || $emotionbased.value !== 2) return null;
     let matrix = drutil.distanceMatrix(
       flatten.map((melo, i) => melo[0]),
-      $similarityweight
+      $similarityweight,
     );
     distMatrix.set(matrix);
     /*let emotionfeatures = muutil.calcEmotion(
@@ -529,24 +523,12 @@
     );
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
-    let p = new Array(flatten.length).fill([0,0])
-    p.map((_,i) => [0.1 * i, 0.1 * i])
-    let mdspoints =
-      flatten.length < 3
-        ? p
-        : undefined;
-    let umappoints =
-      flatten.length < 3
-        ? p
-        : undefined;
-    let mdsgpoints =
-      flatten.length < 3
-        ? p
-        : undefined;
-    let umapgpoints =
-      flatten.length < 3
-        ? p
-        : undefined;
+    let p = new Array(flatten.length).fill([0, 0]);
+    p.map((_, i) => [0.1 * i, 0.1 * i]);
+    let mdspoints = flatten.length < 3 ? p : undefined;
+    let umappoints = flatten.length < 3 ? p : undefined;
+    let mdsgpoints = flatten.length < 3 ? p : undefined;
+    let umapgpoints = flatten.length < 3 ? p : undefined;
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
@@ -567,7 +549,7 @@
       const histdata = glutil.calcHistoGlyphData(flatten);
 
       const maxRhythmValues = muutil.calcRhythmMax(
-        flatten.map((melo, i) => melo[0])
+        flatten.map((melo, i) => melo[0]),
       );
       const rhytmicComplexities = maxRhythmValues.complexities;
 
@@ -648,7 +630,7 @@
                 countOffBeat,
                 countRhyhtmChange,
                 pauses,
-                melo[0]
+                melo[0],
               ),
               percentagePause: muutil.percentagePauses(melo[0]),
               beatComplexity: muutil.computeBeatComplexity(melo[0]),
@@ -662,7 +644,7 @@
                   countRhyhtmChange,
                 ],
                 maxRhythmValues,
-                1
+                1,
               ),
               maxvalues: maxRhythmValues,
             },
@@ -684,7 +666,6 @@
             information,
           ];
           pointarray.push(temppoints);
-
         } else {
           console.log(index, "failed");
         }
@@ -772,7 +753,7 @@
           <input
             type="range"
             bind:value={opacityGlyph}
-            on:mouseup={log("opacity glyph changed",opacityGlyph)}
+            on:mouseup={log("opacity glyph changed", opacityGlyph)}
             min="0"
             max="1"
             step="0.05"
@@ -786,7 +767,7 @@
             max="0.5"
             step="0.05"
             bind:value={opacityVoronoi}
-            on:mouseup={log("opacity voronoi changed",opacityVoronoi)}
+            on:mouseup={log("opacity voronoi changed", opacityVoronoi)}
           />
         </label>
         <label>
@@ -807,7 +788,7 @@
             min="0.2"
             max="2"
             step="0.05"
-            on:mouseup={log("glyphsize changed",$glyphsize)}
+            on:mouseup={log("glyphsize changed", $glyphsize)}
           />
         </label>
         <label>

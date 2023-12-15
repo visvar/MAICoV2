@@ -705,7 +705,7 @@ import { getAxisScale } from '../util/visutil.js'
 import { allPrimer, keysLookup } from '../stores/globalValues.js';
 import { log } from './fileutil.js';
 
-export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq={}) {
+export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
   let player1 = get(player)
   if (player1 === null || player1 === undefined) {
     player1 = new mm.Player(true)//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
@@ -792,14 +792,14 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
 
       player1.playClick = get(playclick)
       //player1.loadSamples(seq).then(() => {
-        player1.start(seq, get(bpm)).then(() => playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
-          ?.attr("x2", reset))
+      player1.start(seq, get(bpm)).then(() => playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
+        ?.attr("x2", reset))
 
-        if (playbackline !== undefined) {
-          pbl = playbackline
-          t = time
-          xe = xend
-        }
+      if (playbackline !== undefined) {
+        pbl = playbackline
+        t = time
+        xe = xend
+      }
       //})
     }
   }
@@ -1040,7 +1040,7 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
         if (minvalue !== undefined && maxvalue !== undefined && (pitch < minvalue || pitch > maxvalue)) {
           pitch = Math.round(minvalue + ((maxvalue - minvalue) / 2))
         }
-        
+
         let kfilter = get(selectedKeys)
         if (kfilter.filter(n => n).length !== 0) {
           if (!kfilter[pitch % 12]) {
@@ -1061,65 +1061,93 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
   return data
 }
 
-export function adjustMelodiesToFilters(){
-  log("adjust with filters", {pitchmap:get(filterextents),keys:get(selectedKeys)})
+export function adjustMelodiesToFilters() {
+  log("adjust with filters", { pitchmap: get(filterextents), keys: get(selectedKeys) })
   let temp = []
   get(models).forEach(model => {
     temp = []
     model.melodies.forEach(melody => {
       temp.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
-    }) 
+    })
     models.addMelodiesToModel(model.name, temp)
   })
 }
 
-function isDifferent(melody, melody1){
+function isDifferent(melody, melody1) {
   let notes = melody.notes
   let notes1 = melody1.notes
   let total = Math.max(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
-  console.log(notes, notes1)
-  for(let i = 0; i<total; i++){
+  for (let i = 0; i < total; i++) {
     let t1 = notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
     let t2 = notes1.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
-    if(t1.filter((n) => t2.indexOf(n) !== -1).length > 0){
-      console.log(false, i)
+    if (t1.filter((n) => t2.indexOf(n) !== -1).length > 0) {
       return false
-    } 
+    }
   }
-  console.log(true)
   return true
 }
 
-function combineMelo(m1,m2){
-  return {
-    notes:m1.notes.concat(m2.notes).sort((a,b) => a.quantizedStartStep - b.quantizedStartStep),
-    totalQuantizedSteps:Math.max(m1.totalQuantizedSteps,m2.totalQuantizedSteps)
+function minQuints(melody, melody1, num) {
+  let notes = melody.notes
+  let notes1 = melody1.notes
+  let total = Math.max(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
+  let blocked = -1
+  let numQuint = 0
+  let changed = false
+  for (let i = 0; i < total; i++) {
+    if (blocked < i) {
+      changed = false
+      let t1 = notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i)
+      let t2 = notes1.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i)
+      t1.forEach((n) => {
+        t2.forEach((n1) => {
+          if (n.pitch === n1.pitch + 7 || n.pitch === n1.pitch - 7) {
+            blocked < Math.min(n.quantizedEndStep - 1, n1.quantizedEndStep - 1) ? blocked = Math.min(n.quantizedEndStep - 1, n1.quantizedEndStep - 1) : null
+            changed = true
+          }
+        })
+      })
+      console.log(t1, t2, changed, numQuint, blocked, i)
+      if (changed) {
+        numQuint++
+      }
+    }
+    if (numQuint >= num)
+      return true
   }
-  
+  return false
+
 }
 
-export function findPolyMelodies(num, melody, rule){
-  // all notes have to be different
+function combineMelo(m1, m2) {
+  return {
+    notes: m1.notes.concat(m2.notes).sort((a, b) => a.quantizedStartStep - b.quantizedStartStep),
+    totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2.totalQuantizedSteps)
+  }
+
+}
+
+export function findPolyMelodies(num, melody, rule) {
+  // 0 = all notes have to be different
+  // 1 = minimum of 5 quints 
   let current = [melody]
   let potential = []
   potential.push(get(currentpoints))
   let combined = new Array(num - 1).fill([])
   let diff = []
   let iter = 1
-  if(rule === 0){
-    while(iter < num){
-      current.forEach((current1, i) =>{
+  while (iter < num) {
+    current.forEach((current1, i) => {
+      if (rule === 0)
         diff = potential[i].filter((m) => isDifferent(current1, m[2].melody))
-        console.log(diff, current, potential, i)
-        diff.forEach((m) => {
-          combined[i].push(combineMelo(current1,m[2].melody))
-        })
-        potential[i] = diff
+      else if (rule === 1)
+        diff = potential[i].filter((m) => minQuints(current1, m[2].melody, 5))
+      diff.forEach((m) => {
+        combined[i].push(combineMelo(current1, m[2].melody))
       })
-      iter++
-    }
-    console.log(combined)
-    return combined
+      potential[i] = diff
+    })
+    iter++
   }
-  
+  return combined
 }
