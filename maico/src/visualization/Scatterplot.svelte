@@ -507,12 +507,16 @@
   }
 
   async function meloPointsNew() {
-    console.log($numpoly);
     flatten = $polyoptions[$numpoly - 2].map((n) => [
       n,
       { model: null, temperature: null },
     ]);
-    if (flatten.length === 0 || $emotionbased.value !== 2) return null;
+    if (flatten.length === 0 || $emotionbased.value !== 2) {
+      
+      if(flatten.length === 0 && $emotionbased.value === 2)
+        points.set([])
+      return null;
+    }
     let matrix = drutil.distanceMatrix(
       flatten.map((melo, i) => melo[0]),
       $similarityweight,
@@ -523,8 +527,10 @@
     );
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
-    let p = new Array(flatten.length).fill([0, 0]);
-    p.map((_, i) => [0.1 * i, 0.1 * i]);
+    let p = [];
+    if(flatten.length<3)
+      for(let l = 0; l<flatten.length; l++)
+        p.push([0.1 * l, 0.1 * l])
     let mdspoints = flatten.length < 3 ? p : undefined;
     let umappoints = flatten.length < 3 ? p : undefined;
     let mdsgpoints = flatten.length < 3 ? p : undefined;
