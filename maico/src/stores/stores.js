@@ -89,12 +89,12 @@ function createActionlog() {
     return {
         subscribe,
         get: (n) => get(n),
-        add: (key, a,d) => update(n => {
-            if(n.actions[key] !== null && n.actions[key] !== undefined){
-                if(n.actions[key].actions.indexOf({ time: key, action: a, data:d }) === -1)
-                    n.actions[key].actions.push({ time: key, action: a, data:d })
-            }else{
-                n.actions[key] = {actions:[{ time: key, action: a, data:d }]}
+        add: (key, a, d) => update(n => {
+            if (n.actions[key] !== null && n.actions[key] !== undefined) {
+                if (n.actions[key].actions.indexOf({ time: key, action: a, data: d }) === -1)
+                    n.actions[key].actions.push({ time: key, action: a, data: d })
+            } else {
+                n.actions[key] = { actions: [{ time: key, action: a, data: d }] }
             }
             return n
         })
@@ -244,7 +244,7 @@ export const selectedKeys = writable(new Array(12).fill(true))
 
 export const seen = writable([])
 
-export const polyoptions = writable([[],[],[]])
+export const polyoptions = writable([[], [], []])
 
 export const seenratemode = writable(false)
 
@@ -338,7 +338,7 @@ export const currentpoints = derived(
             return $stores[2]
         } else if ($stores[0] !== null && $stores[0] !== undefined) {
             let temp = $stores[0]
-                ?.filter((point) => $stores[1] !== null ? point[2]?.isPrimer || $stores[1][point[2].model.name] : true)
+                ?.filter((point) => $stores[1] !== null ? point[2]?.isPolymix || point[2]?.isPrimer || $stores[1][point[2].model.name] : true)
                 // similarity filter
                 .filter((point) => point[2].additional.similarityprimer >= $stores[3][0][0] && point[2].additional.similarityprimer <= $stores[3][0][1])
                 // number notes

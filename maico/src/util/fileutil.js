@@ -3,6 +3,7 @@ import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
 import { actionlog, progress } from '../stores/stores'
 import { get } from 'svelte/store'
+import * as mu from "./modelutil"
 
 export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
@@ -34,7 +35,8 @@ export function writeToMidi(melodies1, bpm, mode) {
       const buffer = array.buffer
       /* global Blob */
       const blob = new Blob([buffer], { type: 'audio/mid' })
-      writeName(blob, melodies[0].primer.name, melodies.length, "variations_sequence")
+      let primername = melodies[0]?.primer?.name !== undefined ? melodies[0].primer.name : 'Polyphony'
+      writeName(blob, primername, melodies.length, "variations_sequence")
     } else if (mode === 1) {
       melodies.forEach((mel) => {
         const track = midi.addTrack()
@@ -53,21 +55,27 @@ export function writeToMidi(melodies1, bpm, mode) {
       const buffer = array.buffer
       /* global Blob */
       const blob = new Blob([buffer], { type: 'audio/mid' })
-      writeName(blob, melodies[0].primer.name, melodies.length, "variations_tracks")
+      let primername = melodies[0]?.primer?.name !== undefined ? melodies[0].primer.name : 'Polyphony'
+      writeName(blob, primername, melodies.length, "variations_tracks")
     } else if (mode === 0) {
       melodies.forEach((mel, i) => {
-        writeMidifile(mel, bpm, i, mel.primer.name)
+        let primername = mel?.primer?.name !== undefined ? mel.primer.name : 'Polyphony'
+        writeMidifile(mel, bpm, i, primername)
       })
-      return null
     }
+    writeLogs()
+    mu.exportModelJson();
+    return null
   } catch (e) {
     console.log(e)
   }
 }
 
 function writeName(blob, primerfile, num, zusatz) {
-  const d = new Date().toISOString();
-  saveAs(blob, d.substring(2, 10) + "_" + primerfile + "_anzahl_" + num + "_" + zusatz + '.mid')
+  return new Promise(() => {
+    const d = new Date().toISOString();
+    saveAs(blob, d.substring(2, 10) + "_" + primerfile + "_anzahl_" + num + "_" + zusatz + '.mid')
+  })
 }
 
 function writeMidifile(mel, bpm, i, primerfile = "") {
@@ -135,17 +143,19 @@ export function makeid(length) {
 }
 
 export function log(action, data) {
-  if(get(progress) !== 100 || get(progress) !== 0)
+  if (get(progress) !== 100 || get(progress) !== 0)
     actionlog.add(new Date().toISOString().substring(11, 19), action, data)
 }
 
-export function writeLogs(){
+export function writeLogs() {
+  return new Promise(() => {
     const complete = JSON.stringify(get(actionlog))
     const blob = new Blob([complete], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = new Date().toISOString().substring(2,19)+"_logs" + '.json'
+    link.download = new Date().toISOString().substring(2, 19) + "_logs" + '.json'
     link.click()
     URL.revokeObjectURL(url)
+  })
 }

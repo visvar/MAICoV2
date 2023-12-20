@@ -273,6 +273,7 @@
             const pauses = muutil.computePauses(melo[0]);
             information = {
               isPrimer: false,
+              isPolymix: false,
               melody: melo[0],
               temperature: melo[1].temperature,
               mvaesim: melo[0].mvaesim,
@@ -385,6 +386,7 @@
 
             information = {
               isPrimer: true,
+              isPolymix: false,
               melody: melo[0],
               temperature: undefined,
               mvaesim: undefined,
@@ -512,9 +514,7 @@
       { model: null, temperature: null },
     ]);
     if (flatten.length === 0 || $emotionbased.value !== 2) {
-      
-      if(flatten.length === 0 && $emotionbased.value === 2)
-        points.set([])
+      if (flatten.length === 0 && $emotionbased.value === 2) points.set([]);
       return null;
     }
     let matrix = drutil.distanceMatrix(
@@ -528,9 +528,8 @@
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
     let p = [];
-    if(flatten.length<3)
-      for(let l = 0; l<flatten.length; l++)
-        p.push([0.1 * l, 0.1 * l])
+    if (flatten.length < 3)
+      for (let l = 0; l < flatten.length; l++) p.push([0.1 * l, 0.1 * l]);
     let mdspoints = flatten.length < 3 ? p : undefined;
     let umappoints = flatten.length < 3 ? p : undefined;
     let mdsgpoints = flatten.length < 3 ? p : undefined;
@@ -572,7 +571,12 @@
           const pauses = muutil.computePauses(melo[0]);
 
           information = {
-            isPrimer: true,
+            isPrimer: false,
+            isPolymix: true,
+            polyinfo: {
+              basemelody: melo[0].basemelody,
+              combinations: melo[0].combinations,
+            },
             melody: melo[0],
             temperature: undefined,
             mvaesim: undefined,

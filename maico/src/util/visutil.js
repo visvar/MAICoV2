@@ -8,7 +8,7 @@ import { keysLookup } from '../stores/globalValues.js';
 import { log } from './fileutil.js';
 
 export function isBrushed(x, y, b, p) {
-  if (b === null || b === undefined || (p !== undefined && !p[2]?.isPrimer && !get(modelselected)[p[2].model.name])) {
+  if (b === null || b === undefined || (p !== undefined && !p[2]?.isPrimer && !p[2]?.isPolymix && !get(modelselected)[p[2].model.name])) {
     return false
   } else {
     if (x > b[0][0] && x < b[1][0] && y > b[0][1] && y < b[1][1]) {
@@ -20,8 +20,8 @@ export function isBrushed(x, y, b, p) {
 
 // xScale, yScale, pointData
 export function getSelectedMelodies(x, y, points) {
-  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null){
-    if(get(meloselected) !== null)
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null) {
+    if (get(meloselected) !== null)
       log("delete brush")
     return null
   }
@@ -35,8 +35,8 @@ export function getSelectedMelodies(x, y, points) {
     }
   })
   seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return {primer:m[2].isPrimer, melody:m[2].melody}})
-  log("select brush results in points",{brush,selected:selectedpoints})
+  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
+  log("select brush results in points", { brush, selected: selectedpoints })
   return selpoints
 }
 

@@ -54,7 +54,6 @@ export async function uploadDatasetFile(event) {
         reader.readAsText(event.target.files[0], "UTF-8");
         reader.onload = function (evt) {
             const obj = JSON.parse(String(evt.target.result))
-            console.log(obj.modelList.data, obj.primerList.primer)
             models.setAll(obj.modelList.data)
             primerList.set(obj.primerList.primer)
         }
@@ -421,12 +420,12 @@ export function exportModelJson(modelname) {
     //const primerString = JSON.stringify(get(primerList), replace, 2)
     //const jsonString = JSON.stringify(data, replace, 2)
     const primer = get(primerList)
-    const complete = JSON.stringify({primerList:{primer},modelList:{data}},replace,2)
+    const complete = JSON.stringify({ primerList: { primer }, modelList: { data } }, replace, 2)
     const blob = new Blob([complete], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = modelname || new Date().toISOString().substring(2,19)+"_dataset" + '.json'
+    link.download = modelname || new Date().toISOString().substring(2, 19) + "_dataset" + '.json'
     link.click()
     URL.revokeObjectURL(url)
 }

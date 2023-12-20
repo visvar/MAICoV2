@@ -72,7 +72,7 @@
 
   let currentaxis = [{ value: 0 }, { value: 0 }];
   axisselect.subscribe((v) => {
-    log("axis changed: " ,{v});
+    log("axis changed: ", { v });
     currentaxis = v;
   });
 
@@ -83,8 +83,8 @@
       ? scaleLinear()
           .domain(
             visutil.makeextentBigger(
-              extent($points.map((value) => value[0][currentaxis[0].value]))
-            )
+              extent($points.map((value) => value[0][currentaxis[0].value])),
+            ),
           )
           .range([margin.left, $side - margin.right])
           .nice()
@@ -98,8 +98,8 @@
       ? scaleLinear()
           .domain(
             visutil.makeextentBigger(
-              extent($points.map((value) => value[1][currentaxis[1].value]))
-            )
+              extent($points.map((value) => value[1][currentaxis[1].value])),
+            ),
           )
           .range([$side - margin.bottom, margin.top])
           .nice()
@@ -131,18 +131,18 @@
 
   // if colors etc change log it -> also glyphs;
   // set selected melodies in function log
-  glyphselect.subscribe((v)=>log("glyph changed: " ,{v}))
-  pointcolorselect.subscribe((v)=>log("pointcolor changed: " ,{v}))
-  vorcolorselect.subscribe((v)=>log("voronoicolor changed: " ,{v}))
-//  filtersim.subscribe((v)=>log("filtersim: " ,{v}))
-//  filternumbernotes.subscribe((v)=>log("filter number of notes: " ,{v}))
-//  filtervarint.subscribe((v)=>log("filter variance: " ,{v}))
-  seenfilter.subscribe((v)=>log("filter seen: " ,{v}))
-  listenfilter.subscribe((v)=>log("filter listened: " ,{v}))
-  tufilter.subscribe((v)=>log("filter like: " ,{v}))
-  tdfilter.subscribe((v)=>log("filter dislike: " ,{v}))
-  expfilter.subscribe((v)=>log("filter export: " ,{v}))
-  axisselect.subscribe((v)=>log("axis selected: " ,{v}))
+  glyphselect.subscribe((v) => log("glyph changed: ", { v }));
+  pointcolorselect.subscribe((v) => log("pointcolor changed: ", { v }));
+  vorcolorselect.subscribe((v) => log("voronoicolor changed: ", { v }));
+  //  filtersim.subscribe((v)=>log("filtersim: " ,{v}))
+  //  filternumbernotes.subscribe((v)=>log("filter number of notes: " ,{v}))
+  //  filtervarint.subscribe((v)=>log("filter variance: " ,{v}))
+  seenfilter.subscribe((v) => log("filter seen: ", { v }));
+  listenfilter.subscribe((v) => log("filter listened: ", { v }));
+  tufilter.subscribe((v) => log("filter like: ", { v }));
+  tdfilter.subscribe((v) => log("filter dislike: ", { v }));
+  expfilter.subscribe((v) => log("filter export: ", { v }));
+  axisselect.subscribe((v) => log("axis selected: ", { v }));
   /**
    * <DonutForValue
           x={x(data[0][currentaxis[0].value])}
@@ -181,7 +181,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * 24
               : $glyphsize * 15}
@@ -193,7 +193,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * 24
                 : $glyphsize * 15}
@@ -214,7 +214,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -228,7 +228,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -248,7 +248,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -261,7 +261,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -282,7 +282,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -295,7 +295,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -316,7 +316,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -329,7 +329,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -349,7 +349,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -362,7 +362,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -382,7 +382,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -395,7 +395,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -414,7 +414,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -427,7 +427,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -448,7 +448,7 @@
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
-              $brushselection
+              $brushselection,
             )
               ? $glyphsize * selectedSize
               : $glyphsize * 30}
@@ -462,7 +462,7 @@
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
@@ -483,14 +483,14 @@
               x={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? x(data[0][currentaxis[0].value]) - $glyphsize * selectedSize
                 : x(data[0][currentaxis[0].value]) - $glyphsize * 30}
               y={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? y(data[1][currentaxis[1].value]) - $glyphsize * selectedSize
                 : y(data[1][currentaxis[1].value]) - $glyphsize * 30}
@@ -502,14 +502,14 @@
               x={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? x(data[0][currentaxis[0].value]) + $glyphsize * selectedSize
                 : x(data[0][currentaxis[0].value]) + $glyphsize * 30}
               y={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
-                $brushselection
+                $brushselection,
               )
                 ? y(data[1][currentaxis[1].value]) - $glyphsize * selectedSize
                 : y(data[1][currentaxis[1].value]) - $glyphsize * 30}

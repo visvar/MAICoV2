@@ -6,6 +6,7 @@
     import * as muutil from "../../util/musicutil.js";
     import * as visutil from "../../util/visutil.js";
     import { onMount } from "svelte";
+    import Select from "svelte-select";
     import {
         currentcolor,
         colors,
@@ -32,6 +33,13 @@
 
     const scalemode = false;
 
+    const polyOptionsSelect = [
+        { label: "Diff", value: 0 },
+        { label: ">4 5th", value: 1 },
+    ];
+
+    let polyselected = { label: "Diff", value: 0 };
+
     $: shownmelody = melody.melody;
 
     $: height =
@@ -47,7 +55,12 @@
         .domain([0, shownmelody.totalQuantizedSteps])
         .range([margin.left, w - margin.right]);
 
-    $: extend = muutil.getExtentOfMelody(melody.melody, true, melody?.isPrimer);
+    $: extend = muutil.getExtentOfMelody(
+        melody.melody,
+        true,
+        melody?.isPrimer,
+        melody?.isPolymix,
+    );
     $: y = d3
         .scaleLinear()
         .domain(extend)
@@ -226,8 +239,15 @@
             ? "white"
             : "black"}
     >
-        {melody.model.name.slice(0, 8)} <br />
-        {melody.mvaesim !== undefined ? "VaeSim: " + melody.mvaesim : ""}
+        {#if melody.model.name === "poly"}
+            {melody.model.name.slice(0, 8)} <br />
+            Base: {melody.polyinfo.basemelody}<br />
+            comb: <br />
+            {melody.polyinfo.combinations}
+        {:else}
+            {melody.model.name.slice(0, 8)} <br />
+            {melody.mvaesim !== undefined ? "VaeSim: " + melody.mvaesim : ""}
+        {/if}
     </div>
     <div
         class="info"
@@ -240,7 +260,10 @@
             ? "white"
             : "black"}
     >
-        Temp: {melody.temperature} <br /> ID: {melody.index}
+        {#if melody.temperature !== undefined}
+            Temp: {melody.temperature} <br />
+        {/if}
+        ID: {melody.index}
     </div>
     {#if melody?.melody?.primer !== undefined}
         <div
@@ -308,30 +331,32 @@
         {#if melody.userspecific.seen === 2}
             <div class="option">👂</div>{/if}
     </div>
-    <div class="liked">
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div
-            class="option"
-            on:click={() => {
-                polyoptions.set(muutil.findPolyMelodies(4, melody.melody, 0));
-                emotionbased.set({ label: "Polyoptions", value: 2 });
-            }}
-        >
-            PolyDiff
+    {#if !melody?.isPolymix}
+        <div class="liked">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <div
+                class="option"
+                on:click={() => {
+                    polyoptions.set(
+                        muutil.findPolyMelodies(4, melody, polyselected.value),
+                    );
+                    emotionbased.set({ label: "Polyoptions", value: 2 });
+                }}
+            >
+                🎼🎛️
+            </div>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <Select
+                class="select"
+                id="selectpoly"
+                items={polyOptionsSelect}
+                bind:value={polyselected}
+                clearable={false}
+            />
         </div>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div
-            class="option"
-            on:click={() => {
-                polyoptions.set(muutil.findPolyMelodies(4, melody.melody, 1));
-                emotionbased.set({ label: "Polyoptions", value: 2 });
-            }}
-        >
-            PolyQuint
-        </div>
-    </div>
+    {/if}
 </div>
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <svg
