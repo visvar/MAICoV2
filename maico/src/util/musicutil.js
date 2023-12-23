@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import models, { player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points } from '../stores/stores.js'
+import {models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased } from '../stores/stores.js'
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -1212,4 +1212,45 @@ export function findPolyMelodies(num, melody, rule) {
     iter++
   }
   return combined
+}
+
+export function findAllPolyMelodies(num, rule) {
+  // 0 = all notes have to be different
+  // 1 = minimum of 5 quints 
+  let points = JSON.parse(JSON.stringify(get(currentpoints))).map(m => m[2])
+  if(points.length === 0)
+    return [[],[],[]]
+    progress.set(0)
+  let combined = []
+  for (let r = 1; r < num; r++)
+    combined.push([])
+  for(let i = 0; i<points.length; i++){
+    let melody = JSON.parse(JSON.stringify(points[i]))
+    let current = [JSON.parse(JSON.stringify(melody.melody))]
+    let potential = JSON.parse(JSON.stringify(get(currentpoints)))
+    let diff = []
+    let iter = 1
+    while (iter < num) {
+      current.forEach((current1) => {
+        let currjson = JSON.parse(JSON.stringify(current1))
+        if (rule === 0)
+          diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody))
+        else if (rule === 1)
+          diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
+        diff.forEach((m) => {
+          let c = combineMelo(currjson, m[2], [iter, currjson?.id, m[2].index, melody.index])
+          let com = notCombined(c, combined[iter - 1])
+          if (com)
+            combined[iter - 1].push(c)
+        })
+      })
+      current = combined[iter - 1]
+      iter++
+    }
+    console.log(get(progress))
+    progress.set(100 * (i/(points.length-1)))
+  }
+  progress.set(100)
+  polyoptions.set(combined)
+  emotionbased.set({ label: "Polyoptions", value: 2 })
 }

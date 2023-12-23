@@ -66,6 +66,7 @@
     playclick,
     selectedKeys,
     numpoly,
+    polyoptions
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -108,6 +109,13 @@
     { label: "RhythmPie", value: 7 },
     { label: "FlowerComplexity", value: 8 },
   ];
+
+  const polyOptionsSelect = [
+        { label: "Diff", value: 0 },
+        { label: ">4 5th", value: 1 },
+    ];
+
+  let polyselected = { label: "Diff", value: 0 };
 
   const glyphmodeloptions = [
     { label: "Correlation", value: 0 },
@@ -168,6 +176,7 @@
   let oldmodelselected = null;
 
   let dataset = false;
+  let poly = false
   let clustering = false;
   let visualization = false;
   let calculation = false;
@@ -258,6 +267,28 @@
             labelInside
           />
         </div>
+        <div on:click={() => (poly = !poly)}>
+          <h1 class="mb-4 text-l font-bold">Polyphony</h1>
+        </div>
+        {#if poly}
+          <button
+            on:click={() => {
+              flutil.log("generate poly ", polyselected.value);
+              mutil.findAllPolyMelodies(4, polyselected.value);
+              }}
+          >
+            generate 🎼🎛️
+          </button>
+          <div class="select">
+            <Select
+              class="select"
+              id="selectpoly"
+              items={polyOptionsSelect}
+              bind:value={polyselected}
+              clearable={false}
+                />
+          </div>
+        {/if}
         <h5 class="mb-4 text-l font-bold">Import Midi as Primer</h5>
         <input
           class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
