@@ -66,7 +66,8 @@
     playclick,
     selectedKeys,
     numpoly,
-    polyoptions
+    polyoptions,
+    progressnew
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -232,6 +233,34 @@
     }
   }
 
+  async function progressAnimation(n,m){
+    if(n === 0){
+      polyoptions.set([[],[],[]])
+      return null
+    }
+    if($emotionbased.value === 2)
+      return null
+    let i = 0
+    progress.set(0)
+    let points = JSON.parse(JSON.stringify($currentpoints)).map(m => m[2])
+    //progress.set(0)
+    let combined = []
+    for (let r = 1; r < 4; r++)
+      combined.push([])
+    //setTimeout(() => {
+    let intervalID = setInterval(() => {
+      i++
+      if ($progress >= 100) {
+        clearInterval(intervalID);
+      } else {
+        progress.set(i/n * 100)
+        combined = mutil.findAllPolyMelodiesExtern(4, polyselected.value, points, combined, i);
+        console.log(i)
+      }
+    }, 10); //this sets the speed of the animation
+    //}, 0);
+  }
+
   /**
    * <button on:click={() => mu.exportModelJson('basic_rnn')}>export model 'basic_rnn' as Json</button>
    *
@@ -240,6 +269,18 @@
   onMount(() => {
     mu.addModel();
   });
+
+  let progressval = 100
+
+  $: $progress, (v) => {
+  progressval = v
+  console.log(progressval)
+  }
+
+  progress.subscribe((v) => {
+  progressval = v
+  })
+
 </script>
 
 <main>
@@ -256,15 +297,16 @@
         <h1 class="mb-4 text-3xl font-bold">Import/Export</h1>
       </div>
       {#if dataset}
-        <div class="my-4">
+        <div class="my-4" id=progressbar>
           <Progressbar
-            animate
-            tweenDuration={500}
-            progress={$progress}
-            easing={sineOut}
-            size="h-4"
-            color="blue"
-            labelInside
+              animate
+              tweenDuration={500}
+              progress={$progress}
+              easing={sineOut}
+              size="h-4"
+              color="blue"
+              labelInside
+              class="mb-8"
           />
         </div>
         <div on:click={() => (poly = !poly)}>
@@ -273,8 +315,9 @@
         {#if poly}
           <button
             on:click={() => {
-              flutil.log("generate poly ", polyselected.value);
-              mutil.findAllPolyMelodies(4, polyselected.value);
+                flutil.log("generate poly ", polyselected.value);
+                progressAnimation($currentpoints.length, polyselected.value)
+                
               }}
           >
             generate 🎼🎛️
@@ -1266,3 +1309,6 @@
     justify-items: center;
   }
 </style>
+
+
+
