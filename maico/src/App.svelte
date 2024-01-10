@@ -4,6 +4,7 @@
   import * as mu from "./util/modelutil.js";
   import * as glutil from "./util/glyphutil.js";
   import * as flutil from "./util/fileutil.js";
+
   // @ts-ignore
   import {
     pointcolorselect,
@@ -169,6 +170,11 @@
   ];
   let exportmode = { label: "seperate Files", value: 0 };
 
+
+  //import {runDB} from "./DB/db.js"
+  //runDB()
+
+
   // maybe for selection
   let modeltemp = [];
 
@@ -266,7 +272,7 @@
    *
    */
 
-  onMount(() => {
+  onMount(async () => {
     mu.addModel();
   });
 

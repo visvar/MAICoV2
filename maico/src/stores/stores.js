@@ -5,8 +5,11 @@ import { distanceMatrix } from '../util/drutil';
 import { averageOfGlyphs, calcInformation, calcVariancesCluster, getMiddlePosition, calcModelFromCluster } from '../util/glyphutil';
 import { axisoptions, axisoptionsCor, keysLookup } from './globalValues';
 import { writeToMidi } from '../util/fileutil';
+import axios from 'axios';
 
 let oldAxis = [{ value: 0, label: 'DR' }, { value: 0, label: 'DR' }, false]
+
+
 
 let cpointchanged = []
 
@@ -85,18 +88,35 @@ function createExportList() {
     };
 }
 
+const startdate = new Date().toISOString().substring(11, 23)
+
+async function postLog(n){
+    const log = {
+        date:n.date,
+        actions:JSON.stringify(n.actions)
+    }
+    const response = await axios.post("http://localhost:3000/api/logs", log)
+    console.log(response)
+}
+
 function createActionlog() {
     const { subscribe, set, update } = writable({ date: new Date().toISOString().substring(2, 10), actions: {} });
 
     return {
         subscribe,
         get: (n) => get(n),
-        add: (key, a, d) => update(n => {
-            if (n.actions[key] !== null && n.actions[key] !== undefined) {
-                if (n.actions[key].actions.indexOf({ time: key, action: a, data: d }) === -1)
-                    n.actions[key].actions.push({ time: key, action: a, data: d })
-            } else {
-                n.actions[key] = { actions: [{ time: key, action: a, data: d }] }
+        add: (key, a, d) => update((n) => {
+            if(startdate.substring(0,8) === key.substring(0,8) && parseInt(key.substring(9))-parseInt(startdate.substring(9)) < 100){
+                return n
+            }else{
+                key = key.substring(0,8)
+                if (n.actions[key] !== null && n.actions[key] !== undefined) {
+                    if (n.actions[key].actions.indexOf({ time: key, action: a, data: d }) === -1)
+                        n.actions[key].actions.push({ time: key, action: a, data: d })
+                } else {
+                    n.actions[key] = { actions: [{ time: key, action: a, data: d }] }
+                }
+                postLog(n)
             }
             return n
         })

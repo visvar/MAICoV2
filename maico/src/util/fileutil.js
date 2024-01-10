@@ -4,6 +4,7 @@ import * as mm from '@magenta/music'
 import { actionlog, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 import * as mu from "./modelutil"
+import axios from 'axios'
 
 export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
@@ -144,7 +145,7 @@ export function makeid(length) {
 
 export function log(action, data) {
   if (get(progress) !== 100 || get(progress) !== 0)
-    actionlog.add(new Date().toISOString().substring(11, 19), action, data)
+    actionlog.add(new Date().toISOString().substring(11, 23), action, data)
 }
 
 export function writeLogs() {
