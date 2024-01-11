@@ -6,6 +6,7 @@ import cors from "cors"
 //import pkg from 'body-parser';
 //const { bodyParser } = pkg;
 import { router } from "./Routes/log.js"
+import path from "path"
 
 const con = get()
 
@@ -23,7 +24,15 @@ mongoose.connect(con.mongoURI,{
 
 app.use("/api/logs", router)
 
-app.get("/", (req,res) => res.send("hello world"))
+//if(process.env.NODE_ENV === "production"){
+
+console.log(path.resolve(path.dirname("./"), "dist", "index.html"), path.dirname("./"))
+    
+app.use(express.static('./'))
+app.get("*", (req,res) => {
+    res.sendFile(path.resolve(path.dirname("./"), "dist", "index.html"))
+})
+//}
 
 app.listen(con.port, ()=> console.log("Express is running on "+con.port))
 
