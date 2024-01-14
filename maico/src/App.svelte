@@ -68,7 +68,7 @@
     selectedKeys,
     numpoly,
     polyoptions,
-    progressnew
+    actionlog
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -97,9 +97,56 @@
   import FlowerGlyphModel from "./visualization/Glyphs/FlowerGlyphModel.svelte";
   import PianorollFilter from "./visualization/Filter/PianorollFilter.svelte";
   import PianoKeyFilter from "./visualization/Filter/PianoKeyFilter.svelte";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy  } from "svelte";
   import { sineOut } from "svelte/easing";
 
+
+    import db from "./firebase.js";
+    import {getAuth, onAuthStateChanged, signInAnonymously} from "firebase/auth"
+    import { getStorage,ref,uploadBytes } from "firebase/storage";
+
+    let user1 = null
+    let uniqueID = flutil.makeid(3)
+
+    const file = "test"
+    const auth = getAuth()
+    onAuthStateChanged(auth, user => {
+      console.log(user)
+        user1 = user
+    })
+
+    //addEventListener("beforeunload", (event) => {});
+    //onbeforeunload = (event) => {};
+
+    onDestroy(() => {
+      console.log('the component is being destroyed');
+      uploadLogDataFiles()
+    });
+
+    actionlog.subscribe(()=> {
+      uploadLogDataFiles()
+    })
+
+    function uploadLogDataFiles(){
+      let log = flutil.getLogs()
+      //log = [file, name]
+      uploadFiles(user1, log[0], log[1])
+      let dataset = flutil.getDataset()
+      uploadFiles(user1, dataset[0], dataset[1])
+    }
+
+    //uploadFiles(user1, json)
+    function uploadFiles(user, json, name){
+        if(user !== null){
+            const storageRef = ref(db, user1.uid);
+            const fileRef = ref(storageRef, "Session_"+uniqueID + "_"+name)
+            uploadBytes(fileRef, json).then(() => {
+                console.log('Uploaded:'+name);
+            });
+        }
+    }
+
+  signInAnonymously(auth)
   const glyphoptions = [
     { label: "Points", value: 0 },
     { label: "Flowerglyph", value: 1 },
@@ -170,9 +217,6 @@
   ];
   let exportmode = { label: "seperate Files", value: 0 };
 
-
-  //import {runDB} from "./DB/db.js"
-  //runDB()
 
 
   // maybe for selection
@@ -289,7 +333,7 @@
 
 </script>
 
-<main>
+<main >
   <div class="relative">
     <div class="tooltip" id="inBig">
       <InBigContainer />
@@ -303,7 +347,7 @@
         <h1 class="mb-4 text-3xl font-bold">Import/Export</h1>
       </div>
       {#if dataset}
-        <div class="my-4" id=progressbar>
+        <div class="my-4" id=progressbar onbeforeunload={() => {console.log("destroy"); uploadLogDataFiles()}}>
           <Progressbar
               animate
               tweenDuration={500}
@@ -1315,6 +1359,5 @@
     justify-items: center;
   }
 </style>
-
 
 

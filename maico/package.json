@@ -30,10 +30,12 @@
     "d3-voronoi": "^1.1.4",
     "eventemitter3": "^5.0.1",
     "file-saver": "^2.0.5",
+    "firebase": "^9.23.0",
     "mathjs": "^11.11.0",
     "musicvis-lib": "^0.57.1",
     "svelte-canvas": "^0.9.3",
     "svelte-select": "^5.6.0",
+    "sveltefire": "^0.4.5",
     "tonal": "^4.14.1",
     "yootils": "^0.3.1"
   }

@@ -1,10 +1,9 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
-import { actionlog, progress } from '../stores/stores'
+import models, { actionlog, primerList, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 import * as mu from "./modelutil"
-import axios from 'axios'
 
 export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
@@ -146,6 +145,32 @@ export function makeid(length) {
 export function log(action, data) {
   if (get(progress) !== 100 || get(progress) !== 0)
     actionlog.add(new Date().toISOString().substring(11, 23), action, data)
+}
+
+function replace(key, value) {
+  if (key === "totalQuantizedSteps" || key === 'quantizedEndStep' || key === 'quantizedStartStep') {
+      let change = parseInt(value);
+      return change;
+  }
+  return value;
+}
+
+export function getDataset() {
+  const data = get(models)
+  //const primerString = JSON.stringify(get(primerList), replace, 2)
+  //const jsonString = JSON.stringify(data, replace, 2)
+  const primer = get(primerList)
+  const complete = JSON.stringify({ primerList: { primer }, modelList: { data } }, replace, 2)
+  const blob = new Blob([complete], { type: 'application/json' })
+  const name = new Date().toISOString().substring(2, 10) + "_dataset" + '.json'
+  return [blob, name]
+}
+
+export function getLogs(){
+  const complete = JSON.stringify(get(actionlog))
+  const blob = new Blob([complete], { type: 'application/json' })
+  const name = new Date().toISOString().substring(2, 10) + "_logs" + '.json'
+  return [blob, name]
 }
 
 export function writeLogs() {
