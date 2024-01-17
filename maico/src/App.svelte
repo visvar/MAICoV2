@@ -564,7 +564,7 @@
         >
           export Logs
         </button>
-        <h5 class="mb-4 text-l font-bold">Dataset</h5>
+        <h5 class="mb-4 text-l font-bold">Session</h5>
         <button
           on:click={() => document.querySelector("#datasetFiles").click()}
         >
