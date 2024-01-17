@@ -20,6 +20,7 @@
     import * as glutil from "../../util/glyphutil.js";
     import { melodies } from "@magenta/music";
     import { log } from "../../util/fileutil.js";
+    import { forEach } from "mathjs";
 
     const margin = { top: 20, right: 10, bottom: 10, left: 25 };
 
@@ -212,7 +213,8 @@
                 .attr("x", (d) => x(d.quantizedStartStep))
                 .attr("y", (d) => y(d.pitch) + noteheight * 0.1)
                 .attr("fill", (d) => {
-                    if (!primer) return fill;
+                    if (!primer && d.meloID !== undefined)
+                        return visutil.modelColor10(d.meloID);
                     /*fill === "grey"
                             ? fill
                             : melody.additional.outScaleNotes.outScale.has(
@@ -241,9 +243,26 @@
     >
         {#if melody.model.name === "poly"}
             {melody.model.name.slice(0, 8)} <br />
-            Base: {melody.polyinfo.basemelody}<br />
-            comb: <br />
-            {melody.polyinfo.combinations}
+            Base:
+            <div
+                style:display="inline-block"
+                style:color={visutil.modelColor10(0)}
+            >
+                {melody.polyinfo.basemelody}
+            </div>
+            <br />
+            comb:<br />
+            {#each melody.polyinfo.combinations as c, i}
+                <div
+                    style:display="inline-block"
+                    style:color={visutil.modelColor10(i + 1)}
+                >
+                    {c}
+                </div>
+                {#if i !== melody.polyinfo.combinations.length - 1}
+                    ,
+                {/if}
+            {/each}
         {:else}
             {melody.model.name.slice(0, 8)} <br />
             {melody.mvaesim !== undefined ? "VaeSim: " + melody.mvaesim : ""}

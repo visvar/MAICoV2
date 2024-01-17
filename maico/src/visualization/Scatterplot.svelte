@@ -34,6 +34,8 @@
     heatmapinfo,
     polyoptions,
     numpoly,
+    exportList,
+    exportcleared,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -122,6 +124,12 @@
   $: $emotionbased, testMeloPoints();
   $: $polyoptions, meloPointsNew();
   $: $numpoly, meloPointsNew();
+  exportcleared.subscribe((n) => {
+    if (n !== 0)
+      //points.set(
+      $points.forEach((p) => (p[2].userspecific.export = false));
+    //);
+  });
 
   similarityweight.subscribe((v) => {
     testMeloPoints();

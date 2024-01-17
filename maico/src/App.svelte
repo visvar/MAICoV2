@@ -151,7 +151,7 @@
 
   console.log(import.meta.env.PROD, import.meta.env.MODE);
   //only in production
-  if(import.meta.env.PROD || import.meta.env.MODE ==="production")
+  if (import.meta.env.PROD || import.meta.env.MODE === "production")
     signInAnonymously(auth);
 
   const glyphoptions = [
@@ -312,7 +312,7 @@
           polyselected.value,
           points,
           combined,
-          i
+          i,
         );
         console.log(i);
       }
@@ -440,7 +440,7 @@
           on:click={() => {
             flutil.log(
               "generate with mvaesim and length for iterations from list ",
-              { $mvaesim, lengthtemp, $iter, $primerList }
+              { $mvaesim, lengthtemp, $iter, $primerList },
             );
             flutil.log("strangers; adjust mode; filterextent; keys:", {
               $strangers,
@@ -453,7 +453,7 @@
         >
         <div class="label">iterations of 15 samples per model</div>
         <div class="filter">
-          <input type="range" bind:value={$iter} min="1" max="10" step="1" />
+          <input type="range" bind:value={$iter} min="1" max="25" step="1" />
           <span>
             {$iter}
           </span>
@@ -693,7 +693,7 @@
               title="Key legend"
               color={d3.scaleOrdinal(
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                gu.colormap12
+                gu.colormap12,
               )}
               tickFormat={(d) => {
                 const keys = [
@@ -720,7 +720,7 @@
             <ColorLegend
               title="Temperature legend"
               color={d3.scaleDiverging([0.2, 0.9, 1.6], (d) =>
-                d3.interpolateRdYlBu(1 - d)
+                d3.interpolateRdYlBu(1 - d),
               )}
               tickFormat={(d) => d}
               tickValues={[0.2, 0.45, 0.7, 0.9, 1.1, 1.35, 1.6]}
@@ -745,7 +745,7 @@
             <ColorLegend
               title="Interval legend"
               color={d3.scaleDiverging([0, 12, 24], (d) =>
-                gu.histogramColorLegend(d)
+                gu.histogramColorLegend(d),
               )}
               tickFormat={(d) => d - 12}
               tickSize={0}
@@ -758,7 +758,7 @@
               title="note tick length"
               color={d3.scaleSequentialQuantile(
                 [0, 1, 2, 3, 4],
-                visutil.divergingScale
+                visutil.divergingScale,
               )}
               tickFormat={(d) => {
                 const keys = [16, 8, 4, 2, 1];
@@ -828,8 +828,8 @@
               class="option {$seenfilter === 1
                 ? 'selected'
                 : $seenfilter === -1
-                ? 'falseselected'
-                : ''}"
+                  ? 'falseselected'
+                  : ''}"
               on:click={() => setFilters(0)}
             >
               👁️
@@ -838,8 +838,8 @@
               class="option {$listenfilter === 2
                 ? 'selected'
                 : $listenfilter === -2
-                ? 'falseselected'
-                : ''}"
+                  ? 'falseselected'
+                  : ''}"
               on:click={() => setFilters(3)}
             >
               👂
@@ -1011,7 +1011,7 @@
               title="Key legend"
               color={d3.scaleOrdinal(
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                gu.colormap12
+                gu.colormap12,
               )}
               tickFormat={(d) => {
                 const keys = [
@@ -1059,13 +1059,13 @@
                   Object.entries($modelselected).map((entry) => [
                     entry[0],
                     true,
-                  ])
-                )
+                  ]),
+                ),
               );
               if (
                 oldmodelselected !== null &&
                 Object.values($modelselected).filter(
-                  (d, i) => d !== Object.values(oldmodelselected)[i]
+                  (d, i) => d !== Object.values(oldmodelselected)[i],
                 ).length > 0
               ) {
                 somethingChanged.set(true);
@@ -1085,13 +1085,13 @@
                   Object.entries($modelselected).map((entry) => [
                     entry[0],
                     false,
-                  ])
-                )
+                  ]),
+                ),
               );
               if (
                 oldmodelselected !== null &&
                 Object.values($modelselected).filter(
-                  (d, i) => d !== Object.values(oldmodelselected)[i]
+                  (d, i) => d !== Object.values(oldmodelselected)[i],
                 ).length > 0
               ) {
                 somethingChanged.set(true);
@@ -1126,7 +1126,7 @@
                         if (
                           oldmodelselected !== null &&
                           Object.values($modelselected).filter(
-                            (d, i) => d !== Object.values(oldmodelselected)[i]
+                            (d, i) => d !== Object.values(oldmodelselected)[i],
                           ).length > 0
                         ) {
                           clusterSelect.set(null);
@@ -1138,7 +1138,7 @@
                         const modelselect = Object.values($modelselected);
                         flutil.log(
                           "modelselection: " + model.name + " changed",
-                          { modelselect }
+                          { modelselect },
                         );
                       }}
                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -1151,19 +1151,19 @@
                   <br /> 👁️: {$seen?.filter(
                     (p) =>
                       p[2].model.name === model.name &&
-                      p[2].userspecific.seen >= 1
+                      p[2].userspecific.seen >= 1,
                   ).length} 👂: {$seen?.filter(
                     (p) =>
                       p[2].model.name === model.name &&
-                      p[2].userspecific.seen === 2
+                      p[2].userspecific.seen === 2,
                   ).length} 👍: {$rate[model.name] === undefined
                     ? 0
                     : $rate[model.name]?.filter(
-                        (p) => p.userspecific.rate === 1
+                        (p) => p.userspecific.rate === 1,
                       ).length} 👎: {$rate[model.name] === undefined
                     ? 0
                     : $rate[model.name]?.filter(
-                        (p) => p.userspecific.rate === -1
+                        (p) => p.userspecific.rate === -1,
                       ).length}
                 </label>
               </div>

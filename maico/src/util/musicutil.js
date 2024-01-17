@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import {models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew } from '../stores/stores.js'
+import { models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew } from '../stores/stores.js'
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -854,7 +854,6 @@ export function computeRhythmDistribution(mel) {
 }
 
 export function computePauses(mel) {
-
   let pauses = Array(mel.totalQuantizedSteps).fill(0)
   let lastEndTime = 0
   mel.notes.forEach((note) => {
@@ -1149,6 +1148,10 @@ function combineMelo(m1, m2s, idtag) {
   let id = idtag[1] !== undefined ? idtag[0] + "_" + idtag[1] + "_" + idtag[2] : idtag[0] + "_" + idtag[2]
   let basemelody
   let combinations
+  let m1notesadapt = idtag[1] !== undefined ? m1.notes : m1.notes.map((n, i) => {
+    n.meloID = 0
+    return n
+  })
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
     combinations = [m2s.index]
@@ -1158,16 +1161,21 @@ function combineMelo(m1, m2s, idtag) {
     basemelody = m1.basemelody
     combinations = c
   }
-  let m2 = m2s.melody
-  let m1notes = m1.notes.concat(m2.notes)
+  let m2r = JSON.parse(JSON.stringify(m2s.melody.notes))
+  let m2 = m2r.map(n => {
+    n.meloID = combinations.length
+    return n
+  })
+  let m1notes = m1notesadapt.concat(m2)
   m1notes = m1notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
   let notes = removeOverNotes(m1notes)
   return {
     notes: notes,
-    totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2.totalQuantizedSteps),
+    totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
     id: id,
     basemelody: basemelody,
-    combinations: combinations
+    combinations: combinations,
+    isPolymix: true
   }
 }
 
@@ -1221,15 +1229,15 @@ export function findAllPolyMelodies(num, rule) {
   // 0 = all notes have to be different
   // 1 = minimum of 5 quints 
   let points = JSON.parse(JSON.stringify(get(currentpoints))).map(m => m[2])
-  if(points.length === 0){
-    polyoptions.set([[],[],[]])
+  if (points.length === 0) {
+    polyoptions.set([[], [], []])
     return null
   }
   //progress.set(0)
   let combined = []
   for (let r = 1; r < num; r++)
     combined.push([])
-  for(let i = 0; i<points.length; i++){
+  for (let i = 0; i < points.length; i++) {
     let melody = JSON.parse(JSON.stringify(points[i]))
     let current = [JSON.parse(JSON.stringify(melody.melody))]
     let potential = JSON.parse(JSON.stringify(get(currentpoints)))
@@ -1284,7 +1292,7 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
     current = combined[iter - 1]
     iter++
   }
-  if(i === points.length -1){
+  if (i === points.length - 1) {
     progress.set(100)
     polyoptions.set(combined)
     emotionbased.set({ label: "Polyoptions", value: 2 })

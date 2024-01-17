@@ -66,13 +66,18 @@ export const progressnew = writable(100)
 
 export const mvaesim = writable(0.90)
 
+export const exportcleared = writable(0)
+
 function createExportList() {
     const { subscribe, set, update } = writable([]);
 
     return {
         subscribe,
         get: (n) => get(n),
-        clear: (n) => set([]),
+        clear: (n) => update(n => {
+            exportcleared.set(get(exportcleared) + 1);
+            return []
+        }),
         addMelo: (mel) => update(n => {
             let p = n.findIndex(v => v.index === mel.index)
             if (p === -1)

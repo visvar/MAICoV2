@@ -14,14 +14,39 @@ export function writeToMidi(melodies1, bpm, mode) {
     let sec
     let melodies = melodies1.map((m) => m.melody)
     if (mode === 2) {
-      const track = midi.addTrack()
+      let track0 = midi.addTrack()
+      track0.channel = 0
+      let track1 = midi.addTrack()
+      track1.channel = 1
+      let track2 = midi.addTrack()
+      track2.channel = 2
+      let track3 = midi.addTrack()
+      track3.channel = 3
+      let tracks = [track0, track1, track2, track3]
       let lastTiming = 0
       melodies.forEach((mel) => {
+        const poly = mel.isPolymix ? true : false
         mel.notes.forEach(n => {
-          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming })
+          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, meloID: poly ? n.meloID : 0 })
         })
         lastTiming += mel.totalQuantizedSteps
+        sec = mm.sequences.unquantizeSequence(newSec, bpm)
+        sec.notes.forEach((n, i) => {
+          n.meloID = newSec.notes[i].meloID
+        })
+        console.log(sec)
+        tracks.forEach((t, i) => {
+          sec.notes.filter(n => n.meloID === i).forEach((note) => {
+            t.addNote({
+              midi: note.pitch,
+              time: note.startTime,
+              duration: note.endTime - note.startTime,
+              velocity: 100,
+            })
+          })
+        })
       })
+      /*
       sec = mm.sequences.unquantizeSequence(newSec, bpm)
       sec.notes.forEach((note) => {
         track.addNote({
@@ -31,6 +56,8 @@ export function writeToMidi(melodies1, bpm, mode) {
           velocity: 100,
         })
       })
+      */
+      console.log(midi)
       const array = midi.toArray()
       const buffer = array.buffer
       /* global Blob */
@@ -39,7 +66,7 @@ export function writeToMidi(melodies1, bpm, mode) {
       writeName(blob, primername, melodies.length, "variations_sequence")
     } else if (mode === 1) {
       melodies.forEach((mel) => {
-        const track = midi.addTrack()
+        let track = midi.addTrack()
         newSec.notes = mel.notes
         sec = mm.sequences.unquantizeSequence(newSec, bpm)
         sec.notes.forEach((note) => {
@@ -60,7 +87,8 @@ export function writeToMidi(melodies1, bpm, mode) {
     } else if (mode === 0) {
       melodies.forEach((mel, i) => {
         let primername = mel?.primer?.name !== undefined ? mel.primer.name : 'Polyphony'
-        writeMidifile(mel, bpm, i, primername)
+        const poly = mel.isPolymix ? true : false
+        writeMidifile(mel, bpm, i, primername, poly)
       })
     }
     //writeLogs()
@@ -79,22 +107,40 @@ function writeName(blob, primerfile, num, zusatz) {
   })
 }
 
-function writeMidifile(mel, bpm, i, primerfile = "") {
+function writeMidifile(mel, bpm, i, primerfile = "", poly) {
   return new Promise(() => {
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
     let sec
-    const track = midi.addTrack()
-    newSec.notes = mel.notes
-    sec = mm.sequences.unquantizeSequence(newSec, bpm)
-    sec.notes.forEach((note) => {
-      track.addNote({
-        midi: note.pitch,
-        time: note.startTime,
-        duration: note.endTime - note.startTime,
-        velocity: 100,
+    if (poly) {
+      const comb = Math.max(...mel.notes.map(n => n.meloID))
+      for (let i = 0; i <= comb; i++) {
+        let track = midi.addTrack()
+        track.channel = i
+        newSec.notes = mel.notes.filter(n => n.meloID === i)
+        sec = mm.sequences.unquantizeSequence(newSec, bpm)
+        sec.notes.forEach((note) => {
+          track.addNote({
+            midi: note.pitch,
+            time: note.startTime,
+            duration: note.endTime - note.startTime,
+            velocity: 100,
+          })
+        })
+      }
+    } else {
+      const track = midi.addTrack()
+      newSec.notes = mel.notes
+      sec = mm.sequences.unquantizeSequence(newSec, bpm)
+      sec.notes.forEach((note) => {
+        track.addNote({
+          midi: note.pitch,
+          time: note.startTime,
+          duration: note.endTime - note.startTime,
+          velocity: 100,
+        })
       })
-    })
+    }
     const array = midi.toArray()
     const buffer = array.buffer
     /* global Blob */
