@@ -1,5 +1,5 @@
 // @ts-ignore
-import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim } from '../stores/stores.js'
+import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession } from '../stores/stores.js'
 import { iter, genlength } from '../stores/devStores.js'
 import { get } from 'svelte/store';
 // @ts-ignore
@@ -48,19 +48,6 @@ export function flattenAllMelodies() {
     return melodies
 }
 
-export async function uploadDatasetFile(event) {
-    try {
-        const reader = new FileReader();
-        reader.readAsText(event.target.files[0], "UTF-8");
-        reader.onload = function (evt) {
-            const obj = JSON.parse(String(evt.target.result))
-            models.setAll(obj.modelList.data)
-            primerList.set(obj.primerList.primer)
-        }
-    } catch (e) {
-        console.log(e)
-    }
-}
 
 export async function requestModels(allprimer) {
     progress.set(0)
@@ -415,12 +402,21 @@ function replace(key, value) {
     }
  */
 
+//polyoptions also
 export function exportModelJson(modelname) {
     const data = modelname !== undefined ? getModel(modelname, models)[0] : get(models)
     //const primerString = JSON.stringify(get(primerList), replace, 2)
     //const jsonString = JSON.stringify(data, replace, 2)
     const primer = get(primerList)
-    const complete = JSON.stringify({ primerList: { primer }, modelList: { data } }, replace, 2)
+    const poly = get(polyoptions)
+    const complete = JSON.stringify({
+        primerList: { primer }, modelList: { data }, polyoptions: { poly },
+        variables: {
+            strangers: get(strangers), genlength: get(genlength),
+            filterextents: get(filterextents), mvaesim: get(mvaesim), iter: get(iter), similarityweight: get(similarityweight),
+            DRumap: get(DRumap), emotionbased: get(emotionbased), numpoly: get(numpoly), axisselect: get(axisselect), selectedKeys: get(selectedKeys), selectedBaseKeys: get(selectedBaseKeys)
+        }
+    }, replace, 2)
     const blob = new Blob([complete], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -428,6 +424,38 @@ export function exportModelJson(modelname) {
     link.download = modelname || new Date().toISOString().substring(2, 19) + "_dataset" + '.json'
     link.click()
     URL.revokeObjectURL(url)
+}
+
+export async function uploadDatasetFile(event) {
+    try {
+        const reader = new FileReader();
+        reader.readAsText(event.target.files[0], "UTF-8");
+        reader.onload = function (evt) {
+            const obj = JSON.parse(String(evt.target.result))
+            models.setAll(obj.modelList.data)
+            primerList.set(obj.primerList.primer)
+            if (obj?.polyoptions !== undefined)
+                polyoptions.set(obj.polyoptions.poly)
+            if (obj?.variables !== undefined) {
+                strangers.set(obj.variables.strangers)
+                genlength.set(obj.variables.genlength)
+                filterextents.set(obj.variables.filterextents)
+                mvaesim.set(obj.variables.mvaesim)
+                iter.set(obj.variables.iter)
+                similarityweight.set(obj.variables.similarityweight)
+                DRumap.set(obj.variables.DRumap)
+                emotionbased.set(obj.variables.emotionbased)
+                numpoly.set(obj.variables.numpoly)
+                axisselect.set(obj.variables.axisselect)
+                selectedKeys.set(obj.variables.selectedKeys)
+                selectedBaseKeys.set(obj.variables.selectedBaseKeys)
+                importedSession.set(get(importedSession) + 1)
+            }
+
+        }
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 export function getIndexbyModelname(n) {

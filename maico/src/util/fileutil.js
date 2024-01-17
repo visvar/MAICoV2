@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
-import models, { actionlog, primerList, progress } from '../stores/stores'
+import models, { actionlog, exportList, primerList, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 import * as mu from "./modelutil"
 
@@ -63,8 +63,9 @@ export function writeToMidi(melodies1, bpm, mode) {
         writeMidifile(mel, bpm, i, primername)
       })
     }
-    writeLogs()
-    mu.exportModelJson();
+    //writeLogs()
+    //mu.exportModelJson();
+    exportList.clear()
     return null
   } catch (e) {
     console.log(e)
@@ -149,8 +150,8 @@ export function log(action, data) {
 
 function replace(key, value) {
   if (key === "totalQuantizedSteps" || key === 'quantizedEndStep' || key === 'quantizedStartStep') {
-      let change = parseInt(value);
-      return change;
+    let change = parseInt(value);
+    return change;
   }
   return value;
 }
@@ -166,7 +167,7 @@ export function getDataset() {
   return [blob, name]
 }
 
-export function getLogs(){
+export function getLogs() {
   const complete = JSON.stringify(get(actionlog))
   const blob = new Blob([complete], { type: 'application/json' })
   const name = new Date().toISOString().substring(2, 10) + "_logs" + '.json'

@@ -6,7 +6,13 @@
     import * as muutil from "../../util/musicutil.js";
     import * as visutil from "../../util/visutil.js";
     import { onMount } from "svelte";
-    import { currentcolor, colors, selectedKeys } from "../../stores/stores.js";
+    import {
+        currentcolor,
+        colors,
+        selectedKeys,
+        selectedBaseKeys,
+        importedSession,
+    } from "../../stores/stores.js";
     import { keysLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
 
@@ -40,6 +46,10 @@
         drawPianoRoll();
     });
 
+    importedSession.subscribe((v) => {
+        if (v !== 0) drawPianoRoll();
+    });
+
     function drawPianoRoll() {
         if (svg !== undefined) {
             svg.selectAll("*").remove();
@@ -62,6 +72,8 @@
                 .attr("width", x(1) - x(0))
                 .attr("fill", (k, i) => {
                     if ($selectedKeys[keysLookup.indexOf(k)]) {
+                        if ($selectedBaseKeys === keysLookup.indexOf(k))
+                            return "orange";
                         return k.includes("#") ? "darkblue" : "lightblue";
                     } else {
                         return k.includes("#") ? "black" : "lightgrey";
@@ -74,6 +86,8 @@
                     let selector = k.includes("#")
                         ? "#idKey" + k[0] + "s"
                         : "#idKey" + k;
+                    if ($selectedBaseKeys === keysLookup.indexOf(k))
+                        $selectedBaseKeys = -1;
                     svg.select(selector).attr("fill", () => {
                         if ($selectedKeys[keysLookup.indexOf(k)]) {
                             return k.includes("#") ? "darkblue" : "lightblue";
@@ -81,6 +95,39 @@
                             return k.includes("#") ? "black" : "lightgrey";
                         }
                     });
+                })
+                .on("contextmenu", (d, k, i) => {
+                    d.preventDefault();
+                    if ($selectedKeys[keysLookup.indexOf(k)]) {
+                        const old = $selectedBaseKeys;
+                        $selectedBaseKeys =
+                            $selectedBaseKeys === keysLookup.indexOf(k)
+                                ? -1
+                                : keysLookup.indexOf(k);
+                        let selector = k.includes("#")
+                            ? "#idKey" + k[0] + "s"
+                            : "#idKey" + k;
+                        svg.select(selector).attr("fill", () => {
+                            if ($selectedBaseKeys === keysLookup.indexOf(k)) {
+                                return "orange";
+                            } else {
+                                return k.includes("#")
+                                    ? "darkblue"
+                                    : "lightblue";
+                            }
+                        });
+                        if (old !== -1) {
+                            selector = keysLookup[old].includes("#")
+                                ? "#idKey" + keysLookup[old][0] + "s"
+                                : "#idKey" + keysLookup[old];
+
+                            svg.select(selector).attr("fill", () => {
+                                return keysLookup[old].includes("#")
+                                    ? "darkblue"
+                                    : "lightblue";
+                            });
+                        }
+                    }
                 });
             svg.append("g")
                 .selectAll("text")

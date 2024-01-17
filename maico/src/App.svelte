@@ -68,7 +68,7 @@
     selectedKeys,
     numpoly,
     polyoptions,
-    actionlog
+    actionlog,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -97,56 +97,63 @@
   import FlowerGlyphModel from "./visualization/Glyphs/FlowerGlyphModel.svelte";
   import PianorollFilter from "./visualization/Filter/PianorollFilter.svelte";
   import PianoKeyFilter from "./visualization/Filter/PianoKeyFilter.svelte";
-  import { onMount, onDestroy  } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { sineOut } from "svelte/easing";
 
+  import db from "./firebase.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signInAnonymously,
+  } from "firebase/auth";
+  import { getStorage, ref, uploadBytes } from "firebase/storage";
 
-    import db from "./firebase.js";
-    import {getAuth, onAuthStateChanged, signInAnonymously} from "firebase/auth"
-    import { getStorage,ref,uploadBytes } from "firebase/storage";
+  let user1 = null;
+  let uniqueID = flutil.makeid(3);
 
-    let user1 = null
-    let uniqueID = flutil.makeid(3)
+  const file = "test";
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    console.log(user);
+    user1 = user;
+  });
 
-    const file = "test"
-    const auth = getAuth()
-    onAuthStateChanged(auth, user => {
-      console.log(user)
-        user1 = user
-    })
+  //addEventListener("beforeunload", (event) => {});
+  //onbeforeunload = (event) => {};
 
-    //addEventListener("beforeunload", (event) => {});
-    //onbeforeunload = (event) => {};
+  onDestroy(() => {
+    console.log("the component is being destroyed");
+    uploadLogDataFiles();
+  });
 
-    onDestroy(() => {
-      console.log('the component is being destroyed');
-      uploadLogDataFiles()
-    });
+  actionlog.subscribe(() => {
+    uploadLogDataFiles();
+  });
 
-    actionlog.subscribe(()=> {
-      uploadLogDataFiles()
-    })
+  function uploadLogDataFiles() {
+    let log = flutil.getLogs();
+    //log = [file, name]
+    uploadFiles(user1, log[0], log[1]);
+    let dataset = flutil.getDataset();
+    uploadFiles(user1, dataset[0], dataset[1]);
+  }
 
-    function uploadLogDataFiles(){
-      let log = flutil.getLogs()
-      //log = [file, name]
-      uploadFiles(user1, log[0], log[1])
-      let dataset = flutil.getDataset()
-      uploadFiles(user1, dataset[0], dataset[1])
+  //uploadFiles(user1, json)
+  function uploadFiles(user, json, name) {
+    if (user !== null) {
+      const storageRef = ref(db, user1.uid);
+      const fileRef = ref(storageRef, "Session_" + uniqueID + "_" + name);
+      uploadBytes(fileRef, json).then(() => {
+        console.log("Uploaded:" + name);
+      });
     }
+  }
 
-    //uploadFiles(user1, json)
-    function uploadFiles(user, json, name){
-        if(user !== null){
-            const storageRef = ref(db, user1.uid);
-            const fileRef = ref(storageRef, "Session_"+uniqueID + "_"+name)
-            uploadBytes(fileRef, json).then(() => {
-                console.log('Uploaded:'+name);
-            });
-        }
-    }
+  console.log(import.meta.env.PROD, import.meta.env.MODE);
+  //only in production
+  if(import.meta.env.PROD || import.meta.env.MODE ==="production")
+    signInAnonymously(auth);
 
-  signInAnonymously(auth)
   const glyphoptions = [
     { label: "Points", value: 0 },
     { label: "Flowerglyph", value: 1 },
@@ -160,9 +167,9 @@
   ];
 
   const polyOptionsSelect = [
-        { label: "Diff", value: 0 },
-        { label: ">4 5th", value: 1 },
-    ];
+    { label: "Diff", value: 0 },
+    { label: ">4 5th", value: 1 },
+  ];
 
   let polyselected = { label: "Diff", value: 0 };
 
@@ -217,8 +224,6 @@
   ];
   let exportmode = { label: "seperate Files", value: 0 };
 
-
-
   // maybe for selection
   let modeltemp = [];
 
@@ -227,7 +232,7 @@
   let oldmodelselected = null;
 
   let dataset = false;
-  let poly = false
+  let poly = false;
   let clustering = false;
   let visualization = false;
   let calculation = false;
@@ -283,29 +288,33 @@
     }
   }
 
-  async function progressAnimation(n,m){
-    if(n === 0){
-      polyoptions.set([[],[],[]])
-      return null
+  async function progressAnimation(n, m) {
+    if (n === 0) {
+      polyoptions.set([[], [], []]);
+      return null;
     }
-    if($emotionbased.value === 2)
-      return null
-    let i = 0
-    progress.set(0)
-    let points = JSON.parse(JSON.stringify($currentpoints)).map(m => m[2])
+    if ($emotionbased.value === 2) return null;
+    let i = 0;
+    progress.set(0);
+    let points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
     //progress.set(0)
-    let combined = []
-    for (let r = 1; r < 4; r++)
-      combined.push([])
+    let combined = [];
+    for (let r = 1; r < 4; r++) combined.push([]);
     //setTimeout(() => {
     let intervalID = setInterval(() => {
-      i++
+      i++;
       if ($progress >= 100) {
         clearInterval(intervalID);
       } else {
-        progress.set(i/n * 100)
-        combined = mutil.findAllPolyMelodiesExtern(4, polyselected.value, points, combined, i);
-        console.log(i)
+        progress.set((i / n) * 100);
+        combined = mutil.findAllPolyMelodiesExtern(
+          4,
+          polyselected.value,
+          points,
+          combined,
+          i
+        );
+        console.log(i);
       }
     }, 10); //this sets the speed of the animation
     //}, 0);
@@ -320,20 +329,20 @@
     mu.addModel();
   });
 
-  let progressval = 100
+  let progressval = 100;
 
-  $: $progress, (v) => {
-  progressval = v
-  console.log(progressval)
-  }
+  $: $progress,
+    (v) => {
+      progressval = v;
+      console.log(progressval);
+    };
 
   progress.subscribe((v) => {
-  progressval = v
-  })
-
+    progressval = v;
+  });
 </script>
 
-<main >
+<main>
   <div class="relative">
     <div class="tooltip" id="inBig">
       <InBigContainer />
@@ -347,16 +356,23 @@
         <h1 class="mb-4 text-3xl font-bold">Import/Export</h1>
       </div>
       {#if dataset}
-        <div class="my-4" id=progressbar onbeforeunload={() => {console.log("destroy"); uploadLogDataFiles()}}>
+        <div
+          class="my-4"
+          id="progressbar"
+          onbeforeunload={() => {
+            console.log("destroy");
+            uploadLogDataFiles();
+          }}
+        >
           <Progressbar
-              animate
-              tweenDuration={500}
-              progress={$progress}
-              easing={sineOut}
-              size="h-4"
-              color="blue"
-              labelInside
-              class="mb-8"
+            animate
+            tweenDuration={500}
+            progress={$progress}
+            easing={sineOut}
+            size="h-4"
+            color="blue"
+            labelInside
+            class="mb-8"
           />
         </div>
         <div on:click={() => (poly = !poly)}>
@@ -365,10 +381,9 @@
         {#if poly}
           <button
             on:click={() => {
-                flutil.log("generate poly ", polyselected.value);
-                progressAnimation($currentpoints.length, polyselected.value)
-                
-              }}
+              flutil.log("generate poly ", polyselected.value);
+              progressAnimation($currentpoints.length, polyselected.value);
+            }}
           >
             generate 🎼🎛️
           </button>
@@ -379,7 +394,7 @@
               items={polyOptionsSelect}
               bind:value={polyselected}
               clearable={false}
-                />
+            />
           </div>
         {/if}
         <h5 class="mb-4 text-l font-bold">Import Midi as Primer</h5>
@@ -425,7 +440,7 @@
           on:click={() => {
             flutil.log(
               "generate with mvaesim and length for iterations from list ",
-              { $mvaesim, lengthtemp, $iter, $primerList },
+              { $mvaesim, lengthtemp, $iter, $primerList }
             );
             flutil.log("strangers; adjust mode; filterextent; keys:", {
               $strangers,
@@ -536,6 +551,13 @@
         </button>
         <button
           on:click={() => {
+            exportList.clear();
+          }}
+        >
+          clear export List
+        </button>
+        <button
+          on:click={() => {
             flutil.writeLogs();
             mu.exportModelJson();
           }}
@@ -546,7 +568,7 @@
         <button
           on:click={() => document.querySelector("#datasetFiles").click()}
         >
-          open dataset
+          open session
         </button>
         <input
           style="display: none"
@@ -570,7 +592,7 @@
             mu.exportModelJson();
           }}
         >
-          export dataset
+          export session
         </button>
       {/if}
     </div>
@@ -671,7 +693,7 @@
               title="Key legend"
               color={d3.scaleOrdinal(
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                gu.colormap12,
+                gu.colormap12
               )}
               tickFormat={(d) => {
                 const keys = [
@@ -698,7 +720,7 @@
             <ColorLegend
               title="Temperature legend"
               color={d3.scaleDiverging([0.2, 0.9, 1.6], (d) =>
-                d3.interpolateRdYlBu(1 - d),
+                d3.interpolateRdYlBu(1 - d)
               )}
               tickFormat={(d) => d}
               tickValues={[0.2, 0.45, 0.7, 0.9, 1.1, 1.35, 1.6]}
@@ -723,7 +745,7 @@
             <ColorLegend
               title="Interval legend"
               color={d3.scaleDiverging([0, 12, 24], (d) =>
-                gu.histogramColorLegend(d),
+                gu.histogramColorLegend(d)
               )}
               tickFormat={(d) => d - 12}
               tickSize={0}
@@ -736,7 +758,7 @@
               title="note tick length"
               color={d3.scaleSequentialQuantile(
                 [0, 1, 2, 3, 4],
-                visutil.divergingScale,
+                visutil.divergingScale
               )}
               tickFormat={(d) => {
                 const keys = [16, 8, 4, 2, 1];
@@ -806,8 +828,8 @@
               class="option {$seenfilter === 1
                 ? 'selected'
                 : $seenfilter === -1
-                  ? 'falseselected'
-                  : ''}"
+                ? 'falseselected'
+                : ''}"
               on:click={() => setFilters(0)}
             >
               👁️
@@ -816,8 +838,8 @@
               class="option {$listenfilter === 2
                 ? 'selected'
                 : $listenfilter === -2
-                  ? 'falseselected'
-                  : ''}"
+                ? 'falseselected'
+                : ''}"
               on:click={() => setFilters(3)}
             >
               👂
@@ -989,7 +1011,7 @@
               title="Key legend"
               color={d3.scaleOrdinal(
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                gu.colormap12,
+                gu.colormap12
               )}
               tickFormat={(d) => {
                 const keys = [
@@ -1037,13 +1059,13 @@
                   Object.entries($modelselected).map((entry) => [
                     entry[0],
                     true,
-                  ]),
-                ),
+                  ])
+                )
               );
               if (
                 oldmodelselected !== null &&
                 Object.values($modelselected).filter(
-                  (d, i) => d !== Object.values(oldmodelselected)[i],
+                  (d, i) => d !== Object.values(oldmodelselected)[i]
                 ).length > 0
               ) {
                 somethingChanged.set(true);
@@ -1063,13 +1085,13 @@
                   Object.entries($modelselected).map((entry) => [
                     entry[0],
                     false,
-                  ]),
-                ),
+                  ])
+                )
               );
               if (
                 oldmodelselected !== null &&
                 Object.values($modelselected).filter(
-                  (d, i) => d !== Object.values(oldmodelselected)[i],
+                  (d, i) => d !== Object.values(oldmodelselected)[i]
                 ).length > 0
               ) {
                 somethingChanged.set(true);
@@ -1104,7 +1126,7 @@
                         if (
                           oldmodelselected !== null &&
                           Object.values($modelselected).filter(
-                            (d, i) => d !== Object.values(oldmodelselected)[i],
+                            (d, i) => d !== Object.values(oldmodelselected)[i]
                           ).length > 0
                         ) {
                           clusterSelect.set(null);
@@ -1116,7 +1138,7 @@
                         const modelselect = Object.values($modelselected);
                         flutil.log(
                           "modelselection: " + model.name + " changed",
-                          { modelselect },
+                          { modelselect }
                         );
                       }}
                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -1129,19 +1151,19 @@
                   <br /> 👁️: {$seen?.filter(
                     (p) =>
                       p[2].model.name === model.name &&
-                      p[2].userspecific.seen >= 1,
+                      p[2].userspecific.seen >= 1
                   ).length} 👂: {$seen?.filter(
                     (p) =>
                       p[2].model.name === model.name &&
-                      p[2].userspecific.seen === 2,
+                      p[2].userspecific.seen === 2
                   ).length} 👍: {$rate[model.name] === undefined
                     ? 0
                     : $rate[model.name]?.filter(
-                        (p) => p.userspecific.rate === 1,
+                        (p) => p.userspecific.rate === 1
                       ).length} 👎: {$rate[model.name] === undefined
                     ? 0
                     : $rate[model.name]?.filter(
-                        (p) => p.userspecific.rate === -1,
+                        (p) => p.userspecific.rate === -1
                       ).length}
                 </label>
               </div>
@@ -1359,5 +1381,3 @@
     justify-items: center;
   }
 </style>
-
-

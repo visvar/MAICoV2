@@ -96,10 +96,10 @@ function createActionlog() {
         subscribe,
         get: (n) => get(n),
         add: (key, a, d) => update((n) => {
-            if(startdate.substring(0,8) === key.substring(0,8) && parseInt(key.substring(9))-parseInt(startdate.substring(9)) < 100){
+            if (startdate.substring(0, 8) === key.substring(0, 8) && parseInt(key.substring(9)) - parseInt(startdate.substring(9)) < 100) {
                 return n
-            }else{
-                key = key.substring(0,8)
+            } else {
+                key = key.substring(0, 8)
                 if (n.actions[key] !== null && n.actions[key] !== undefined) {
                     if (n.actions[key].actions.indexOf({ time: key, action: a, data: d }) === -1)
                         n.actions[key].actions.push({ time: key, action: a, data: d })
@@ -124,7 +124,7 @@ function createPrimerList() {
     return {
         subscribe,
         get: (n) => get(n),
-        clear: (n) => set([]),
+        clear: () => set([]),
         set: (n) => set(n),
         addMelo: (mel) => update(n => {
             n.push(mel)
@@ -147,6 +147,8 @@ export const primerSelected = derived([primerList, primerTodelete], v => {
     return v[0][v[1]]
 })
 
+export const selectedBaseKeys = writable(-1)
+
 
 function createAxis() {
     const { subscribe, set, update } = writable([{ value: 2, label: 'DR' }, { value: 2, label: 'DR' }, true]);
@@ -154,6 +156,7 @@ function createAxis() {
     return {
         subscribe,
         get: (n) => get(n),
+        set: (n) => set(n),
         updateAxis: (axis, num, a2, num2) => update(n => {
             if (axis === true) {
                 oldAxis = { ...n }
@@ -268,6 +271,8 @@ export const samplingstatus = writable('waiting for user action')
 export const filterextents = writable(new Array(64).fill([40, 88]))
 
 export const strangers = writable(0)
+
+export const importedSession = writable(0)
 
 export const adjustMode = writable(false)
 

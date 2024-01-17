@@ -11,6 +11,7 @@
         colors,
         rate,
         filterextents,
+        importedSession,
     } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
@@ -49,6 +50,22 @@
     onMount(() => {
         init();
     });
+
+    importedSession.subscribe((v) => {
+        if (v !== 0) init2();
+    });
+
+    function init2() {
+        // create the main SVG element
+        svg = d3.select("#svgFilter").style("fill", "grey");
+        for (let i = 0; i <= length; i++) {
+            filtertemp[i] = [extent[0], extent[1]];
+        }
+        for (let i = 0; i < $filterextents.length; i++) {
+            filtertemp[i] = [$filterextents[i][0], $filterextents[i][1]];
+        }
+        drawPianoRoll();
+    }
 
     function init() {
         // create the main SVG element
