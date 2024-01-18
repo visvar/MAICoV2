@@ -704,7 +704,7 @@ export function isPolyphonic(mel) {
 }
 
 import { getAxisScale } from '../util/visutil.js'
-import { allPrimer, keysLookup } from '../stores/globalValues.js';
+import { allPrimer, keysLookup, oktaveLookup, quintcircle } from '../stores/globalValues.js';
 import { log } from './fileutil.js';
 
 export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
@@ -1298,4 +1298,31 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
     emotionbased.set({ label: "Polyoptions", value: 2 })
   }
   return combined
+}
+
+
+
+export function reshuffleQuintCircle(basenote, mode){
+  let quintcirclers = quintcircle.map(m => {
+    return mode === "dur"?  m.dur:m.moll
+  })
+  let quints = quintcirclers
+  while(quints.indexOf(basenote) - 6 !== 0){
+    quints.push(quints.shift())
+    console.log(quints)
+  }
+  return quints
+}
+
+
+export function calcTimbre(melody, basenote, mode){
+  let qc = reshuffleQuintCircle(basenote,mode)
+  let timbre = 0 
+  let timbrescore = 0
+  melody.notes.forEach(n => {
+    let note = keysLookup[n%12]
+    let index = qc.findIndex(v => v === note) - 6
+    timbre += index > 0? 1: index<0? -1:0
+    timbrescore += index
+  })
 }

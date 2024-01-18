@@ -211,6 +211,11 @@ export const oktaveLookup = [
   { pitch: 126, name: 'F#', octave: 9, label: 'F#9', frequency: 11839.82 },
   { pitch: 127, name: 'G', octave: 9, label: 'G9', frequency: 12543.85 }
 ]
+                            //-6,-5 ... (index - 6), shift so basetone is at 0
+export const quintcircle = [{dur:"F#", moll: "D#"},{dur:"C#", moll: "B"},{dur:"G#", moll: "F"},{dur:"D#", moll: "C"},
+  {dur:"A#", moll: "G"},{dur:"F", moll: "D"},{dur:"C", moll: "A"},
+  {dur:"G", moll: "E"},{dur:"D", moll: "A"},{dur:"A", moll: "F#"},
+  {dur:"E", moll: "C#"}, {dur:"B", moll: "G#"},{dur:"F#", moll: "D#"}]
 
 export const instrumentsSoundfont = [
   "acoustic grand piano",
