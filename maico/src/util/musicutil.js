@@ -1302,12 +1302,12 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
 
 
 
-export function reshuffleQuintCircle(basenote, mode){
+export function reshuffleQuintCircle(basenote, mode) {
   let quintcirclers = quintcircle.map(m => {
-    return mode === "dur"?  m.dur:m.moll
+    return mode === "dur" ? m.dur : m.moll
   })
   let quints = quintcirclers
-  while(quints.indexOf(basenote) - 6 !== 0){
+  while (quints.indexOf(basenote) - 6 !== 0) {
     quints.push(quints.shift())
     console.log(quints)
   }
@@ -1315,14 +1315,16 @@ export function reshuffleQuintCircle(basenote, mode){
 }
 
 
-export function calcTimbre(melody, basenote, mode){
-  let qc = reshuffleQuintCircle(basenote,mode)
-  let timbre = 0 
+export function calcTimbre(melody, basenote, mode) {
+  let qc = reshuffleQuintCircle(basenote, mode)
+  let timbre = 0
   let timbrescore = 0
   melody.notes.forEach(n => {
-    let note = keysLookup[n%12]
+    let note = keysLookup[n % 12]
     let index = qc.findIndex(v => v === note) - 6
-    timbre += index > 0? 1: index<0? -1:0
+    timbre += index > 0 ? 1 : index < 0 ? -1 : 0
     timbrescore += index
   })
+
+  return { timbre: timbre / melody.notes.length, timbrescore: timbrescore / melody.notes.length }
 }
