@@ -112,11 +112,7 @@
   let uniqueID = flutil.makeid(3);
 
   const file = "test";
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    console.log(user);
-    user1 = user;
-  });
+  
 
   //addEventListener("beforeunload", (event) => {});
   //onbeforeunload = (event) => {};
@@ -151,8 +147,15 @@
 
   console.log(import.meta.env.PROD, import.meta.env.MODE);
   //only in production
-  if (import.meta.env.PROD || import.meta.env.MODE === "production")
+  if (import.meta.env.PROD || import.meta.env.MODE === "production"){
     signInAnonymously(auth);
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      user1 = user;
+    });
+  }
+    //signInAnonymously(auth);
 
   const glyphoptions = [
     { label: "Points", value: 0 },
@@ -164,6 +167,7 @@
     { label: "ChromaRoll", value: 6 },
     { label: "RhythmPie", value: 7 },
     { label: "FlowerComplexity", value: 8 },
+    { label: "Melodyline", value: 9 },
   ];
 
   const polyOptionsSelect = [
@@ -195,7 +199,8 @@
     { label: "Rhythm", value: 5 },
     { label: "Seen", value: 6 },
     { label: "Rate", value: 7 },
-    { label: "None", value: 8 },
+    { label: "Timbre", value: 8 },
+    { label: "None", value: 9 },
   ];
 
   const pointcoloroptions = [
@@ -205,6 +210,7 @@
     { label: "Rhythm", value: 4 }, // was 3
     { label: "Seen", value: 5 },
     { label: "Rate", value: 6 },
+    { label: "Timbre", value: 7 },
   ];
 
   //TODO: find other axis and insert,
@@ -764,6 +770,24 @@
                 const keys = [16, 8, 4, 2, 1];
                 return keys[d];
               }}
+              tickSize={0}
+              width={250}
+            />
+          {/if}
+          {#if $currentcolor === 7 || $vorcolorselect.value === 8}
+            <ColorLegend
+              title="timbre"
+              color={d3.scaleSequentialQuantile(
+                [0, 1],
+                visutil.sequentialScale,
+              )}
+              tickFormat={(d) => {
+                if(d===0)
+                  return "dark"
+                if(d === 1)
+                  return "light"
+              }}
+              tickValues={[0, 0.5,1]}
               tickSize={0}
               width={250}
             />

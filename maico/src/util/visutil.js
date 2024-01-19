@@ -99,6 +99,12 @@ export function calcAllColorScales(alldata) {
     }
   })
 
+  result.push({
+    name: 'Timbre', scale: (data) => {
+      return data?.timbre !== undefined ? sequentialScale(data.timbre) : 'lightgrey'
+    }
+  })
+
   colors.set(result)
 }
 // 10 different values
@@ -303,6 +309,8 @@ export function getFillForVoronoi(data) {
     } else if (s === 7) {
       return getColor(data.data[2], 6) //data.data[2].userspecific.rate !== 0 ? (data.userspecific.rate === 1 ? "green" : "red") : 'blue'
     } else if (s === 8) {
+      return getColor(data.data[2], 7)
+    } else if (s === 9) {
       return 'transparent'
     }
 
