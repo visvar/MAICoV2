@@ -1307,11 +1307,11 @@ export function reshuffleQuintCircle(bn, mode) {
     return mode === "dur" ? m.dur : m.moll
   })
   let basenote = bn
-  if(!isNaN(basenote))
+  if (!isNaN(basenote))
     basenote = keysLookup[basenote]
   let quints = quintcirclers
   let index = quints.indexOf(basenote) - 6
-  while (index  !== 0) {
+  while (index !== 0) {
     quints.push(quints.shift())
     index = quints.indexOf(basenote) - 6
   }
@@ -1319,15 +1319,15 @@ export function reshuffleQuintCircle(bn, mode) {
 }
 
 export function calcTimbre(melody, basenote, qc) {
-  if(basenote === -1 || qc === undefined)
-    return {timbre: undefined, timbrescore: 0}
+  if (basenote === -1 || qc === undefined)
+    return { timbre: undefined, timbrescore: 0 }
   let timbre = 0
   let timbrescore = 0
   let hardcase = 0
   melody.notes.forEach(n => {
     let note = keysLookup[n.pitch % 12]
     let index = qc.findLastIndex(v => v === note) - 6
-    if(index === 6)
+    if (index === -6)
       hardcase++
     else
       timbre += index > 0 ? 1 : index < 0 ? -1 : 0
@@ -1335,7 +1335,7 @@ export function calcTimbre(melody, basenote, qc) {
   })
   timbre += timbre > 0 ? hardcase : timbre < 0 ? -hardcase : 0
   let scale = d3.scaleLinear()
-  .domain([-melody.notes.filter(n => n.pitch%12 !== basenote).length, melody.notes.filter(n => n.pitch%12 !== basenote).length]) 
-  .range([0, 1])
+    .domain([-melody.notes.filter(n => n.pitch % 12 !== basenote).length, melody.notes.filter(n => n.pitch % 12 !== basenote).length])
+    .range([0, 1])
   return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
 }
