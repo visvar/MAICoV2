@@ -1348,3 +1348,48 @@ export function calcTimbre(melody, basenote, qc) {
     .range([0, 1])
   return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
 }
+
+export function swapIntervals(int1, int2, notesat) {
+  if (int1 === 4 && int2 === 3)
+    return "dur"
+  else if (int1 === 3 && int2 === 4)
+    return "moll"
+  else {
+    let test = [notesat[0].pitch + 12 - notesat[2].pitch, notesat[0].pitch - notesat[2].pitch - 12]
+    let first = int1 !== 3 && int1 !== 4
+    let second = int2 !== 3 && int2 !== 4
+    if (first && !second) {
+      if (test[0] === 3 || test[0] === 4)
+        return test[0] === 3 && int2 === 4 ? "dur" : test[0] === 4 && int2 === 3 ? "moll" : "special"
+    }
+    if (!first && second) {
+      if (test[1] === 3 || test[1] === 4)
+        return test[1] === 3 && int1 === 4 ? "moll" : test[1] === 4 && int1 === 3 ? "dur" : "special"
+    }
+    return undefined
+  }
+}
+
+export function calcIntervals(melody) {
+  if (!melody.isPolymix)
+    return []
+  else {
+    let intervals = []
+    for (let i = 0; i < melody.totalQuantizedSteps; i++) {
+      let notesat = melody.notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).sort((a, b) => a.pitch - b.pitch)
+      if (notesat.length > 1) {
+        let int = []
+        for (let j = 0; j < notesat.length - 1; j++) {
+          let interval = notesat[j + 1].pitch - notesat[j].pitch
+          int.push(interval)
+        }
+        let triplet = undefined
+        if (int.length === 2) {
+          triplet = swapIntervals(int[0], int[1], notesat)
+        }
+        intervals.push({ quantizedStartStep: i, quantizedEndStep: i + 1, intervals: int, voices: notesat.length, triplet: undefined })
+      }
+    }
+  }
+
+}
