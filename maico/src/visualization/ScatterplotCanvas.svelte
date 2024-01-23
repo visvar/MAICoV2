@@ -32,6 +32,7 @@
     tdfilter,
     expfilter,
     modelselected,
+    selectedBaseKeys,
   } from "../stores/stores.js";
   import { get } from "svelte/store";
 
@@ -178,7 +179,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -211,7 +212,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -279,7 +280,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -313,7 +314,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -445,7 +446,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -622,7 +623,11 @@
                   <Pianoroll
                     x={x(data[2].repposition[0][currentaxis[0].value])}
                     y={y(data[2].repposition[1][currentaxis[1].value])}
-                    fill={visutil.getColor(data[2], $currentcolor)}
+                    fill={visutil.getColor(
+                      data[2],
+                      $currentcolor,
+                      $selectedBaseKeys,
+                    )}
                     r={$repsize * selectedSize}
                     information={data[2]}
                   />
@@ -666,7 +671,7 @@
           {opacity}
           x={105}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2]}
         />
@@ -675,7 +680,7 @@
           {opacity}
           x={325}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2].starglyph.data}
           drawbounds={$outercircle}
@@ -684,7 +689,7 @@
           {opacity}
           x={435}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2].starglyphRhythm.data}
           drawbounds={$outercircle}
@@ -695,7 +700,7 @@
           {opacity}
           x={765}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2]}
         />

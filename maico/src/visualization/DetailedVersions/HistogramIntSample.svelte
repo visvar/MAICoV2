@@ -7,6 +7,7 @@
     import {
         currentcolor,
         modelpointsavg,
+        selectedBaseKeys,
         tooltipSel,
     } from "../../stores/stores.js";
     import { averageOfGlyphs } from "../../util/glyphutil";
@@ -58,7 +59,11 @@
                     .range([offset + margin, width - margin - barsize - 1])
                     .nice();
 
-                const fill = visutil.getColor(data, $currentcolor);
+                const fill = visutil.getColor(
+                    data,
+                    $currentcolor,
+                    $selectedBaseKeys,
+                );
                 context.fillStyle = fill;
                 context.strokeStyle = fill;
 
@@ -67,7 +72,7 @@
                     scaleX(12),
                     scaleY(0),
                     scaleX(24) + barsize,
-                    scaleY(0)
+                    scaleY(0),
                 );
                 mvlib.Canvas.drawRoundedRect(
                     context,
@@ -75,7 +80,7 @@
                     scaleY(data.histInterval.max) - 1,
                     width - offset - 2 * margin,
                     height - offset - 2 * margin,
-                    0
+                    0,
                 );
                 context.stroke();
 
@@ -92,7 +97,7 @@
                                 ty,
                                 barsize,
                                 height,
-                                0
+                                0,
                             );
                             context.fillStyle = glutil.histogramColorScale(i);
                             //context.strokeStyle = v(colorscale(i))
@@ -108,7 +113,7 @@
                             ty,
                             barsize,
                             height,
-                            0
+                            0,
                         );
                         context.fillStyle = glutil.histogramColorScale(i);
                         //context.strokeStyle = v(colorscale(i))
@@ -128,7 +133,7 @@
                         1,
                     13,
                     scaleX,
-                    offset
+                    offset,
                 );
                 drawAxisHisto(
                     context,
@@ -136,7 +141,7 @@
                     height - 2 * margin - offset,
                     data.histInterval.max,
                     scaleY,
-                    offset
+                    offset,
                 );
                 drawAxisHisto(
                     context,
@@ -144,7 +149,7 @@
                     height - 2 * margin - offset,
                     data.histInterval.max,
                     scaleY2,
-                    offset
+                    offset,
                 );
             }
         }

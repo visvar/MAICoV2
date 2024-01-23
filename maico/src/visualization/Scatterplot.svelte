@@ -36,7 +36,7 @@
     numpoly,
     exportList,
     exportcleared,
-    selectedBaseKeys
+    selectedBaseKeys,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -126,7 +126,7 @@
   $: $polyoptions, meloPointsNew();
   $: $numpoly, meloPointsNew();
 
-  $: $selectedBaseKeys, testMeloPoints();
+  //$: $selectedBaseKeys, testMeloPoints();
 
   exportcleared.subscribe((n) => {
     if (n !== 0)
@@ -217,8 +217,7 @@
     }
     flatten = await moutil.flattenAllMelodies();
 
-    if(flatten.length === 0)
-      return null
+    if (flatten.length === 0) return null;
 
     let matrix = drutil.distanceMatrix(
       flatten.map((melo, i) => melo[0]),
@@ -264,7 +263,10 @@
       let information = undefined;
       let varInt = undefined;
 
-      let qc = $selectedBaseKeys !== -1 ? muutil.reshuffleQuintCircle($selectedBaseKeys, "dur"):undefined
+      let qc =
+        $selectedBaseKeys !== -1
+          ? muutil.reshuffleQuintCircle($selectedBaseKeys, "dur")
+          : undefined;
 
       heatmapinfo.set(
         glutil.calcPianoHeatmap(
@@ -294,7 +296,8 @@
               isPolymix: false,
               melody: melo[0],
               temperature: melo[1].temperature,
-              timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
+              //timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
+              timbre: muutil.calcAllTimbre(melo[0]),
               mvaesim: melo[0].mvaesim,
               primerindex:
                 melo[0]?.primer?.id !== undefined ? melo[0]?.primer?.id : 0,
@@ -408,7 +411,8 @@
               isPolymix: false,
               melody: melo[0],
               temperature: undefined,
-              timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
+              //timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
+              timbre: muutil.calcAllTimbre(melo[0]),
               mvaesim: undefined,
               primerindex: undefined,
               model: { name: "primer" },
@@ -581,7 +585,10 @@
       let information = undefined;
       let varInt = undefined;
 
-      let qc = $selectedBaseKeys !== -1 ? muutil.reshuffleQuintCircle($selectedBaseKeys, "dur"):undefined
+      let qc =
+        $selectedBaseKeys !== -1
+          ? muutil.reshuffleQuintCircle($selectedBaseKeys, "dur")
+          : undefined;
 
       flatten.forEach((melo, index) => {
         if (index < mdspoints.length) {
@@ -601,7 +608,8 @@
             },
             melody: melo[0],
             temperature: undefined,
-            timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
+            //timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
+            timbre: muutil.calcAllTimbre(melo[0]),
             mvaesim: undefined,
             primerindex: undefined,
             model: { name: "poly" },

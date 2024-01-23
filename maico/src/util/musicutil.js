@@ -1318,6 +1318,15 @@ export function reshuffleQuintCircle(bn, mode) {
   return quints
 }
 
+export function calcAllTimbre(melody) {
+  let timbrearray = []
+  for (let basenote = 0; basenote < 12; basenote++) {
+    let qc = reshuffleQuintCircle(basenote, "dur")
+    timbrearray.push(calcTimbre(melody, basenote, qc).timbre)
+  }
+  return timbrearray
+}
+
 export function calcTimbre(melody, basenote, qc) {
   if (basenote === -1 || qc === undefined)
     return { timbre: undefined, timbrescore: 0 }

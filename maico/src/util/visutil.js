@@ -1,4 +1,4 @@
-import { vorcolorselect, brushClusterSwitch, clusterdata, models, axisselect, brushselection, modelselected, currentcolor, colors, points, side, setcpoints, currentpoints, seen, meloselected } from '../stores/stores.js'
+import { vorcolorselect, brushClusterSwitch, clusterdata, models, axisselect, brushselection, modelselected, currentcolor, colors, points, side, setcpoints, currentpoints, seen, meloselected, selectedBaseKeys } from '../stores/stores.js'
 import { get } from 'svelte/store';
 import { extent } from 'd3-array';
 import * as d3 from 'd3'
@@ -40,8 +40,9 @@ export function getSelectedMelodies(x, y, points) {
   return selpoints
 }
 
-export function getColor(data, currentcolor) {
-  return get(colors)[currentcolor].scale(data)
+export function getColor(data, currentcolor, basenote) {
+  return get(colors)[currentcolor].scale(data, basenote)
+
 }
 
 
@@ -51,7 +52,7 @@ export function calcAllColorScales(alldata) {
   let scale
   // models -> put in information
   result.push({
-    name: 'Models', scale: (data) => {
+    name: 'Models', scale: (data, a) => {
       const value = modelutil.getIndexbyModelname(data?.model?.name)
       return value !== null && value !== undefined ? modelColor10(value) : '#444'
     }
@@ -60,7 +61,7 @@ export function calcAllColorScales(alldata) {
   // temperature -> put in melody
   let ext = extent(information.map(d => parseFloat(d.temperature)))
   result.push({
-    name: 'Temperature', scale: (data) => {
+    name: 'Temperature', scale: (data, a) => {
       scale = d3.scaleLinear().domain(ext)
       return divergingScale(scale(data.temperature))
     }
@@ -68,40 +69,40 @@ export function calcAllColorScales(alldata) {
 
   // key -> put in melody
   result.push({
-    name: 'Key', scale: (data) => {
+    name: 'Key', scale: (data, a) => {
       return keyColors(data.additional.key)
     }
   })
 
   // primer -> put in melody
   result.push({
-    name: 'Primer', scale: (data) => {
+    name: 'Primer', scale: (data, a) => {
       return modelColor10(data.primerindex)
     }
   })
 
   //rhythm
   result.push({
-    name: 'Rhythm', scale: (data) => {
+    name: 'Rhythm', scale: (data, a) => {
       return divergingScale(data.rhythm.complexity)
     }
   })
 
   result.push({
-    name: 'Seen', scale: (data) => {
+    name: 'Seen', scale: (data, a) => {
       return data.userspecific.seen ? "green" : "red" // 
     }
   })
 
   result.push({
-    name: 'Rate', scale: (data) => {
+    name: 'Rate', scale: (data, a) => {
       return data.userspecific.rate !== 0 ? (data.userspecific.rate === 1 ? "green" : "red") : 'blue'
     }
   })
 
   result.push({
-    name: 'Timbre', scale: (data) => {
-      return data?.timbre !== undefined ? sequentialScale(data.timbre) : 'lightgrey'
+    name: 'Timbre', scale: (data, a) => {
+      return data?.timbre !== undefined && a !== -1 ? sequentialScale(data.timbre[get(selectedBaseKeys)]) : 'lightgrey'
     }
   })
 
