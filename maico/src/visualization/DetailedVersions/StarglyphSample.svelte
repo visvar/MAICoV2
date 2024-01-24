@@ -6,6 +6,7 @@
     import {
         currentcolor,
         modelpointsavg,
+        selectedBaseKeys,
         tooltipSel,
     } from "../../stores/stores.js";
     import { averageOfGlyphs } from "../../util/glyphutil";
@@ -49,7 +50,11 @@
                     mode === 0
                         ? data.starglyph.data
                         : data.starglyphRhythm.data;
-                const fill = visutil.getColor(data, $currentcolor);
+                const fill = visutil.getColor(
+                    data,
+                    $currentcolor,
+                    $selectedBaseKeys,
+                );
                 const x = width / 2;
                 const y = height / 2;
                 const scale = radius / 10;
@@ -61,7 +66,7 @@
                 for (let i = 1; i < path.length; i++) {
                     context.lineTo(
                         x + scale * path[i].x,
-                        y + scale * path[i].y
+                        y + scale * path[i].y,
                     );
                 }
                 //context.stroke();

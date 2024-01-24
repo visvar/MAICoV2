@@ -6,6 +6,7 @@
     import {
         currentcolor,
         modelpointsavg,
+        selectedBaseKeys,
         tooltipSel,
     } from "../../stores/stores.js";
     import { averageOfGlyphs } from "../../util/glyphutil";
@@ -49,7 +50,11 @@
                     mode === 0
                         ? data.starglyph.data
                         : data.starglyphRhythm.data;
-                const fill = visutil.getColor(data, $currentcolor);
+                const fill = visutil.getColor(
+                    data,
+                    $currentcolor,
+                    $selectedBaseKeys,
+                );
                 const x = width / 2;
                 const y = height / 2;
                 const scale = radius / 10;
@@ -77,7 +82,7 @@
                         x - b,
                         y - radius * scaled,
                         x,
-                        y - radius * scaled
+                        y - radius * scaled,
                     );
                     context.bezierCurveTo(
                         x + b,
@@ -85,7 +90,7 @@
                         x + a,
                         y - a,
                         x,
-                        y
+                        y,
                     );
                     context.restore();
                 }

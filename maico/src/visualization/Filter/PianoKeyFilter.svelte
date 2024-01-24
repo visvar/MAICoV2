@@ -98,36 +98,36 @@
                 })
                 .on("contextmenu", (d, k, i) => {
                     d.preventDefault();
-                    if ($selectedKeys[keysLookup.indexOf(k)]) {
-                        const old = $selectedBaseKeys;
-                        $selectedBaseKeys =
-                            $selectedBaseKeys === keysLookup.indexOf(k)
-                                ? -1
-                                : keysLookup.indexOf(k);
-                        let selector = k.includes("#")
-                            ? "#idKey" + k[0] + "s"
-                            : "#idKey" + k;
-                        svg.select(selector).attr("fill", () => {
-                            if ($selectedBaseKeys === keysLookup.indexOf(k)) {
-                                return "orange";
-                            } else {
-                                return k.includes("#")
-                                    ? "darkblue"
-                                    : "lightblue";
-                            }
-                        });
-                        if (old !== -1) {
-                            selector = keysLookup[old].includes("#")
-                                ? "#idKey" + keysLookup[old][0] + "s"
-                                : "#idKey" + keysLookup[old];
-
-                            svg.select(selector).attr("fill", () => {
-                                return keysLookup[old].includes("#")
-                                    ? "darkblue"
-                                    : "lightblue";
-                            });
+                    
+                    const old = $selectedBaseKeys;
+                    $selectedBaseKeys =
+                        $selectedBaseKeys === keysLookup.indexOf(k)
+                            ? -1
+                            : keysLookup.indexOf(k);
+                    let selector = k.includes("#")
+                        ? "#idKey" + k[0] + "s"
+                        : "#idKey" + k;
+                    svg.select(selector).attr("fill", () => {
+                        if ($selectedBaseKeys === keysLookup.indexOf(k)) {
+                            return "orange";
+                        } else {
+                            return k.includes("#")
+                                ? "darkblue"
+                                : "lightblue";
                         }
+                    });
+                    if (old !== -1) {
+                        selector = keysLookup[old].includes("#")
+                            ? "#idKey" + keysLookup[old][0] + "s"
+                            : "#idKey" + keysLookup[old];
+
+                        svg.select(selector).attr("fill", () => {
+                            return $selectedKeys[old] ? keysLookup[old].includes("#")
+                                ? "darkblue"
+                                : "lightblue" : keysLookup[old].includes("#") ? "black" : "lightgrey";
+                        });
                     }
+                    
                 });
             svg.append("g")
                 .selectAll("text")

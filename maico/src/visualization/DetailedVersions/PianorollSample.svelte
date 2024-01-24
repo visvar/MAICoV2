@@ -6,6 +6,7 @@
     import {
         currentcolor,
         modelpointsavg,
+        selectedBaseKeys,
         tooltipSel,
     } from "../../stores/stores.js";
     import { averageOfGlyphs } from "../../util/glyphutil";
@@ -50,7 +51,11 @@
                     .range([margin + offset, width])
                     .nice();
                 const height1 = scaley(yextent[1] - 1) - scaley(yextent[1]);
-                const fill = visutil.getColor(data, $currentcolor);
+                const fill = visutil.getColor(
+                    data,
+                    $currentcolor,
+                    $selectedBaseKeys,
+                );
                 context.fillStyle = fill;
                 context.strokeStyle = fill;
 
@@ -58,7 +63,7 @@
                     scalex(0),
                     scaley(yextent[1]),
                     scalex(melody.totalQuantizedSteps) - scalex(0),
-                    scaley(yextent[0]) - scaley(yextent[1])
+                    scaley(yextent[0]) - scaley(yextent[1]),
                 );
 
                 //context.stroke();
@@ -76,7 +81,7 @@
                         ty,
                         width,
                         height1,
-                        4
+                        4,
                     );
                     context.fillStyle =
                         gu.getColorLightness(fill) < 50 ? "white" : "black";
@@ -89,7 +94,7 @@
                     scaley(yextent[0]),
                     melody.totalQuantizedSteps,
                     scalex,
-                    offset
+                    offset,
                 );
                 drawAxis(
                     context,
@@ -97,7 +102,7 @@
                     height - 2 * margin - offset,
                     yextent,
                     scaley,
-                    offset
+                    offset,
                 );
             }
         }

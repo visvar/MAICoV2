@@ -387,7 +387,7 @@ export const currentpoints = derived(
 );
 
 function createColor() {
-    const { subscribe, set, update } = writable([{ name: 'Color', scale: (i) => null }]);
+    const { subscribe, set, update } = writable([{ name: 'Color', scale: (i, a) => null }]);
 
     return {
         subscribe,

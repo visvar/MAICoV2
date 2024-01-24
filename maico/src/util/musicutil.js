@@ -704,7 +704,7 @@ export function isPolyphonic(mel) {
 }
 
 import { getAxisScale } from '../util/visutil.js'
-import { allPrimer, keysLookup } from '../stores/globalValues.js';
+import { allPrimer, keysLookup, oktaveLookup, quintcircle } from '../stores/globalValues.js';
 import { log } from './fileutil.js';
 
 export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
@@ -1298,4 +1298,98 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
     emotionbased.set({ label: "Polyoptions", value: 2 })
   }
   return combined
+}
+
+
+
+export function reshuffleQuintCircle(bn, mode) {
+  let quintcirclers = quintcircle.map(m => {
+    return mode === "dur" ? m.dur : m.moll
+  })
+  let basenote = bn
+  if (!isNaN(basenote))
+    basenote = keysLookup[basenote]
+  let quints = quintcirclers
+  let index = quints.indexOf(basenote) - 6
+  while (index !== 0) {
+    quints.push(quints.shift())
+    index = quints.indexOf(basenote) - 6
+  }
+  return quints
+}
+
+export function calcAllTimbre(melody) {
+  let timbrearray = []
+  for (let basenote = 0; basenote < 12; basenote++) {
+    let qc = reshuffleQuintCircle(basenote, "dur")
+    timbrearray.push(calcTimbre(melody, basenote, qc).timbre)
+  }
+  return timbrearray
+}
+
+export function calcTimbre(melody, basenote, qc) {
+  if (basenote === -1 || qc === undefined)
+    return { timbre: undefined, timbrescore: 0 }
+  let timbre = 0
+  let timbrescore = 0
+  let hardcase = 0
+  melody.notes.forEach(n => {
+    let note = keysLookup[n.pitch % 12]
+    let index = qc.findLastIndex(v => v === note) - 6
+    if (index === -6)
+      hardcase++
+    else
+      timbre += index > 0 ? 1 : index < 0 ? -1 : 0
+    timbrescore += index
+  })
+  timbre += timbre > 0 ? hardcase : timbre < 0 ? -hardcase : 0
+  let scale = d3.scaleLinear()
+    .domain([-melody.notes.filter(n => n.pitch % 12 !== basenote).length, melody.notes.filter(n => n.pitch % 12 !== basenote).length])
+    .range([0, 1])
+  return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
+}
+
+export function swapIntervals(int1, int2, notesat) {
+  if (int1 === 4 && int2 === 3)
+    return "dur"
+  else if (int1 === 3 && int2 === 4)
+    return "moll"
+  else {
+    let test = [notesat[0].pitch + 12 - notesat[2].pitch, notesat[0].pitch - notesat[2].pitch - 12]
+    let first = int1 !== 3 && int1 !== 4
+    let second = int2 !== 3 && int2 !== 4
+    if (first && !second) {
+      if (test[0] === 3 || test[0] === 4)
+        return test[0] === 3 && int2 === 4 ? "dur" : test[0] === 4 && int2 === 3 ? "moll" : "special"
+    }
+    if (!first && second) {
+      if (test[1] === 3 || test[1] === 4)
+        return test[1] === 3 && int1 === 4 ? "moll" : test[1] === 4 && int1 === 3 ? "dur" : "special"
+    }
+    return undefined
+  }
+}
+
+export function calcIntervals(melody) {
+  if (!melody.isPolymix)
+    return []
+  else {
+    let intervals = []
+    for (let i = 0; i < melody.totalQuantizedSteps; i++) {
+      let notesat = melody.notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).sort((a, b) => a.pitch - b.pitch)
+      if (notesat.length > 1) {
+        let int = []
+        for (let j = 0; j < notesat.length - 1; j++) {
+          let interval = notesat[j + 1].pitch - notesat[j].pitch
+          int.push(interval)
+        }
+        let triplet = undefined
+        if (int.length === 2) {
+          triplet = swapIntervals(int[0], int[1], notesat)
+        }
+        intervals.push({ quantizedStartStep: i, quantizedEndStep: i + 1, intervals: int, voices: notesat.length, triplet: undefined })
+      }
+    }
+  }
+
 }

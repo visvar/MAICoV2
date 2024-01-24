@@ -15,6 +15,7 @@
         bpm,
         polyoptions,
         emotionbased,
+        selectedBaseKeys,
     } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
@@ -49,7 +50,7 @@
             : Math.min(480, (h - 2 * margin.top - margin.bottom) / length);
     let width = w;
 
-    let fill = visutil.getColor(melody, $currentcolor);
+    let fill = visutil.getColor(melody, $currentcolor, $selectedBaseKeys);
 
     $: x = d3
         .scaleLinear()
@@ -106,7 +107,7 @@
             console.log(melody);
             svg.selectAll("rect").attr(
                 "fill",
-                visutil.getColor(melody, $currentcolor),
+                visutil.getColor(melody, $currentcolor, $selectedBaseKeys),
             );
         }
     }

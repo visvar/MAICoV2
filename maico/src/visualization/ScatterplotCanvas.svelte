@@ -32,6 +32,7 @@
     tdfilter,
     expfilter,
     modelselected,
+    selectedBaseKeys,
   } from "../stores/stores.js";
   import { get } from "svelte/store";
 
@@ -47,6 +48,7 @@
   import Pianoroll from "./Glyphs/Pianoroll.svelte";
   import Pianorollheatmap from "./Glyphs/Pianorollheatmap.svelte";
   import HistogramInterval from "./Glyphs/HistogramInterval.svelte";
+  import Melodyline from "./Glyphs/Melodyline.svelte";
   import ColorGraph from "./Glyphs/ColorGraph.svelte";
   import Axis from "./util/Axis.svelte";
   import Line from "./util/Line.svelte";
@@ -177,7 +179,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -210,7 +212,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -278,7 +280,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -312,7 +314,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -444,7 +446,7 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor)}
+            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -454,6 +456,39 @@
               : $glyphsize * 30}
             information={data[2].starglyphRhythm.data}
             drawbounds={$outercircle}
+          />
+          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+            <DonutForValue
+              x={x(data[0][currentaxis[0].value])}
+              y={y(data[1][currentaxis[1].value])}
+              r={visutil.isBrushed(
+                x(data[0][currentaxis[0].value]),
+                y(data[1][currentaxis[1].value]),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={data[2]?.additional?.key?.type !== undefined
+                ? data[2]?.additional?.key?.type.includes("major")
+                  ? 1
+                  : 0.5
+                : 0}
+              round={true}
+            />
+          {/if}
+        {:else if $glyphselect.value === 9}
+          <Melodyline
+            {opacity}
+            x={x(data[0][currentaxis[0].value])}
+            y={y(data[1][currentaxis[1].value])}
+            r={visutil.isBrushed(
+              x(data[0][currentaxis[0].value]),
+              y(data[1][currentaxis[1].value]),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data[2]}
           />
           {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
             <DonutForValue
@@ -588,7 +623,11 @@
                   <Pianoroll
                     x={x(data[2].repposition[0][currentaxis[0].value])}
                     y={y(data[2].repposition[1][currentaxis[1].value])}
-                    fill={visutil.getColor(data[2], $currentcolor)}
+                    fill={visutil.getColor(
+                      data[2],
+                      $currentcolor,
+                      $selectedBaseKeys,
+                    )}
                     r={$repsize * selectedSize}
                     information={data[2]}
                   />
@@ -632,7 +671,7 @@
           {opacity}
           x={105}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2]}
         />
@@ -641,7 +680,7 @@
           {opacity}
           x={325}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2].starglyph.data}
           drawbounds={$outercircle}
@@ -650,7 +689,7 @@
           {opacity}
           x={435}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2].starglyphRhythm.data}
           drawbounds={$outercircle}
@@ -661,7 +700,7 @@
           {opacity}
           x={765}
           y={105}
-          fill={visutil.getColor(data[2], $currentcolor)}
+          fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
           r={30}
           information={data[2]}
         />
