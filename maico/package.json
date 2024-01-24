@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npx gh-pages -d dist",
-    "download": "python src/Scripts/downloadbase.py"
+    "download": "python src/Scripts/download.py"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
