@@ -112,7 +112,6 @@
   let uniqueID = flutil.makeid(3);
 
   const file = "test";
-  
 
   //addEventListener("beforeunload", (event) => {});
   //onbeforeunload = (event) => {};
@@ -147,15 +146,15 @@
 
   console.log(import.meta.env.PROD, import.meta.env.MODE);
   //only in production
-  if (import.meta.env.PROD || import.meta.env.MODE === "production"){
-    signInAnonymously(auth);
+  if (import.meta.env.PROD || import.meta.env.MODE === "production") {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       console.log(user);
       user1 = user;
+      signInAnonymously(auth);
     });
   }
-    //signInAnonymously(auth);
+  //signInAnonymously(auth);
 
   const glyphoptions = [
     { label: "Points", value: 0 },
@@ -782,12 +781,10 @@
                 visutil.sequentialScale,
               )}
               tickFormat={(d) => {
-                if(d===0)
-                  return "dark"
-                if(d === 1)
-                  return "light"
+                if (d === 0) return "dark";
+                if (d === 1) return "light";
               }}
-              tickValues={[0, 0.5,1]}
+              tickValues={[0, 0.5, 1]}
               tickSize={0}
               width={250}
             />

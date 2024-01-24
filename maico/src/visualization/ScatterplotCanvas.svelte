@@ -131,6 +131,8 @@
     }
   });
 
+  selectedBaseKeys.subscribe((v) => log("selected Basekey changed: ", { v }));
+
   // if colors etc change log it -> also glyphs;
   // set selected melodies in function log
   glyphselect.subscribe((v) => log("glyph changed: ", { v }));
