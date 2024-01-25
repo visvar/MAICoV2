@@ -12,6 +12,7 @@
     import HistogramKeyModel from "./HistogramKeyModel.svelte";
     import FlowerSample from "./FlowerSample.svelte";
     import Melodyline from "./Melodyline.svelte";
+    import MelodylineIntervals from "./MelodylineIntervals.svelte";
 
     const width = 350;
     const height = 350;
@@ -84,11 +85,11 @@
             </div>
         {:else if $glyphselect.value === 9}
             <div class="box">
-                <Melodyline
-                    {width}
-                    {height}
-                    data={$tooltipSel.data}
-                />
+                <Melodyline {width} {height} data={$tooltipSel.data} />
+            </div>
+        {:else if $glyphselect.value === 10}
+            <div class="box">
+                <MelodylineIntervals {width} {height} data={$tooltipSel.data} />
             </div>
         {/if}
     {/if}

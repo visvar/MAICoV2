@@ -66,6 +66,7 @@
   import RhythmPie from "./Glyphs/RhythmPie.svelte";
   import ComplexityPie from "./Glyphs/ComplexityPie.svelte";
   import Emoji from "./Emojis/Emoji.svelte";
+  import MelodylineIntervals from "./Glyphs/MelodylineIntervals.svelte";
 
   export let opacity;
 
@@ -480,6 +481,39 @@
           {/if}
         {:else if $glyphselect.value === 9}
           <Melodyline
+            {opacity}
+            x={x(data[0][currentaxis[0].value])}
+            y={y(data[1][currentaxis[1].value])}
+            r={visutil.isBrushed(
+              x(data[0][currentaxis[0].value]),
+              y(data[1][currentaxis[1].value]),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data[2]}
+          />
+          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+            <DonutForValue
+              x={x(data[0][currentaxis[0].value])}
+              y={y(data[1][currentaxis[1].value])}
+              r={visutil.isBrushed(
+                x(data[0][currentaxis[0].value]),
+                y(data[1][currentaxis[1].value]),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={data[2]?.additional?.key?.type !== undefined
+                ? data[2]?.additional?.key?.type.includes("major")
+                  ? 1
+                  : 0.5
+                : 0}
+              round={true}
+            />
+          {/if}
+        {:else if $glyphselect.value === 10}
+          <MelodylineIntervals
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}

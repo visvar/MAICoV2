@@ -193,6 +193,8 @@
 
             playbackline = svg.append("line").attr("stroke", "blue");
 
+            console.log(muutil.calcIntervals(shownmelody));
+
             svg.append("g")
                 .selectAll("rect")
                 .data(shownmelody.notes)

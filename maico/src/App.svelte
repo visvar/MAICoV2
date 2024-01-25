@@ -167,6 +167,7 @@
     { label: "RhythmPie", value: 7 },
     { label: "FlowerComplexity", value: 8 },
     { label: "Melodyline", value: 9 },
+    { label: "MelodylineInt", value: 10 },
   ];
 
   const polyOptionsSelect = [

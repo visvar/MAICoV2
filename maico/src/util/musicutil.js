@@ -1380,7 +1380,7 @@ export function calcIntervals(melody) {
       if (notesat.length > 1) {
         let int = []
         for (let j = 0; j < notesat.length - 1; j++) {
-          let interval = notesat[j + 1].pitch - notesat[j].pitch
+          let interval = { value: notesat[j + 1].pitch - notesat[j].pitch, voices: [notesat[j].meloID, notesat[j + 1].meloID] }
           int.push(interval)
         }
         let triplet = undefined
@@ -1390,6 +1390,7 @@ export function calcIntervals(melody) {
         intervals.push({ quantizedStartStep: i, quantizedEndStep: i + 1, intervals: int, voices: notesat.length, triplet: undefined })
       }
     }
+    return intervals
   }
 
 }
