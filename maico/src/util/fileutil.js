@@ -27,7 +27,7 @@ export function writeToMidi(melodies1, bpm, mode) {
       melodies.forEach((mel) => {
         const poly = mel.isPolymix ? true : false
         mel.notes.forEach(n => {
-          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, meloID: poly ? n.meloID : 0 })
+          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, meloID: poly ? mel.indexing.filter(k => k.id === n.meloID)[0].meloID : 0 })
         })
         lastTiming += mel.totalQuantizedSteps
         sec = mm.sequences.unquantizeSequence(newSec, bpm)
@@ -117,7 +117,7 @@ function writeMidifile(mel, bpm, i, primerfile = "", poly) {
       for (let i = 0; i <= comb; i++) {
         let track = midi.addTrack()
         track.channel = i
-        newSec.notes = mel.notes.filter(n => n.meloID === i)
+        newSec.notes = mel.notes.filter(n => mel.indexing.filter(k => k.id === n.meloID)[0].meloID === i)
         sec = mm.sequences.unquantizeSequence(newSec, bpm)
         sec.notes.forEach((note) => {
           track.addNote({
