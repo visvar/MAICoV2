@@ -101,8 +101,8 @@ export function calcAllColorScales(alldata) {
   })
 
   result.push({
-    name: 'Timbre', scale: (data, a) => {
-      return data?.timbre !== undefined && a !== -1 ? sequentialScale(data.timbre[get(selectedBaseKeys)]) : 'lightgrey'
+    name: 'Timbre', scale: (data, a) => {              //sequentialScale
+      return data?.timbre !== undefined && a !== -1 ? divergingTimbreScale(data.timbre[get(selectedBaseKeys)]) : 'lightgrey'
     }
   })
 
@@ -112,6 +112,12 @@ export function calcAllColorScales(alldata) {
 export function modelColor10(i) {
   const scale = d3.schemeTableau10
   return scale[i % 10]
+}
+
+export function melodyColor(index, indexing) {
+  let id = indexing.filter(n => n.id === index)[0].meloID
+  const scale = d3.schemeTableau10
+  return scale[id % 10]
 }
 
 // dark to bright
@@ -135,6 +141,10 @@ export function divergingScale(i) {
  */
 export function divergingScaleSymmetric(i) {
   return i < 0.5 ? d3.interpolateBlues((-i + 0.5) * 2) : d3.interpolateBlues((i - 0.5) * 2)
+}
+
+export function divergingTimbreScale(i) {
+  return d3.interpolateRdYlGn(i)
 }
 
 // what kinds of types are major and which are minor? maybe do differentiation not just color?

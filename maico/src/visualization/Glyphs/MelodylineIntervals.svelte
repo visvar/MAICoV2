@@ -56,7 +56,11 @@
             context.fillStyle = color;
             context.strokeStyle = color;
             let notes = information.isPolymix
-                ? information.melody.notes.filter((n) => n.meloID === i)
+                ? information.melody.notes.filter((n1) =>
+                      information?.melody?.indexing !== undefined
+                          ? information?.melody?.indexing[i].id === n1.meloID
+                          : n1.meloID === i,
+                  )
                 : information.melody.notes;
             const line = [];
             notes.forEach((note, j) => {

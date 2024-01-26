@@ -1144,14 +1144,25 @@ function removeOverNotes(m1) {
   return notes
 }
 
+export function calcIndexing(current, m2) {
+  let m2i = { id: m2.index, meloID: undefined, meanpitch: meanpitch(m2.melody) }
+  current.push(m2i)
+  let sorted = current.sort((a, b) => a.meanpitch - b.meanpitch)
+  sorted.forEach((n, i) => {
+    n.meloID = i
+  })
+  return sorted
+}
+
 function combineMelo(m1, m2s, idtag) {
   let id = idtag[1] !== undefined ? idtag[0] + "_" + idtag[1] + "_" + idtag[2] : idtag[0] + "_" + idtag[2]
   let basemelody
   let combinations
   let m1notesadapt = idtag[1] !== undefined ? m1.notes : m1.notes.map((n, i) => {
-    n.meloID = 0
+    n.meloID = idtag[3]
     return n
   })
+  let current = idtag[0] <= 1 ? [{ id: idtag[3], meloID: 0, meanpitch: meanpitch(m1) }] : m1.indexing
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
     combinations = [m2s.index]
@@ -1163,18 +1174,20 @@ function combineMelo(m1, m2s, idtag) {
   }
   let m2r = JSON.parse(JSON.stringify(m2s.melody.notes))
   let m2 = m2r.map(n => {
-    n.meloID = combinations.length
+    n.meloID = m2s.index
     return n
   })
   let m1notes = m1notesadapt.concat(m2)
   m1notes = m1notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
   let notes = removeOverNotes(m1notes)
+  let indexing = calcIndexing(current, m2s)
   return {
     notes: notes,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
     id: id,
     basemelody: basemelody,
     combinations: combinations,
+    indexing: indexing,
     isPolymix: true
   }
 }
@@ -1349,27 +1362,6 @@ export function calcTimbre(melody, basenote, qc) {
   return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
 }
 
-export function swapIntervals(int1, int2, notesat) {
-  if (int1 === 4 && int2 === 3)
-    return "dur"
-  else if (int1 === 3 && int2 === 4)
-    return "moll"
-  else {
-    let test = [notesat[0].pitch + 12 - notesat[2].pitch, notesat[0].pitch - notesat[2].pitch - 12]
-    let first = int1 !== 3 && int1 !== 4
-    let second = int2 !== 3 && int2 !== 4
-    if (first && !second) {
-      if (test[0] === 3 || test[0] === 4)
-        return test[0] === 3 && int2 === 4 ? "dur" : test[0] === 4 && int2 === 3 ? "moll" : "special"
-    }
-    if (!first && second) {
-      if (test[1] === 3 || test[1] === 4)
-        return test[1] === 3 && int1 === 4 ? "moll" : test[1] === 4 && int1 === 3 ? "dur" : "special"
-    }
-    return undefined
-  }
-}
-
 export function calcIntervals(melody) {
   if (!melody.isPolymix)
     return []
@@ -1383,11 +1375,7 @@ export function calcIntervals(melody) {
           let interval = { value: notesat[j + 1].pitch - notesat[j].pitch, voices: [notesat[j].meloID, notesat[j + 1].meloID] }
           int.push(interval)
         }
-        let triplet = undefined
-        if (int.length === 2) {
-          triplet = swapIntervals(int[0], int[1], notesat)
-        }
-        intervals.push({ quantizedStartStep: i, quantizedEndStep: i + 1, intervals: int, voices: notesat.length, triplet: undefined })
+        intervals.push({ quantizedStartStep: i, quantizedEndStep: i + 1, intervals: int, voices: notesat.length })
       }
     }
     return intervals

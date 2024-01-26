@@ -21,7 +21,7 @@
     let context;
     const margin = 10;
     const offset = 0;
-    const bars = 40
+    const bars = 40;
 
     onMount(() => {
         context = canvas.getContext("2d");
@@ -50,30 +50,37 @@
                     .domain([0, melody.totalQuantizedSteps])
                     .range([margin + offset, width])
                     .nice();
-        context.fillStyle = "white";
-        context.strokeStyle = "grey";
-        context.rect(
-            scaleX(0),
-            scaleY(yextent[1]),
-            scaleX(melody.totalQuantizedSteps) - scaleX(0),
-            scaleY(yextent[0]) - scaleY(yextent[1])
-        );
-        context.stroke();
-        context.fill();
-        let voices = 0
-        if(data.isPolymix){
-            voices += data.polyinfo.combinations.length
-        }
-        let h = bars/(voices+1)
-        for(let i = 0; i<=voices;i++){
-            let color = visutil.modelColor10(i);
-            context.fillStyle = color
-            context.strokeStyle = color
-            let notes = data.isPolymix?data.melody.notes.filter(n => n.meloID === i):data.melody.notes
-            //context.beginPath();
-            const line = []
-            notes.forEach((note,j) => {
-                /*
+                context.fillStyle = "white";
+                context.strokeStyle = "grey";
+                context.rect(
+                    scaleX(0),
+                    scaleY(yextent[1]),
+                    scaleX(melody.totalQuantizedSteps) - scaleX(0),
+                    scaleY(yextent[0]) - scaleY(yextent[1]),
+                );
+                context.stroke();
+                context.fill();
+                let voices = 0;
+                if (data.isPolymix) {
+                    voices += data.polyinfo.combinations.length;
+                }
+                let h = bars / (voices + 1);
+                for (let i = 0; i <= voices; i++) {
+                    let color = visutil.modelColor10(i);
+                    context.fillStyle = color;
+                    context.strokeStyle = color;
+
+                    let notes = data.isPolymix
+                        ? data.melody.notes.filter((n1) =>
+                              data?.melody?.indexing !== undefined
+                                  ? data?.melody?.indexing[i].id === n1.meloID
+                                  : n1.meloID === i,
+                          )
+                        : data.melody.notes;
+                    //context.beginPath();
+                    const line = [];
+                    notes.forEach((note, j) => {
+                        /*
                 if(j === 0)
                     context.moveTo(scaleX(note.quantizedStartStep), scaleY(note.pitch));
                 else
@@ -82,30 +89,49 @@
 
                 context.stroke(); 
                 */
-                if(j === 0)
-                    line.push([scaleX(note.quantizedStartStep), scaleY(note.pitch)])
-                else
-                    line.push([scaleX(note.quantizedStartStep+0.25), scaleY(note.pitch)])
-                if(j === notes.length - 1)
-                    line.push([scaleX(note.quantizedEndStep), scaleY(note.pitch)])
-                else
-                    line.push([scaleX(note.quantizedEndStep-0.25), scaleY(note.pitch)])
-            })
-            //context.stroke();  
-            const curve = d3.curveCatmullRom(context);
-            context.beginPath();
-            curve.lineStart();
-            for (const [x, y] of line) curve.point(x, y);
-            curve.lineEnd();
-            context.stroke();
-            
-            notes.forEach((note,j) => {
-                mvlib.Canvas.drawRoundedRect(context, scaleX(note.quantizedStartStep), margin + (h * i), scaleX(note.quantizedEndStep)-scaleX(note.quantizedStartStep), h, 0);
-                context.fill()
-                context.stroke()
-            })
-            
-        }
+                        if (j === 0)
+                            line.push([
+                                scaleX(note.quantizedStartStep),
+                                scaleY(note.pitch),
+                            ]);
+                        else
+                            line.push([
+                                scaleX(note.quantizedStartStep + 0.25),
+                                scaleY(note.pitch),
+                            ]);
+                        if (j === notes.length - 1)
+                            line.push([
+                                scaleX(note.quantizedEndStep),
+                                scaleY(note.pitch),
+                            ]);
+                        else
+                            line.push([
+                                scaleX(note.quantizedEndStep - 0.25),
+                                scaleY(note.pitch),
+                            ]);
+                    });
+                    //context.stroke();
+                    const curve = d3.curveCatmullRom(context);
+                    context.beginPath();
+                    curve.lineStart();
+                    for (const [x, y] of line) curve.point(x, y);
+                    curve.lineEnd();
+                    context.stroke();
+
+                    notes.forEach((note, j) => {
+                        mvlib.Canvas.drawRoundedRect(
+                            context,
+                            scaleX(note.quantizedStartStep),
+                            margin + h * (voices - i),
+                            scaleX(note.quantizedEndStep) -
+                                scaleX(note.quantizedStartStep),
+                            h,
+                            0,
+                        );
+                        context.fill();
+                        context.stroke();
+                    });
+                }
             }
         }
     }

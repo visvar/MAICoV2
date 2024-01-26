@@ -193,7 +193,7 @@
 
             playbackline = svg.append("line").attr("stroke", "blue");
 
-            console.log(muutil.calcIntervals(shownmelody));
+            //console.log(muutil.calcIntervals(shownmelody));
 
             svg.append("g")
                 .selectAll("rect")
@@ -217,7 +217,11 @@
                 .attr("y", (d) => y(d.pitch) + noteheight * 0.1)
                 .attr("fill", (d) => {
                     if (!primer && d.meloID !== undefined)
-                        return visutil.modelColor10(d.meloID);
+                        return visutil.modelColor10(
+                            shownmelody.indexing.filter(
+                                (n) => n.id === d.meloID,
+                            )[0].meloID,
+                        );
                     /*fill === "grey"
                             ? fill
                             : melody.additional.outScaleNotes.outScale.has(

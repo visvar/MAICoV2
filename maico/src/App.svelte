@@ -299,7 +299,7 @@
       polyoptions.set([[], [], []]);
       return null;
     }
-    if ($emotionbased.value === 2) return null;
+    //if ($emotionbased.value === 2) return null;
     let i = 0;
     progress.set(0);
     let points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
