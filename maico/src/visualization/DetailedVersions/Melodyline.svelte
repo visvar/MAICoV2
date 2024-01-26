@@ -72,6 +72,7 @@
 
                     let notes = data.isPolymix
                         ? data.melody.notes.filter((n1) =>
+                            n1?.trackID !== undefined?n1.trackID === i:
                               data?.melody?.indexing !== undefined
                                   ? data?.melody?.indexing[i].id === n1.meloID
                                   : n1.meloID === i,

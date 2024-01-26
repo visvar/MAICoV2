@@ -218,6 +218,8 @@
                 .attr("fill", (d) => {
                     if (!primer && d.meloID !== undefined)
                         return visutil.modelColor10(
+                            d?.trackID !== undefined?
+                            d.trackID:
                             shownmelody.indexing.filter(
                                 (n) => n.id === d.meloID,
                             )[0].meloID,

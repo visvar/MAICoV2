@@ -602,15 +602,15 @@
           if (melo[0]?.indexing === undefined) {
             let current = [
               {
-                id: melo[0].basemelody,
-                meloID: 0,
+                meloID: melo[0].basemelody,
+                trackID: 0,
                 meanpitch: muutil.meanpitch({
                   notes: melo[0].notes.filter((n) => n.meloID === 0),
                 }),
               },
             ];
             for (let bc = 1; bc <= melo[0].combinations.length; bc++) {
-              muutil.calcIndexing(current, {
+              current = muutil.calcIndexing(current, {
                 index: melo[0].combinations[bc - 1],
                 melody: {
                   notes: melo[0].notes.filter((n) => n.meloID === bc),
@@ -622,6 +622,7 @@
                 n.meloID === 0
                   ? melo[0].basemelody
                   : melo[0].combinations[n.meloID - 1];
+              n.trackID = current.filter(t => t.meloID === n.meloID)[0].trackID
             });
             melo[0].indexing = current;
           }

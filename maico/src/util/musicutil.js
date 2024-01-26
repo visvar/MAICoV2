@@ -1145,11 +1145,11 @@ function removeOverNotes(m1) {
 }
 
 export function calcIndexing(current, m2) {
-  let m2i = { id: m2.index, meloID: undefined, meanpitch: meanpitch(m2.melody) }
+  let m2i = { meloID: m2.index, trackID: undefined, meanpitch: meanpitch(m2.melody) }
   current.push(m2i)
   let sorted = current.sort((a, b) => a.meanpitch - b.meanpitch)
   sorted.forEach((n, i) => {
-    n.meloID = i
+    n.trackID = i
   })
   return sorted
 }
@@ -1162,7 +1162,7 @@ function combineMelo(m1, m2s, idtag) {
     n.meloID = idtag[3]
     return n
   })
-  let current = idtag[0] <= 1 ? [{ id: idtag[3], meloID: 0, meanpitch: meanpitch(m1) }] : m1.indexing
+  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] : m1.indexing
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
     combinations = [m2s.index]
@@ -1181,6 +1181,9 @@ function combineMelo(m1, m2s, idtag) {
   m1notes = m1notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
   let notes = removeOverNotes(m1notes)
   let indexing = calcIndexing(current, m2s)
+  m1notes.forEach(n => {
+    n.trackID = indexing.filter(t => t.meloID === n.meloID)[0].trackID
+  })
   return {
     notes: notes,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
