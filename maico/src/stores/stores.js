@@ -209,6 +209,8 @@ export const keydetectselect = writable({ value: 0, label: 'Temperley adapted' }
 
 export const glyphsize = writable(1.1)
 
+export const drpoints = writable([[],[]])
+
 export const repsize = writable(0.3)
 
 export const playclick = writable(false)

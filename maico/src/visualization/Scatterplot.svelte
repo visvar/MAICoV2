@@ -37,6 +37,7 @@
     exportList,
     exportcleared,
     selectedBaseKeys,
+    drpoints,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -64,6 +65,8 @@
   let opacityVoronoi = 0.1;
   let opacityClusterHull = 0.1;
   let opacityGlyph = 1;
+
+  let gridmethod = 0
 
   let svg;
   let brushselect;
@@ -126,6 +129,8 @@
   $: $polyoptions, meloPointsNew();
   $: $numpoly, meloPointsNew();
 
+  $:$glyphsize, newgrid();
+
   //$: $selectedBaseKeys, testMeloPoints();
 
   exportcleared.subscribe((n) => {
@@ -151,6 +156,16 @@
       // clusters => [index of cluster, color of cluster]
       cluster.setCluster(clusters[0], clusters[1]);
     }
+  }
+
+  async function newgrid(){
+    let mdspoints = drpoints[0]
+    let umappoints = drpoints[1]
+    let mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+    let umapgpoints = drutil.gridify(umappoints, gridmethod);
+    //points.set(pointarray);
+
+    //get points => manipulate gridified set points
   }
 
   async function calcRepresentative() {
@@ -238,8 +253,8 @@
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
-      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
-      umapgpoints = drutil.gridify(umappoints, 0);
+      mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, gridmethod);
     }
 
     if (
@@ -248,6 +263,7 @@
       mdsgpoints !== undefined &&
       umapgpoints !== undefined
     ) {
+      drpoints.set([mdspoints,umappoints])
       let nnfilter = [1000, 0];
       let intfilter = [1000, 0];
       pointarray = [];
@@ -561,8 +577,8 @@
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
-      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
-      umapgpoints = drutil.gridify(umappoints, 0);
+      mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, gridmethod);
     }
     if (
       mdspoints !== undefined &&
@@ -570,6 +586,7 @@
       mdsgpoints !== undefined &&
       umapgpoints !== undefined
     ) {
+      drpoints.set([mdspoints,umappoints])
       let nnfilter = [1000, 0];
       let intfilter = [1000, 0];
       pointarray = [];
@@ -599,18 +616,18 @@
           const countOffBeat = muutil.computeOffBeat(melo[0]);
           const pauses = muutil.computePauses(melo[0]);
 
-          if (melo[0]?.indexing === undefined) {
+          if (melo[0]?.indexing === undefined ) {
             let current = [
               {
-                id: melo[0].basemelody,
-                meloID: 0,
+                meloID: melo[0].basemelody,
+                trackID: 0,
                 meanpitch: muutil.meanpitch({
                   notes: melo[0].notes.filter((n) => n.meloID === 0),
                 }),
               },
             ];
             for (let bc = 1; bc <= melo[0].combinations.length; bc++) {
-              muutil.calcIndexing(current, {
+              current = muutil.calcIndexing(current, {
                 index: melo[0].combinations[bc - 1],
                 melody: {
                   notes: melo[0].notes.filter((n) => n.meloID === bc),
@@ -618,12 +635,22 @@
               });
             }
             melo[0].notes.forEach((n) => {
-              n.meloID =
-                n.meloID === 0
+              let nmelo = n.meloID === 0
                   ? melo[0].basemelody
                   : melo[0].combinations[n.meloID - 1];
+              n.meloID =nmelo
+              n.trackID = current.filter(t => t.meloID === nmelo)[0].trackID
             });
             melo[0].indexing = current;
+          } else if (melo[0]?.melody?.notes[0]?.trackID === undefined){
+            let current = melo[0].indexing
+            melo[0].notes.forEach((n) => {
+              let nmelo = n.meloID === 0
+                  ? melo[0].basemelody
+                  : melo[0].combinations[n.meloID - 1];
+              n.meloID = nmelo
+              n.trackID = current.filter(t => t.meloID === nmelo)[0]?.trackID
+            });
           }
 
           information = {
