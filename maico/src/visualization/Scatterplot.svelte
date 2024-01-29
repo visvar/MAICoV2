@@ -65,6 +65,8 @@
   let opacityClusterHull = 0.1;
   let opacityGlyph = 1;
 
+  let gridmethod = 0
+
   let svg;
   let brushselect;
   let brushGroup;
@@ -238,8 +240,8 @@
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
-      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
-      umapgpoints = drutil.gridify(umappoints, 0);
+      mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, gridmethod);
     }
 
     if (
@@ -561,8 +563,8 @@
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
-      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
-      umapgpoints = drutil.gridify(umappoints, 0);
+      mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, gridmethod);
     }
     if (
       mdspoints !== undefined &&
@@ -599,7 +601,7 @@
           const countOffBeat = muutil.computeOffBeat(melo[0]);
           const pauses = muutil.computePauses(melo[0]);
 
-          if (melo[0]?.indexing === undefined) {
+          if (melo[0]?.indexing === undefined ) {
             let current = [
               {
                 meloID: melo[0].basemelody,
@@ -618,13 +620,22 @@
               });
             }
             melo[0].notes.forEach((n) => {
-              n.meloID =
-                n.meloID === 0
+              let nmelo = n.meloID === 0
                   ? melo[0].basemelody
                   : melo[0].combinations[n.meloID - 1];
-              n.trackID = current.filter(t => t.meloID === n.meloID)[0].trackID
+              n.meloID =nmelo
+              n.trackID = current.filter(t => t.meloID === nmelo)[0].trackID
             });
             melo[0].indexing = current;
+          } else if (melo[0]?.melody?.notes[0]?.trackID === undefined){
+            let current = melo[0].indexing
+            melo[0].notes.forEach((n) => {
+              let nmelo = n.meloID === 0
+                  ? melo[0].basemelody
+                  : melo[0].combinations[n.meloID - 1];
+              n.meloID = nmelo
+              n.trackID = current.filter(t => t.meloID === nmelo)[0]?.trackID
+            });
           }
 
           information = {

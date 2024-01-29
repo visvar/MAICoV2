@@ -451,7 +451,6 @@ export async function uploadDatasetFile(event) {
                 selectedBaseKeys.set(obj.variables.selectedBaseKeys)
                 importedSession.set(get(importedSession) + 1)
             }
-
         }
     } catch (e) {
         console.log(e)
