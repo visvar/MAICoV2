@@ -37,6 +37,7 @@
     exportList,
     exportcleared,
     selectedBaseKeys,
+    drpoints,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -128,6 +129,8 @@
   $: $polyoptions, meloPointsNew();
   $: $numpoly, meloPointsNew();
 
+  $:$glyphsize, newgrid();
+
   //$: $selectedBaseKeys, testMeloPoints();
 
   exportcleared.subscribe((n) => {
@@ -153,6 +156,16 @@
       // clusters => [index of cluster, color of cluster]
       cluster.setCluster(clusters[0], clusters[1]);
     }
+  }
+
+  async function newgrid(){
+    let mdspoints = drpoints[0]
+    let umappoints = drpoints[1]
+    let mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+    let umapgpoints = drutil.gridify(umappoints, gridmethod);
+    //points.set(pointarray);
+
+    //get points => manipulate gridified set points
   }
 
   async function calcRepresentative() {
@@ -250,6 +263,7 @@
       mdsgpoints !== undefined &&
       umapgpoints !== undefined
     ) {
+      drpoints.set([mdspoints,umappoints])
       let nnfilter = [1000, 0];
       let intfilter = [1000, 0];
       pointarray = [];
@@ -572,6 +586,7 @@
       mdsgpoints !== undefined &&
       umapgpoints !== undefined
     ) {
+      drpoints.set([mdspoints,umappoints])
       let nnfilter = [1000, 0];
       let intfilter = [1000, 0];
       pointarray = [];

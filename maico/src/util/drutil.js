@@ -86,7 +86,7 @@ export function distanceMatrix(melodies, weight) {
 }
 
 export function gridify(points, num) {
-  let cellsize = get(glyphsize)* 15
+  let cellsize = get(glyphsize)* 30
   let total = get(side) - 50
   /**
    * gridsize === 2^level
@@ -94,11 +94,12 @@ export function gridify(points, num) {
    * cellsize < total/2^(level-1)
    */
   let level = 2
-  console.log(cellsize > total/Math.pow(2,level), cellsize , total,Math.pow(2,level))
-  while(cellsize > total/Math.pow(2,level) || level === 50){
+  console.log(cellsize > total/Math.pow(2,level), cellsize , total/Math.pow(2,level))
+  while(cellsize < total/Math.pow(2,level) || level === 50){
     level++
-    console.log(cellsize > total/Math.pow(2,level), cellsize , total,Math.pow(2,level))
+    console.log(cellsize > total/Math.pow(2,level), cellsize , total/Math.pow(2,level))
   }
+  level--
   let gridpoints = null
   console.log("grid", num)
   if (points === undefined)
