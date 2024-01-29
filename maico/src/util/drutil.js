@@ -86,32 +86,26 @@ export function distanceMatrix(melodies, weight) {
 }
 
 export function gridify(points, num) {
-  let cellsize = get(glyphsize)* 30
+  let cellsize = get(glyphsize) * 60
   let total = get(side) - 50
-  /**
-   * gridsize === 2^level
-   * level = 1 -> total/2
-   * cellsize < total/2^(level-1)
-   */
-  let level = 2
-  console.log(cellsize > total/Math.pow(2,level), cellsize , total/Math.pow(2,level))
-  while(cellsize < total/Math.pow(2,level) || level === 50){
+  let level = 0
+  while (cellsize * Math.pow(2, level) < total || level === 50) {
     level++
-    console.log(cellsize > total/Math.pow(2,level), cellsize , total/Math.pow(2,level))
   }
   level--
+  while (points.length > Math.pow(4, level))
+    level++
   let gridpoints = null
-  console.log("grid", num)
   if (points === undefined)
     return points
   if (num === 0)
     gridpoints = hagrid.gridify_hilbert(points, {
       level: level,
-      keep_aspect_ratio: false
+      keep_aspect_ratio: true
     })
   else if (num === 1)
     gridpoints = hagrid.gridify_gosper(points, {
-      level:level,
+      level: level,
       scale_factor: 1
     })
   else if (num === 2)

@@ -166,7 +166,7 @@ function createAxis() {
             if (axis === true) {
                 oldAxis = { ...n }
                 if (!get(DRumap).value) {
-                    if (!get(grid)) {
+                    if (!get(grid) && !get(hilbert)) {
                         n[0] = { value: 0, label: 'DR' }
                         n[1] = { value: 0, label: 'DR' }
                     } else {
@@ -174,7 +174,7 @@ function createAxis() {
                         n[1] = { value: 1, label: 'DR' }
                     }
                 } else {
-                    if (!get(grid)) {
+                    if (!get(grid) && !get(hilbert)) {
                         n[0] = { value: 2, label: 'DR' }
                         n[1] = { value: 2, label: 'DR' }
                     } else {
@@ -205,11 +205,13 @@ export const glyphmodelselect = writable({ value: 0, label: 'Correlation' })
 
 export const grid = writable(false)
 
+export const hilbert = writable(false)
+
 export const keydetectselect = writable({ value: 0, label: 'Temperley adapted' })
 
 export const glyphsize = writable(1.1)
 
-export const drpoints = writable([[],[]])
+export const drpoints = writable([[], []])
 
 export const repsize = writable(0.3)
 

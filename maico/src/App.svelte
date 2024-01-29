@@ -69,6 +69,7 @@
     numpoly,
     polyoptions,
     actionlog,
+    hilbert,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -994,18 +995,33 @@
           use metric-based layout
         </label>
         <div />
-        <label>
-          <input
-            type="checkbox"
-            bind:checked={$grid}
-            on:change={() => {
-              if ($axisselect[2]) {
-                axisselect.updateAxis(true, 0);
-              }
-            }}
-          />
-          use grid
-        </label>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              bind:checked={$grid}
+              on:change={() => {
+                if ($axisselect[2]) {
+                  axisselect.updateAxis(true, 0);
+                }
+                $hilbert = false;
+              }}
+            />
+            use grid
+          </label><label>
+            <input
+              type="checkbox"
+              bind:checked={$hilbert}
+              on:change={() => {
+                if ($axisselect[2]) {
+                  axisselect.updateAxis(true, 0);
+                }
+                $grid = false;
+              }}
+            />
+            use hilbert
+          </label>
+        </div>
       </div>
       <div>
         <CorrelationMatrix w={280} h={200} />
