@@ -98,6 +98,9 @@
     }
 
     function exportChange(melody, add) {
+        log(!add ? "added toExport:" : "removed Export:", {
+            melody,
+        });
         !add ? exportList.addMelo(melody) : exportList.deleteMelo(melody);
         return !add;
     }
