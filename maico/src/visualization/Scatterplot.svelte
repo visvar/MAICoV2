@@ -83,7 +83,19 @@
   });
 
   function brushHandler(event) {
-    brushselection.set(event.selection);
+    if (
+      ($brushselection === null && event.selection !== null) ||
+      ($brushselection !== null && event.selection !== null)
+    )
+      brushselection.set(event.selection);
+    else if ($brushselection === null && event.selection === null) {
+      brushselection.set([
+        [event.sourceEvent.offsetX - 30, event.sourceEvent.offsetY - 30],
+        [event.sourceEvent.offsetX + 30, event.sourceEvent.offsetY + 30],
+      ]);
+    } else {
+      brushselection.set(null);
+    }
   }
 
   function updateExtent(val) {
