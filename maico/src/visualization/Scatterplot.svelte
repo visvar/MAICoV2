@@ -277,8 +277,10 @@
     );
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
-    let p = new Array(flatten.length);
-    p.map((_, i) => [0.1 * i, 0.1 * i]);
+    let p = new Array();
+    for (let i = 0; i < flatten.length; i++) {
+      p.push([0.1 * i, 0.1 * i]);
+    }
     let mdspoints = flatten.length < 3 ? p : undefined;
     let umappoints = flatten.length < 3 ? p : undefined;
     let mdsgpoints = flatten.length < 3 ? p : undefined;
@@ -587,6 +589,7 @@
       n,
       { model: null, temperature: null },
     ]);
+    console.log(flatten);
     if (flatten.length === 0 || $emotionbased.value !== 2) {
       if (flatten.length === 0 && $emotionbased.value === 2) points.set([]);
       return null;
@@ -650,7 +653,10 @@
           const countOffBeat = muutil.computeOffBeat(melo[0]);
           const pauses = muutil.computePauses(melo[0]);
 
-          if (melo[0]?.indexing === undefined) {
+          if (
+            melo[0]?.indexing === undefined &&
+            melo[0]?.notes[0]?.meloID !== undefined
+          ) {
             let current = [
               {
                 meloID: melo[0].basemelody,
@@ -660,6 +666,7 @@
                 }),
               },
             ];
+
             for (let bc = 1; bc <= melo[0].combinations.length; bc++) {
               current = muutil.calcIndexing(current, {
                 index: melo[0].combinations[bc - 1],
@@ -677,7 +684,7 @@
               n.trackID = current.filter((t) => t.meloID === nmelo)[0].trackID;
             });
             melo[0].indexing = current;
-          } else if (melo[0]?.melody?.notes[0]?.trackID === undefined) {
+          } else if (melo[0]?.notes[0]?.trackID === undefined) {
             let current = melo[0].indexing;
             melo[0].notes.forEach((n) => {
               let nmelo =

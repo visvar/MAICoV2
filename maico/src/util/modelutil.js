@@ -434,8 +434,10 @@ export async function uploadDatasetFile(event) {
             const obj = JSON.parse(String(evt.target.result))
             models.setAll(obj.modelList.data)
             primerList.set(obj.primerList.primer)
-            if (obj?.polyoptions !== undefined)
+            if (obj?.polyoptions !== undefined) {
+                console.log('-', obj.polyoptions.poly)
                 polyoptions.set(obj.polyoptions.poly)
+            }
             if (obj?.variables !== undefined) {
                 strangers.set(obj.variables.strangers)
                 genlength.set(obj.variables.genlength)
