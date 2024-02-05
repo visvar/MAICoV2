@@ -6,7 +6,7 @@ import { averageOfGlyphs, calcInformation, calcVariancesCluster, getMiddlePositi
 import { axisoptions, axisoptionsCor, keysLookup } from './globalValues';
 import { writeToMidi } from '../util/fileutil';
 
-let oldAxis = [{ value: 0, label: 'DR' }, { value: 0, label: 'DR' }, false]
+let oldAxis = [{ value: 3, label: 'DR' }, { value: 3, label: 'DR' }, 1]
 
 
 
@@ -155,39 +155,45 @@ export const primerSelected = derived([primerList, primerTodelete], v => {
 export const selectedBaseKeys = writable(-1)
 
 
-function createAxis() {
-    const { subscribe, set, update } = writable([{ value: 3, label: 'DR' }, { value: 3, label: 'DR' }, true]);
+function createAxis() {                                                                              // 1 == DR, 2== Timbre
+    const { subscribe, set, update } = writable([{ value: 3, label: 'DR' }, { value: 3, label: 'DR' }, 1]);
 
     return {
         subscribe,
         get: (n) => get(n),
         set: (n) => set(n),
         updateAxis: (axis, num, a2, num2) => update(n => {
+            console.log(n, axis, num, oldAxis)
             if (axis === true) {
                 oldAxis = { ...n }
-                if (!get(DRumap).value) {
-                    if (!get(grid) && !get(hilbert)) {
-                        n[0] = { value: 0, label: 'DR' }
-                        n[1] = { value: 0, label: 'DR' }
+                if (num === 1) {
+                    if (!get(DRumap).value) {
+                        if (!get(grid) && !get(hilbert)) {
+                            n[0] = { value: 0, label: 'DR' }
+                            n[1] = { value: 0, label: 'DR' }
+                        } else {
+                            n[0] = { value: 1, label: 'DR' }
+                            n[1] = { value: 1, label: 'DR' }
+                        }
                     } else {
-                        n[0] = { value: 1, label: 'DR' }
-                        n[1] = { value: 1, label: 'DR' }
+                        if (!get(grid) && !get(hilbert)) {
+                            n[0] = { value: 2, label: 'DR' }
+                            n[1] = { value: 2, label: 'DR' }
+                        } else {
+                            n[0] = { value: 3, label: 'DR' }
+                            n[1] = { value: 3, label: 'DR' }
+                        }
                     }
-                } else {
-                    if (!get(grid) && !get(hilbert)) {
-                        n[0] = { value: 2, label: 'DR' }
-                        n[1] = { value: 2, label: 'DR' }
-                    } else {
-                        n[0] = { value: 3, label: 'DR' }
-                        n[1] = { value: 3, label: 'DR' }
-                    }
+                } else if (num === 2) {
+                    n[0] = { value: 100, label: 'Timbre' }
+                    n[1] = { value: 100, label: 'Timbre' }
                 }
-                n[2] = true
+                n[2] = num
             } else {
-                if (n[2] && n[0].value < 4 && num > 1) {
+                if (n[2] !== 0 && n[0].value < 4 && num > 1) {
                     n = { ...oldAxis }
                 } else {
-                    n[2] = false
+                    n[2] = 0
                     n[num] = { value: axis.value, label: axis.label }
                     if (a2 !== undefined && a2 !== null)
                         n[num2] = { value: a2.value, label: a2.label }

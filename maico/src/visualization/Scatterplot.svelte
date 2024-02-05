@@ -39,6 +39,7 @@
     selectedBaseKeys,
     drpoints,
     hilbert,
+    axisselect,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -48,6 +49,7 @@
 
   import Voronoi from "./Voronoi.svelte";
   import ScatterplotCanvas from "./ScatterplotCanvas.svelte";
+  import TimbreCanvas from "./TimbreCanvas.svelte";
   import ClusterCanvas from "./ClusterCanvas.svelte";
 
   import * as moutil from "../util/modelutil.js";
@@ -314,11 +316,6 @@
       let information = undefined;
       let varInt = undefined;
 
-      let qc =
-        $selectedBaseKeys !== -1
-          ? muutil.reshuffleQuintCircle($selectedBaseKeys, "dur")
-          : undefined;
-
       heatmapinfo.set(
         glutil.calcPianoHeatmap(
           flatten.filter((v, i) => i >= $primerList.length).map((p) => p[0]),
@@ -347,7 +344,6 @@
               isPolymix: false,
               melody: melo[0],
               temperature: melo[1].temperature,
-              //timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
               timbre: muutil.calcAllTimbre(melo[0]),
               mvaesim: melo[0].mvaesim,
               primerindex:
@@ -462,7 +458,6 @@
               isPolymix: false,
               melody: melo[0],
               temperature: undefined,
-              //timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
               timbre: muutil.calcAllTimbre(melo[0]),
               mvaesim: undefined,
               primerindex: undefined,
@@ -589,7 +584,6 @@
       n,
       { model: null, temperature: null },
     ]);
-    console.log(flatten);
     if (flatten.length === 0 || $emotionbased.value !== 2) {
       if (flatten.length === 0 && $emotionbased.value === 2) points.set([]);
       return null;
@@ -638,11 +632,6 @@
 
       let information = undefined;
       let varInt = undefined;
-
-      let qc =
-        $selectedBaseKeys !== -1
-          ? muutil.reshuffleQuintCircle($selectedBaseKeys, "dur")
-          : undefined;
 
       flatten.forEach((melo, index) => {
         if (index < mdspoints.length) {
@@ -705,7 +694,6 @@
             },
             melody: melo[0],
             temperature: undefined,
-            //timbre: muutil.calcTimbre(melo[0], $selectedBaseKeys, qc).timbre,
             timbre: muutil.calcAllTimbre(melo[0]),
             mvaesim: undefined,
             primerindex: undefined,
@@ -836,7 +824,11 @@
     <Voronoi opacity={opacityVoronoi} />
   </div>
   <div class="canvas">
-    <ScatterplotCanvas opacity={opacityGlyph} />
+    {#if $axisselect[0].label !== "Timbre"}
+      <ScatterplotCanvas opacity={opacityGlyph} />
+    {:else}
+      <TimbreCanvas opacity={opacityGlyph} />
+    {/if}
   </div>
   <div class="canvas">
     <svg

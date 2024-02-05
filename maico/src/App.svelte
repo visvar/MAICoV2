@@ -304,6 +304,7 @@
     let i = 0;
     progress.set(0);
     let points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
+    console.log(points);
     //progress.set(0)
     let combined = [];
     for (let r = 1; r < 4; r++) combined.push([]);
@@ -321,7 +322,6 @@
           combined,
           i,
         );
-        console.log(i);
       }
     }, 10); //this sets the speed of the animation
     //}, 0);
@@ -945,7 +945,7 @@
             bind:value={$DRumap}
             on:change={() => {
               if ($axisselect[2]) {
-                axisselect.updateAxis(true, 0);
+                axisselect.updateAxis(true, 1);
               }
             }}
             clearable={false}
@@ -982,10 +982,10 @@
         <label>
           <input
             type="checkbox"
-            checked={$axisselect[2]}
+            checked={$axisselect[2] === 1}
             on:change={(e) => {
               if (e.target.checked) {
-                axisselect.updateAxis(true, 0);
+                axisselect.updateAxis(true, 1);
               } else {
                 axisselect.updateAxis(axisoptions[0], 2);
               }
@@ -1001,8 +1001,8 @@
               type="checkbox"
               bind:checked={$grid}
               on:change={() => {
-                if ($axisselect[2]) {
-                  axisselect.updateAxis(true, 0);
+                if ($axisselect[2] === 1) {
+                  axisselect.updateAxis(true, 1);
                 }
                 $hilbert = false;
               }}
@@ -1013,8 +1013,8 @@
               type="checkbox"
               bind:checked={$hilbert}
               on:change={() => {
-                if ($axisselect[2]) {
-                  axisselect.updateAxis(true, 0);
+                if ($axisselect[2] === 1) {
+                  axisselect.updateAxis(true, 1);
                 }
                 $grid = false;
               }}
@@ -1022,6 +1022,21 @@
             use hilbert
           </label>
         </div>
+      </div>
+      <div>
+        <input
+          type="checkbox"
+          checked={$axisselect[2] === 2}
+          on:change={(e) => {
+            if (e.target.checked) {
+              axisselect.updateAxis(true, 2);
+            } else {
+              axisselect.updateAxis(axisoptions[0], 2);
+            }
+          }}
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        />
+        use timbre layout
       </div>
       <div>
         <CorrelationMatrix w={280} h={200} />

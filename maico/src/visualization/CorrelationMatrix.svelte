@@ -33,7 +33,7 @@
                 : visutil.divergingScale;
             const a1 = $axisselect[0].value;
             const a2 = $axisselect[1].value;
-            const a3 = $axisselect[2];
+            const a3 = $axisselect[2] !== 0;
             select1 = "axis" + a1 + a2;
             select2 = "axis" + a2 + a1;
             const kw = (w - 100) / (axisoptionsCor.length + 1);
@@ -79,7 +79,7 @@
                     .attr("rx", 4)
                     .attr(
                         "id",
-                        (d, i) => "axis" + i + j // i < j ? : "axis" + j + i
+                        (d, i) => "axis" + i + j, // i < j ? : "axis" + j + i
                     )
                     /*.attr("fill-opacity", (d, i) =>
                         (a1 === j && a2 === i) || (a1 === j && a2 === i)
@@ -95,10 +95,10 @@
                                       visutil.correlationCoefficient(
                                           corData[i],
                                           corData[j],
-                                          corData[i].length
-                                      )
-                                  )
-                              )
+                                          corData[i].length,
+                                      ),
+                                  ),
+                              ),
                     )
                     .attr("stroke-width", (d, i) =>
                         !a3 &&
@@ -107,7 +107,7 @@
                         a2 === i
                             ? //)
                               1
-                            : 0
+                            : 0,
                     )
                     .attr("stroke", "#333")
                     .style("cursor", "pointer")
@@ -118,7 +118,7 @@
                     .append("title")
                     .text(
                         (d, i) =>
-                            `${axisoptionsCor[j].label} - ${axisoptionsCor[i].label}`
+                            `${axisoptionsCor[j].label} - ${axisoptionsCor[i].label}`,
                     );
 
                 // text for values
@@ -138,13 +138,13 @@
                                           visutil.correlationCoefficient(
                                               corData[i],
                                               corData[j],
-                                              corData[i].length
-                                          )
-                                      )
-                                  )
+                                              corData[i].length,
+                                          ),
+                                      ),
+                                  ),
                         ) < 50
                             ? "white"
-                            : "black"
+                            : "black",
                     )
                     .style("text-anchor", "middle")
                     .style("vertical-align", "bottom")
@@ -155,7 +155,7 @@
                             const cor = visutil.correlationCoefficient(
                                 corData[i],
                                 corData[j],
-                                corData[i].length
+                                corData[i].length,
                             );
                             return isNaN(cor) || i === j
                                 ? ""
@@ -185,7 +185,7 @@
                 .on("mouseout", (d, i) => {
                     d3.select("#axisrect" + i.value).attr("width", 75);
                     d3.select("#axistext" + i.value).text(
-                        (d, i) => d.shortLabel
+                        (d, i) => d.shortLabel,
                     );
                 });
             // short label
@@ -240,7 +240,7 @@
                 title="correlation coefficient"
                 tickFormat={(d) => d}
                 color={d3.scaleDiverging([-1, 0, 1], (d) =>
-                    visutil.divergingScale(1 - d)
+                    visutil.divergingScale(1 - d),
                 )}
                 width={w - 100}
                 tickSize={0}
@@ -251,7 +251,7 @@
                 tickFormat={(d) => d}
                 color={d3.scaleDiverging(
                     [-1, 0, 1],
-                    visutil.divergingScaleSymmetric
+                    visutil.divergingScaleSymmetric,
                 )}
                 width={w - 100}
                 tickSize={0}
