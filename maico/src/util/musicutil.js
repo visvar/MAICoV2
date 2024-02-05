@@ -1155,7 +1155,7 @@ export function calcIndexing(current, m2) {
 }
 
 function combineMelo(m1, m2s, idtag) {
-  let id = idtag[1] !== undefined ? idtag[0] + "_" + idtag[1] + "_" + idtag[2] : idtag[0] + "_" + idtag[2]
+  let id_comb = idtag[1] !== undefined ? idtag[0] + "_" + idtag[1] + "_" + idtag[2] : idtag[0] + "_" + idtag[2]
   let basemelody
   let combinations
   let m1notesadapt = idtag[1] !== undefined ? m1.notes : m1.notes.map((n, i) => {
@@ -1188,7 +1188,7 @@ function combineMelo(m1, m2s, idtag) {
   return {
     notes: notes,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
-    id: id,
+    id_comb: id_comb,
     basemelody: basemelody,
     combinations: combinations,
     indexing: indexing,
