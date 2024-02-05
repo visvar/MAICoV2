@@ -2,6 +2,8 @@ import * as druid from '@saehrimnir/druidjs/dist/druid.esm.js'
 // import * as druid from '@saehrimnir/druidjs'
 import * as hagrid from '@saehrimnir/hagrid'
 import * as muutil from './musicutil.js'
+import { glyphsize, side } from '../stores/stores.js'
+import { get } from 'svelte/store'
 
 function getDrProjectedPoints(distMatrix, umap, emotion) {
   const druidMatrix = druid.Matrix.from(distMatrix)
@@ -84,34 +86,31 @@ export function distanceMatrix(melodies, weight) {
 }
 
 export function gridify(points, num) {
+  let cellsize = get(glyphsize) * 60
+  let total = get(side) - 50
+  let level = 0
+  while (cellsize * Math.pow(2, level) < total || level === 50) {
+    level++
+  }
+  level--
+  while (points.length > Math.pow(4, level))
+    level++
   let gridpoints = null
   if (points === undefined)
     return points
   if (num === 0)
-    if (points.length >= 100)
-      gridpoints = hagrid.gridify(points, 'hilbert', {
-        l_min: 0,
-        pluslevel: 0,
-        keep_aspect_ratio: true
-      })
-    else
-      gridpoints = hagrid.gridify(points, 'hilbert', {
-        l_min: 0,
-        pluslevel: 1,
-        keep_aspect_ratio: true
-      })
-  else if (num === 1)
-    gridpoints = hagrid.gridify(points, 'gosper', {
-      l_min: 0,
-      pluslevel: 0,
+    gridpoints = hagrid.gridify_hilbert(points, {
+      level: level,
       keep_aspect_ratio: true
     })
-
+  else if (num === 1)
+    gridpoints = hagrid.gridify_gosper(points, {
+      level: level,
+      scale_factor: 1
+    })
   else if (num === 2)
-    gridpoints = hagrid.gridify(points, "dgrid", {
-      l_min: 0,
-      pluslevel: 2,
-      keep_aspect_ratio: true
+    gridpoints = hagrid.gridify_dgrid(points, {
+      aspect_ratio: 0.9
     })
 
   return gridpoints

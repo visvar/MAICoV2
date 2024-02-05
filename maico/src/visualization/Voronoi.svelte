@@ -16,6 +16,7 @@
         repSwitch,
         seen,
         rate,
+        selectedBaseKeys,
     } from "../stores/stores.js";
     import { get } from "svelte/store";
 
@@ -97,6 +98,7 @@
     $: $vorcolorselect, newColor();
     $: $seen, newColor();
     $: $rate, newColor();
+    $: $selectedBaseKeys, newColor();
     $: opacity, newOpacity();
 
     function newPolygons() {

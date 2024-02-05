@@ -57,6 +57,7 @@
             context.strokeStyle = color;
             let notes = information.isPolymix
                 ? information.melody.notes.filter((n1) =>
+                n1?.trackID !== undefined?n1.trackID === i:
                       information?.melody?.indexing !== undefined
                           ? information?.melody?.indexing[i].id === n1.meloID
                           : n1.meloID === i,

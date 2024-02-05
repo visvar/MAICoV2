@@ -37,6 +37,8 @@
     exportList,
     exportcleared,
     selectedBaseKeys,
+    drpoints,
+    hilbert,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -65,6 +67,8 @@
   let opacityClusterHull = 0.1;
   let opacityGlyph = 1;
 
+  let gridmethod = 0;
+
   let svg;
   let brushselect;
   let brushGroup;
@@ -79,7 +83,19 @@
   });
 
   function brushHandler(event) {
-    brushselection.set(event.selection);
+    if (
+      ($brushselection === null && event.selection !== null) ||
+      ($brushselection !== null && event.selection !== null)
+    )
+      brushselection.set(event.selection);
+    else if ($brushselection === null && event.selection === null) {
+      brushselection.set([
+        [event.sourceEvent.offsetX - 30, event.sourceEvent.offsetY - 30],
+        [event.sourceEvent.offsetX + 30, event.sourceEvent.offsetY + 30],
+      ]);
+    } else {
+      brushselection.set(null);
+    }
   }
 
   function updateExtent(val) {
@@ -126,6 +142,10 @@
   $: $polyoptions, meloPointsNew();
   $: $numpoly, meloPointsNew();
 
+  $: $glyphsize, newgrid();
+  $: $grid, newgrid();
+  $: $hilbert, newgrid();
+
   //$: $selectedBaseKeys, testMeloPoints();
 
   exportcleared.subscribe((n) => {
@@ -151,6 +171,33 @@
       // clusters => [index of cluster, color of cluster]
       cluster.setCluster(clusters[0], clusters[1]);
     }
+  }
+
+  async function newgrid() {
+    let gridmethod = $grid ? 2 : 0;
+    if (
+      drpoints === undefined ||
+      $points === undefined ||
+      drpoints[0]?.length === 0 ||
+      $points?.length < 3
+    )
+      return null;
+    let mdsgpoints = await drutil.gridify($drpoints[0], gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+    let umapgpoints = await drutil.gridify($drpoints[1], gridmethod);
+    //points.set(pointarray);
+    let temp = $points;
+    temp.forEach((p, index) => {
+      p[0][1] = mdsgpoints[index][0];
+      p[0][3] = umapgpoints[index][0];
+      p[1][1] = mdsgpoints[index][1];
+      p[1][3] = umapgpoints[index][1];
+      p[2].visdata[0][1] = mdsgpoints[index][0];
+      p[2].visdata[0][3] = umapgpoints[index][0];
+      p[2].visdata[1][1] = mdsgpoints[index][1];
+      p[2].visdata[1][3] = umapgpoints[index][1];
+    });
+    points.set(temp);
+    //get points => manipulate gridified set points
   }
 
   async function calcRepresentative() {
@@ -215,6 +262,7 @@
       meloPointsNew();
       return null;
     }
+    let gridmethod = $grid ? 2 : 0;
     flatten = await moutil.flattenAllMelodies();
 
     if (flatten.length === 0) return null;
@@ -229,8 +277,10 @@
     );
     $emotionbased.value ? (matrix = emotionfeatures) : null;
     */
-    let p = new Array(flatten.length);
-    p.map((_, i) => [0.1 * i, 0.1 * i]);
+    let p = new Array();
+    for (let i = 0; i < flatten.length; i++) {
+      p.push([0.1 * i, 0.1 * i]);
+    }
     let mdspoints = flatten.length < 3 ? p : undefined;
     let umappoints = flatten.length < 3 ? p : undefined;
     let mdsgpoints = flatten.length < 3 ? p : undefined;
@@ -238,8 +288,8 @@
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
-      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
-      umapgpoints = drutil.gridify(umappoints, 0);
+      mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, gridmethod);
     }
 
     if (
@@ -248,6 +298,7 @@
       mdsgpoints !== undefined &&
       umapgpoints !== undefined
     ) {
+      drpoints.set([mdspoints, umappoints]);
       let nnfilter = [1000, 0];
       let intfilter = [1000, 0];
       pointarray = [];
@@ -533,10 +584,12 @@
   }
 
   async function meloPointsNew() {
+    let gridmethod = $grid ? 2 : 0;
     flatten = $polyoptions[$numpoly - 2].map((n) => [
       n,
       { model: null, temperature: null },
     ]);
+    console.log(flatten);
     if (flatten.length === 0 || $emotionbased.value !== 2) {
       if (flatten.length === 0 && $emotionbased.value === 2) points.set([]);
       return null;
@@ -561,8 +614,8 @@
     if (flatten.length >= 3) {
       mdspoints = await drutil.getPoints(matrix, false, false); //$emotionbased.value);
       umappoints = await drutil.getPoints(matrix, true, false); //$emotionbased.value);
-      mdsgpoints = drutil.gridify(mdspoints, 0); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
-      umapgpoints = drutil.gridify(umappoints, 0);
+      mdsgpoints = drutil.gridify(mdspoints, gridmethod); // 0 hilbert, 1 gosper ???, 2 dgrid (does not work)
+      umapgpoints = drutil.gridify(umappoints, gridmethod);
     }
     if (
       mdspoints !== undefined &&
@@ -570,6 +623,7 @@
       mdsgpoints !== undefined &&
       umapgpoints !== undefined
     ) {
+      drpoints.set([mdspoints, umappoints]);
       let nnfilter = [1000, 0];
       let intfilter = [1000, 0];
       pointarray = [];
@@ -599,18 +653,22 @@
           const countOffBeat = muutil.computeOffBeat(melo[0]);
           const pauses = muutil.computePauses(melo[0]);
 
-          if (melo[0]?.indexing === undefined) {
+          if (
+            melo[0]?.indexing === undefined &&
+            melo[0]?.notes[0]?.meloID !== undefined
+          ) {
             let current = [
               {
-                id: melo[0].basemelody,
-                meloID: 0,
+                meloID: melo[0].basemelody,
+                trackID: 0,
                 meanpitch: muutil.meanpitch({
                   notes: melo[0].notes.filter((n) => n.meloID === 0),
                 }),
               },
             ];
+
             for (let bc = 1; bc <= melo[0].combinations.length; bc++) {
-              muutil.calcIndexing(current, {
+              current = muutil.calcIndexing(current, {
                 index: melo[0].combinations[bc - 1],
                 melody: {
                   notes: melo[0].notes.filter((n) => n.meloID === bc),
@@ -618,12 +676,24 @@
               });
             }
             melo[0].notes.forEach((n) => {
-              n.meloID =
+              let nmelo =
                 n.meloID === 0
                   ? melo[0].basemelody
                   : melo[0].combinations[n.meloID - 1];
+              n.meloID = nmelo;
+              n.trackID = current.filter((t) => t.meloID === nmelo)[0].trackID;
             });
             melo[0].indexing = current;
+          } else if (melo[0]?.notes[0]?.trackID === undefined) {
+            let current = melo[0].indexing;
+            melo[0].notes.forEach((n) => {
+              let nmelo =
+                n.meloID === 0
+                  ? melo[0].basemelody
+                  : melo[0].combinations[n.meloID - 1];
+              n.meloID = nmelo;
+              n.trackID = current.filter((t) => t.meloID === nmelo)[0]?.trackID;
+            });
           }
 
           information = {

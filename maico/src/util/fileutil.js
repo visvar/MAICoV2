@@ -9,6 +9,7 @@ export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
     return null
   try {
+    console.log(melodies1)
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
     let sec
@@ -27,16 +28,16 @@ export function writeToMidi(melodies1, bpm, mode) {
       melodies.forEach((mel) => {
         const poly = mel.isPolymix ? true : false
         mel.notes.forEach(n => {
-          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, meloID: poly ? mel.indexing.filter(k => k.id === n.meloID)[0].meloID : 0 })
+          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, meloID: poly ? n.trackID : 0 })
         })
         lastTiming += mel.totalQuantizedSteps
         sec = mm.sequences.unquantizeSequence(newSec, bpm)
         sec.notes.forEach((n, i) => {
-          n.meloID = newSec.notes[i].meloID
+          n.trackID = newSec.notes[i].trackID
         })
         console.log(sec)
         tracks.forEach((t, i) => {
-          sec.notes.filter(n => n.meloID === i).forEach((note) => {
+          sec.notes.filter(n => n.trackID === i).forEach((note) => {
             t.addNote({
               midi: note.pitch,
               time: note.startTime,
@@ -87,7 +88,8 @@ export function writeToMidi(melodies1, bpm, mode) {
     } else if (mode === 0) {
       melodies.forEach((mel, i) => {
         let primername = mel?.primer?.name !== undefined ? mel.primer.name : 'Polyphony'
-        const poly = mel.isPolymix ? true : false
+        const poly = mel?.isPolymix ? true : false
+        console.log(poly)
         writeMidifile(mel, bpm, i, primername, poly)
       })
     }
@@ -112,12 +114,13 @@ function writeMidifile(mel, bpm, i, primerfile = "", poly) {
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
     let sec
+    console.log(mel.notes)
     if (poly) {
-      const comb = Math.max(...mel.notes.map(n => n.meloID))
+      const comb = Math.max(...mel.notes.map(n => n.trackID))
       for (let i = 0; i <= comb; i++) {
         let track = midi.addTrack()
         track.channel = i
-        newSec.notes = mel.notes.filter(n => mel.indexing.filter(k => k.id === n.meloID)[0].meloID === i)
+        newSec.notes = mel.notes.filter(n => n.trackID === i)
         sec = mm.sequences.unquantizeSequence(newSec, bpm)
         sec.notes.forEach((note) => {
           track.addNote({

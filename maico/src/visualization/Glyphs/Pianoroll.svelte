@@ -40,7 +40,7 @@
             scaleY(information.pianoroll.data[1]) - 1,
             r * 2 + 2,
             r * 2 + 2,
-            0
+            0,
         );
         context.stroke();
         context.fill();

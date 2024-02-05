@@ -98,6 +98,9 @@
     }
 
     function exportChange(melody, add) {
+        log(!add ? "added toExport:" : "removed Export:", {
+            melody,
+        });
         !add ? exportList.addMelo(melody) : exportList.deleteMelo(melody);
         return !add;
     }
@@ -218,6 +221,8 @@
                 .attr("fill", (d) => {
                     if (!primer && d.meloID !== undefined)
                         return visutil.modelColor10(
+                            d?.trackID !== undefined?
+                            d.trackID:
                             shownmelody.indexing.filter(
                                 (n) => n.id === d.meloID,
                             )[0].meloID,
@@ -344,6 +349,7 @@
         <div
             class="option {melody.userspecific.export ? 'selected' : ''}"
             on:click={() => {
+                selectOption(1);
                 melody.userspecific.export = exportChange(
                     melody,
                     melody.userspecific.export,
