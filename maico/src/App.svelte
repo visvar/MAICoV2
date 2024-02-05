@@ -780,7 +780,7 @@
               title="timbre"
               color={d3.scaleSequentialQuantile(
                 [0, 1],
-                visutil.sequentialScale,
+                visutil.divergingTimbreScale,
               )}
               tickFormat={(d) => {
                 if (d === 0) return "dark";

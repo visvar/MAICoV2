@@ -156,7 +156,7 @@ export const selectedBaseKeys = writable(-1)
 
 
 function createAxis() {
-    const { subscribe, set, update } = writable([{ value: 2, label: 'DR' }, { value: 2, label: 'DR' }, true]);
+    const { subscribe, set, update } = writable([{ value: 3, label: 'DR' }, { value: 3, label: 'DR' }, true]);
 
     return {
         subscribe,
@@ -205,7 +205,7 @@ export const glyphmodelselect = writable({ value: 0, label: 'Correlation' })
 
 export const grid = writable(false)
 
-export const hilbert = writable(false)
+export const hilbert = writable(true)
 
 export const keydetectselect = writable({ value: 0, label: 'Temperley adapted' })
 

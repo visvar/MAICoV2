@@ -349,6 +349,7 @@
         <div
             class="option {melody.userspecific.export ? 'selected' : ''}"
             on:click={() => {
+                selectOption(1);
                 melody.userspecific.export = exportChange(
                     melody,
                     melody.userspecific.export,
