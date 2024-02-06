@@ -171,7 +171,7 @@
     height={$side}
     style="cursor: pointer, position: absolute; top: 0; left: 0;"
   >
-    {#if !$axisselect[2]}
+    {#if $axisselect[2] === 0}
       <Axis type="x" scale={x} tickNumber={10} margin={marginaxis} />
       <Axis type="y" scale={y} tickNumber={10} margin={marginaxis} />
     {/if}

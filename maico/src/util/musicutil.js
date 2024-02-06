@@ -1162,7 +1162,6 @@ function combineMelo(m1, m2s, idtag) {
     n.meloID = idtag[3]
     return n
   })
-  console.log(idtag[1], m1notesadapt)
   let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] : m1.indexing
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
@@ -1224,13 +1223,12 @@ export function findPolyMelodies(num, melody, rule) {
   while (iter < num) {
     current.forEach((current1, i) => {
       let currjson = JSON.parse(JSON.stringify(current1))
-      console.log(currjson)
       if (rule === 0)
         diff = potential.filter((m, j) => isDifferent(current1, m[2].melody))
       else if (rule === 1)
         diff = potential.filter((m, j) => minQuints(current1, m[2].melody, 5))
       diff.forEach((m) => {
-        let c = combineMelo(currjson, m[2], [iter, currjson?.id, m[2].index, melody.index])
+        let c = combineMelo(currjson, m[2], [iter, currjson?.id_comb, m[2].index, melody.index])
         let com = notCombined(c, combined[iter - 1])
         if (com)
           combined[iter - 1].push(c)
@@ -1269,7 +1267,7 @@ export function findAllPolyMelodies(num, rule) {
         else if (rule === 1)
           diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
         diff.forEach((m) => {
-          let c = combineMelo(currjson, m[2], [iter, currjson?.id, m[2].index, melody.index])
+          let c = combineMelo(currjson, m[2], [iter, currjson?.id_comb, m[2].index, melody.index])
           let com = notCombined(c, combined[iter - 1])
           if (com)
             combined[iter - 1].push(c)
@@ -1301,7 +1299,7 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
       else if (rule === 1)
         diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
       diff.forEach((m) => {
-        let c = combineMelo(currjson, m[2], [iter, currjson?.id, m[2].index, melody.index])
+        let c = combineMelo(currjson, m[2], [iter, currjson?.id_comb, m[2].index, melody.index])
         let com = notCombined(c, combined[iter - 1])
         if (com)
           combined[iter - 1].push(c)
@@ -1365,6 +1363,18 @@ export function calcTimbre(melody, basenote, qc) {
     .domain([-melody.notes.filter(n => n.pitch % 12 !== basenote).length, melody.notes.filter(n => n.pitch % 12 !== basenote).length])
     .range([0, 1])
   return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
+}
+
+export function orderQuintenzirkel(array) {
+  // C cis D dis e f fis g gis a ais b
+  // 0  1  2  3  4 5  6  7  8  9  10 11
+  let temp = new Array(array.length);
+  let index = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]; // top is at the left
+  // let index = [6, 1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 11] // if middle is top 
+  array.forEach((d, i) => {
+    temp[index[i]] = d;
+  });
+  return temp
 }
 
 export function calcIntervals(melody) {

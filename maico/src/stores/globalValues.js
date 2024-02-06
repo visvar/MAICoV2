@@ -77,7 +77,8 @@ export const axisoptionsCor = [
   { label: 'Temperature', value: 4, shortLabel: 'Temp' },
   { label: 'Similarity to Primer', value: 5, shortLabel: 'SimPrim' },
   { label: 'Variance of Intervals', value: 6, shortLabel: 'VarInt' },
-  { label: 'Number of Notes', value: 7, shortLabel: 'NumNot' }]
+  { label: 'Number of Notes', value: 7, shortLabel: 'NumNot' }
+]
 
 export const keysLookup = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 

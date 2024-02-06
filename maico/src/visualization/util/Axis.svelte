@@ -7,6 +7,7 @@
 		tickSize = 4,
 		margin,
 		tickNumber = 10,
+		tickFormat = (t) => t,
 		type = "x";
 
 	$: ticks = scale.ticks(tickNumber);
@@ -32,12 +33,16 @@
 		ticks.forEach((d) => {
 			if (type === "x") {
 				context.fillText(
-					d,
+					tickFormat(d),
 					scale(d),
-					height - margin.bottom + tickSize + 1
+					height - margin.bottom + tickSize + 1,
 				);
 			} else if (type === "y") {
-				context.fillText(d, margin.left - tickSize - 1, scale(d));
+				context.fillText(
+					tickFormat(d),
+					margin.left - tickSize - 1,
+					scale(d),
+				);
 			}
 		});
 		context.save();
@@ -47,7 +52,7 @@
 			context.fillText(
 				$axisselect[0]?.label,
 				(width - margin.left - margin.right) / 2,
-				margin.top / 2
+				margin.top / 2,
 			);
 			context.strokeStyle = "#333";
 			context.stroke();
@@ -55,13 +60,13 @@
 			context.save();
 			context.translate(
 				(width - margin.left - margin.right) / 2,
-				(height - margin.top - margin.bottom) / 2
+				(height - margin.top - margin.bottom) / 2,
 			);
 			context.rotate(Math.PI / 2);
 			context.fillText(
 				$axisselect[1]?.label,
 				0,
-				-height / 2
+				-height / 2,
 				//width - margin.right / 2,
 				//(height - margin.top - margin.bottom) / 2
 			);

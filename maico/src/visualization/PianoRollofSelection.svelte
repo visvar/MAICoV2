@@ -45,8 +45,8 @@
 </script>
 
 {#if !$brushClusterSwitch}
-    <h2>Selected Samples</h2>
-    {#if $meloselected !== null}
+    {#if $meloselected !== null && false}
+        <h2>Selected Samples</h2>
         <div class="colorContainer">
             <ColorLegend
                 title="Notecolor legend"
@@ -81,7 +81,7 @@
             {/each}
         {/if}
         {#if $meloselected === null && $heatmapinfo !== null && $filterextents !== null && $progress === 100}
-            <Pianoheatmap w={w} h={h * 0.75} />   
+            <Pianoheatmap {w} h={h * 0.75} />
         {/if}
     </div>
 {:else}
