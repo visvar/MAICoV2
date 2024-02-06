@@ -1023,21 +1023,23 @@
           </label>
         </div>
       </div>
-      <div>
-        <input
-          type="checkbox"
-          checked={$axisselect[2] === 2}
-          on:change={(e) => {
-            if (e.target.checked) {
-              axisselect.updateAxis(true, 2);
-            } else {
-              axisselect.updateAxis(axisoptions[0], 2);
-            }
-          }}
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-        />
-        use timbre layout
-      </div>
+      {#if false}
+        <div>
+          <input
+            type="checkbox"
+            checked={$axisselect[2] === 2}
+            on:change={(e) => {
+              if (e.target.checked) {
+                axisselect.updateAxis(true, 2);
+              } else {
+                axisselect.updateAxis(axisoptions[0], 2);
+              }
+            }}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          use timbre layout
+        </div>
+      {/if}
       <div>
         <CorrelationMatrix w={280} h={200} />
       </div>
