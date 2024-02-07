@@ -33,6 +33,7 @@
     expfilter,
     modelselected,
     selectedBaseKeys,
+    qcorder,
   } from "../stores/stores.js";
   import { get } from "svelte/store";
 
@@ -68,11 +69,12 @@
   import Emoji from "./Emojis/Emoji.svelte";
   import MelodylineIntervals from "./Glyphs/MelodylineIntervals.svelte";
   import { keysLookup } from "../stores/globalValues.js";
+  import { orderQuintenzirkel } from "../util/musicutil.js";
 
   export let opacity;
 
-  const margin = { top: 25, right: 25, bottom: 25, left: 25 };
-  const marginaxis = { top: 25, right: 25, bottom: 25, left: 25 };
+  const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+  const marginaxis = { top: 25, right: 25, bottom: 25, left: 30 };
 
   let currentaxis = [{ value: 0 }, { value: 0 }];
   axisselect.subscribe((v) => {
@@ -81,6 +83,10 @@
   });
 
   let selectedSize = 30;
+
+  $: ordering = $qcorder
+    ? orderQuintenzirkel([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+    : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   $: x = scaleLinear()
     .domain([0, 11])
@@ -94,11 +100,13 @@
 
   brushselection.subscribe((value) => {
     // need different selection calculation
-    //meloselected.set(visutil.getSelectedMelodies(x, y, $currentpoints));
+    meloselected.set(
+      visutil.getTimbreSelectedMelodies(x, y, $currentpoints, ordering),
+    );
   });
   currentpoints.subscribe((value) => {
     // same
-    meloselected.set(visutil.getSelectedMelodies(x, y, value));
+    meloselected.set(visutil.getTimbreSelectedMelodies(x, y, value, ordering));
   });
 
   seen.subscribe((v) => {
@@ -154,31 +162,44 @@
     height={$side}
     style="cursor: pointer, position: absolute; top: 0; left: 0;"
   >
-    {#if $axisselect[2] === 0}
-      <Axis
-        type="x"
-        scale={x}
-        tickFormat={(t) => keysLookup[t]}
-        tickNumber={10}
-        margin={marginaxis}
-      />
-      <Axis
-        type="y"
-        scale={y}
-        tickFormat={(t) => (t === 0 ? "Dark" : t === 1 ? "Light" : "")}
-        tickNumber={2}
-        margin={marginaxis}
-      />
-    {/if}
+    <Axis
+      type="x"
+      scale={x}
+      tickFormat={(t) =>
+        $qcorder ? orderQuintenzirkel(keysLookup)[t] : keysLookup[t]}
+      tickNumber={10}
+      margin={marginaxis}
+    />
+    <Axis
+      type="y"
+      scale={y}
+      tickFormat={(t) => (t === 0 ? "Dark" : t === 1 ? "Light" : "")}
+      tickNumber={2}
+      margin={marginaxis}
+    />
     {#if $currentpoints !== undefined}
       {#each $currentpoints as data, indexBla}
-        {#each keysLookup as basekey, indexkey}
+        {#each ordering as basekey, indexkey}
+          {#if indexkey !== 11}
+            <Line
+              x1={x(indexkey)}
+              x2={x(indexkey + 1)}
+              y1={y(data[2].timbre[basekey])}
+              y2={y(data[2].timbre[ordering[indexkey + 1]])}
+              stroke={"blue"}
+              opacity={0.1}
+            ></Line>
+          {/if}
+        {/each}
+      {/each}
+      {#each $currentpoints as data, indexBla}
+        {#each ordering as basekey, indexkey}
           {#if $glyphselect.value === 0 || ($brushClusterSwitch && !$glyphinclude)}
             <Point
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
-              fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[basekey])}
+              fill={visutil.getColor(data[2], 7, basekey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -209,9 +230,9 @@
           {:else if $glyphselect.value === 1}
             <Flowerglyph
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
-              fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[basekey])}
+              fill={visutil.getColor(data[2], 7, basekey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -225,7 +246,7 @@
             {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
               <DonutForValue
                 x={x(data[2].timbre)}
-                y={y(data[2].timbre)}
+                y={y(data[2].timbre[indexkey])}
                 r={visutil.isBrushed(
                   x(data[0][currentaxis[0].value]),
                   y(data[1][currentaxis[1].value]),
@@ -244,8 +265,8 @@
           {:else if $glyphselect.value === 2}
             <Chromapie
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[indexkey])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -258,7 +279,7 @@
             {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
               <DonutForValue
                 x={x(data[2].timbre)}
-                y={y(data[2].timbre)}
+                y={y(data[2].timbre[indexkey])}
                 r={visutil.isBrushed(
                   x(data[0][currentaxis[0].value]),
                   y(data[1][currentaxis[1].value]),
@@ -277,9 +298,9 @@
           {:else if $glyphselect.value === 3}
             <Pianoroll
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
-              fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[basekey])}
+              fill={visutil.getColor(data[2], 7, basekey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -292,7 +313,7 @@
             {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
               <DonutForValue
                 x={x(data[2].timbre)}
-                y={y(data[2].timbre)}
+                y={y(data[2].timbre[indexkey])}
                 r={visutil.isBrushed(
                   x(data[0][currentaxis[0].value]),
                   y(data[1][currentaxis[1].value]),
@@ -311,9 +332,9 @@
           {:else if $glyphselect.value === 4}
             <HistogramInterval
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
-              fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[basekey])}
+              fill={visutil.getColor(data[2], 7, basekey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -345,8 +366,8 @@
           {:else if $glyphselect.value === 5}
             <Fivecirclepie
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[indexkey])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -378,8 +399,8 @@
           {:else if $glyphselect.value === 6}
             <ColorGraph
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[indexkey])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -410,8 +431,8 @@
             {/if}
           {:else if $glyphselect.value === 7}
             <RhythmPie
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[indexkey])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -443,9 +464,9 @@
           {:else if $glyphselect.value === 8}
             <Flowerglyph
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
-              fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[basekey])}
+              fill={visutil.getColor(data[2], 7, basekey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -478,8 +499,8 @@
           {:else if $glyphselect.value === 9}
             <Melodyline
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[indexkey])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -511,8 +532,8 @@
           {:else if $glyphselect.value === 10}
             <MelodylineIntervals
               {opacity}
-              x={x(data[2].timbre)}
-              y={y(indexkey)}
+              x={x(indexkey)}
+              y={y(data[2].timbre[indexkey])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),

@@ -820,9 +820,11 @@
 </script>
 
 <div id="container">
-  <div class="canvas">
-    <Voronoi opacity={opacityVoronoi} />
-  </div>
+  {#if $axisselect[0].label !== "Timbre"}
+    <div class="canvas">
+      <Voronoi opacity={opacityVoronoi} />
+    </div>
+  {/if}
   <div class="canvas">
     {#if $axisselect[0].label !== "Timbre"}
       <ScatterplotCanvas opacity={opacityGlyph} />
@@ -831,6 +833,7 @@
     {/if}
   </div>
   <div class="canvas">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <svg
       id="svg"
       width={$side}

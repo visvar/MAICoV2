@@ -40,6 +40,36 @@ export function getSelectedMelodies(x, y, points) {
   return selpoints
 }
 
+export function getTimbreSelectedMelodies(x, y, points, ordering) {
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null) {
+    if (get(meloselected) !== null)
+      log("delete brush")
+    return null
+  }
+  let brush = get(brushselection)
+  let keyindizes = ordering.filter((v, i) => x(i) > get(brushselection)[0][0] && x(i) < get(brushselection)[1][0])
+  let selpoints = points.filter((point) => {
+    let r = false
+    keyindizes.forEach((v) => {
+      if (y(point[2].timbre[v]) > get(brushselection)[0][1] && y(point[2].timbre[v]) < get(brushselection)[1][1])
+        r = true
+    })
+    return r
+  })
+  console.log(selpoints)
+  let newpoints = []
+  selpoints.forEach(p => {
+    if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
+      p[2].userspecific.seen = 1
+      newpoints.push(p)
+    }
+  })
+  seen.set(get(seen).concat(newpoints))
+  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
+  log("select brush results in points", { brush, selected: selectedpoints })
+  return selpoints
+}
+
 export function getColor(data, currentcolor, basenote) {
   return get(colors)[currentcolor].scale(data, basenote)
 
@@ -102,7 +132,7 @@ export function calcAllColorScales(alldata) {
 
   result.push({
     name: 'Timbre', scale: (data, a) => {              //sequentialScale
-      return data?.timbre !== undefined && a !== -1 ? divergingTimbreScale(data.timbre[get(selectedBaseKeys)]) : 'lightgrey'
+      return data?.timbre !== undefined && a !== -1 ? divergingTimbreScale(data.timbre[a]) : 'lightgrey'
     }
   })
 
@@ -320,7 +350,7 @@ export function getFillForVoronoi(data) {
     } else if (s === 7) {
       return getColor(data.data[2], 6) //data.data[2].userspecific.rate !== 0 ? (data.userspecific.rate === 1 ? "green" : "red") : 'blue'
     } else if (s === 8) {
-      return getColor(data.data[2], 7)
+      return getColor(data.data[2], 7, get(selectedBaseKeys))
     } else if (s === 9) {
       return 'transparent'
     }

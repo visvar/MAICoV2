@@ -1,0 +1,10 @@
+## TODO
+
+- do controls for all selected melodies => on the right at the top
+
+- height of right -> div with bind and rest calc
+
+- currentpoints auch abhängig von exclude list --> ###done###
+    - add melo to exclude list and the point is not shown in currentpoints
+
+- timbre vis for single basekey -> stack points over another?

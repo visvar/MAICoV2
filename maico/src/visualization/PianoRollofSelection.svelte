@@ -13,6 +13,7 @@
         filterextents,
         heatmapinfo,
         progress,
+        exclude,
     } from "../stores/stores.js";
     import { get } from "svelte/store";
 
@@ -59,6 +60,23 @@
             />
         </div>
     {/if}
+    <div>
+        {#if $meloselected !== null}
+            <button
+                on:click={() => {
+                    exclude.set(
+                        $exclude.concat($meloselected.map((p) => p[2].index)),
+                    );
+                }}>Exclude</button
+            >
+        {:else}
+            <button
+                on:click={() => {
+                    exclude.set([]);
+                }}>Clear Exclude</button
+            >
+        {/if}
+    </div>
     <div class="list" bind:clientWidth={w} bind:clientHeight={h}>
         {#if $meloselected !== null}
             {#each $meloselected as data, index}

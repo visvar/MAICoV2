@@ -435,7 +435,6 @@ export async function uploadDatasetFile(event) {
             models.setAll(obj.modelList.data)
             primerList.set(obj.primerList.primer)
             if (obj?.polyoptions !== undefined) {
-                console.log('-', obj.polyoptions.poly)
                 polyoptions.set(obj.polyoptions.poly)
             }
             if (obj?.variables !== undefined) {

@@ -1369,8 +1369,8 @@ export function orderQuintenzirkel(array) {
   // C cis D dis e f fis g gis a ais b
   // 0  1  2  3  4 5  6  7  8  9  10 11
   let temp = new Array(array.length);
-  let index = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]; // top is at the left
-  // let index = [6, 1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 11] // if middle is top 
+  //let index = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]; // top is at the left
+  let index = [6, 1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 11] // if middle is top 
   array.forEach((d, i) => {
     temp[index[i]] = d;
   });

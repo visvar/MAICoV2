@@ -163,7 +163,6 @@ function createAxis() {                                                         
         get: (n) => get(n),
         set: (n) => set(n),
         updateAxis: (axis, num, a2, num2) => update(n => {
-            console.log(n, axis, num, oldAxis)
             if (axis === true) {
                 oldAxis = { ...n }
                 if (num === 1) {
@@ -356,9 +355,11 @@ export const tufilter = writable(false);
 export const tdfilter = writable(false);
 export const expfilter = writable(false);
 
+export const exclude = writable([])
+
 
 export const currentpoints = derived(
-    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter],
+    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter, exclude],
     $stores => {
         permutation = new Array($stores[0]).fill(null)
         if ($stores[2] !== null && $stores[2] !== cpointchanged) {
@@ -386,6 +387,8 @@ export const currentpoints = derived(
                 .filter((point) => $stores[11] === 0 || point[2].userspecific.seen === $stores[11] || (point[2].userspecific.seen < 2 && $stores[11] === -2))
                 //exportfilter
                 .filter((point) => !$stores[12] || (point[2].userspecific.export))
+                .filter((point) => $stores[13].indexOf(point[2].index) === -1)
+            console.log($stores[13])
             temp.forEach((p, i) => {
                 permutation[i] = p[2].index
             })
@@ -410,6 +413,8 @@ function createColor() {
 }
 
 export const modeactive = writable(false)
+
+export const qcorder = writable(false)
 
 export const currentcolor = derived(
     pointcolorselect,

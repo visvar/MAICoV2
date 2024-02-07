@@ -1,0 +1,12 @@
+## Notes
+
+poly very slow even when generating very little or the same often
+-> clever selection of samples -> some already wont work so dont check them
+-> make comparison faster with array of length instead of notes (but could be still too much)
+-> if same samples are marked from beginning we could avoid them already
+
+
+still same sample can appear from generation (filter them? now that model does not matter rly)
+-> would be benefitial to poly as well
+
+hilbert not in dataset
