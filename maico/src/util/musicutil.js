@@ -1162,7 +1162,7 @@ function combineMelo(m1, m2s, idtag) {
     n.meloID = idtag[3]
     return n
   })
-  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] : m1.indexing
+  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] :[...m1.indexing]
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
     combinations = [m2s.index]
@@ -1180,12 +1180,15 @@ function combineMelo(m1, m2s, idtag) {
   let m1notes = m1notesadapt.concat(m2)
   m1notes = m1notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
   let notes = removeOverNotes(m1notes)
-  let indexing = calcIndexing(current, m2s)
-  m1notes.forEach(n => {
-    n.trackID = indexing.filter(t => t.meloID === n.meloID)[0].trackID
+  const indexing = calcIndexing(current, m2s)
+  console.log(indexing)
+  let notes2 = []
+  notes.forEach(n => {
+    notes2.push({pitch:n.pitch, quantizedStartStep:n.quantizedStartStep, quantizedEndStep:n.quantizedEndStep, meloID:n.meloID, trackID:indexing.filter(t => t.meloID === n.meloID)[0].trackID})
   })
+  console.log(notes, notes2)
   return {
-    notes: notes,
+    notes: notes2,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
     id_comb: id_comb,
     basemelody: basemelody,

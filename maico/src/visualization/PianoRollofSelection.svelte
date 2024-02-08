@@ -51,9 +51,10 @@
             $meloselected.forEach((p) => selectOption(i === 0 ? 1 : -1, p[2]));
         } else if (i === 2) {
             $meloselected.forEach(
-                (p) => (p[2].userspecific.export = exportChange(p[2], h)),
+                (p) => {
+                    p[2].userspecific.export = exportChange(p[2], !h)
+                }
             );
-            console.log($exportList, $meloselected);
         }
     }
 
@@ -103,10 +104,12 @@
                 />
             </div>
         {/if}
-        <div>
+        <div class="global">
             {#if $meloselected !== null}
                 <div class="float">
+                    <p class="option">All Selected: </p> 
                     <button
+                        class="option"
                         on:click={() => {
                             exclude.set(
                                 $exclude.concat(
@@ -225,12 +228,22 @@
     }
     .float {
         align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+    .global {
+        background-color: aquamarine;
+        align-items: center;
+        justify-content: center;
         display: flex;
     }
     .option {
+        background-color: rgb(110, 224, 186);
         display: inline-block;
         padding: 10px;
         cursor: pointer;
+        margin-left: 5px;
+        margin-right: 5px;
     }
     .liked .selected {
         background-color: rgb(197, 230, 242);

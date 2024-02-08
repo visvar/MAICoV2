@@ -388,7 +388,6 @@ export const currentpoints = derived(
                 //exportfilter
                 .filter((point) => !$stores[12] || (point[2].userspecific.export))
                 .filter((point) => $stores[13].indexOf(point[2].index) === -1)
-            console.log($stores[13])
             temp.forEach((p, i) => {
                 permutation[i] = p[2].index
             })

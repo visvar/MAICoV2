@@ -71,6 +71,7 @@
     polyoptions,
     actionlog,
     hilbert,
+    brushselection,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -1029,6 +1030,7 @@
           type="checkbox"
           checked={$axisselect[2] === 2}
           on:change={(e) => {
+            brushselection.set(null)
             if (e.target.checked) {
               axisselect.updateAxis(true, 2);
             } else {

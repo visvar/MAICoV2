@@ -258,7 +258,7 @@
             Base:
             <div
                 style:display="inline-block"
-                style:color={visutil.modelColor10(0)}
+                style:color={visutil.modelColor10(melody.melody.indexing.filter(t => t.meloID === melody.polyinfo.basemelody)[0].trackID)}
             >
                 {melody.polyinfo.basemelody}
             </div>
@@ -267,7 +267,7 @@
             {#each melody.polyinfo.combinations as c, i}
                 <div
                     style:display="inline-block"
-                    style:color={visutil.modelColor10(i + 1)}
+                    style:color={visutil.modelColor10(melody.melody.indexing.filter(t => t.meloID === c)[0].trackID)}
                 >
                     {c}
                 </div>
