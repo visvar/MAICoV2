@@ -173,7 +173,7 @@
     <Axis
       type="y"
       scale={y}
-      tickFormat={(t) => (t === 0 ? "Dark" : t === 1 ? "Light" : "")}
+      tickFormat={(t) => (t === 0 ? "Dark" : t === 1 ? "Bright" : "")}
       tickNumber={2}
       margin={marginaxis}
     />

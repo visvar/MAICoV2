@@ -335,6 +335,8 @@
 
             const chromadata = glutil.calcDataPie(melo[0]);
 
+            melo[0].array = muutil.calcArrayforMelo(melo[0])
+
             const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
             // let countSyncope = muutil.computeSyncope(melo[0]);
             const countOffBeat = muutil.computeOffBeat(melo[0]);

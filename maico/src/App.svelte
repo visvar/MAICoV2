@@ -786,7 +786,7 @@
               )}
               tickFormat={(d) => {
                 if (d === 0) return "dark";
-                if (d === 1) return "light";
+                if (d === 1) return "bright";
               }}
               tickValues={[0, 0.5, 1]}
               tickSize={0}

@@ -1073,16 +1073,34 @@ export function adjustMelodiesToFilters() {
   })
 }
 
-function isDifferent(melody, melody1) {
-  let notes = melody.notes
-  let notes1 = melody1.notes
-  let total = Math.max(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
-  for (let i = 0; i < total; i++) {
-    let t1 = notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
-    let t2 = notes1.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
-    if (t1.filter((n) => t2.indexOf(n) !== -1).length > 0) {
-      return false
+function isDifferent(melody, melody1, a, b) {
+  if(!melody?.isPolymix && b === a)
+    return false
+  if(melody?.isPolymix && (melody.basemelody === a || melody.combinations.includes(a)))
+    return false
+  if(melody?.array !== undefined && melody1?.array !== undefined)
+    return isDifferentArray(melody.array, melody1.array)
+  else{
+    let notes = melody.notes
+    let notes1 = melody1.notes
+    let total = Math.min(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
+    for (let i = 0; i < total; i++) {
+      let t1 = notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
+      let t2 = notes1.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
+      if (t1.filter((n) => t2.indexOf(n) !== -1).length > 0) {
+        return false
+      }
     }
+    return true
+  }
+}
+
+function isDifferentArray(melody, melody1) {
+  for(let i = 0; i<Math.min(melody.length, melody1.length);i++){
+    if(melody1[i].filter((n)=> {
+      melody[i].includes(n)
+    }).length >0)
+    return false
   }
   return true
 }
@@ -1181,12 +1199,10 @@ function combineMelo(m1, m2s, idtag) {
   m1notes = m1notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
   let notes = removeOverNotes(m1notes)
   const indexing = calcIndexing(current, m2s)
-  console.log(indexing)
   let notes2 = []
   notes.forEach(n => {
     notes2.push({pitch:n.pitch, quantizedStartStep:n.quantizedStartStep, quantizedEndStep:n.quantizedEndStep, meloID:n.meloID, trackID:indexing.filter(t => t.meloID === n.meloID)[0].trackID})
   })
-  console.log(notes, notes2)
   return {
     notes: notes2,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
@@ -1227,7 +1243,7 @@ export function findPolyMelodies(num, melody, rule) {
     current.forEach((current1, i) => {
       let currjson = JSON.parse(JSON.stringify(current1))
       if (rule === 0)
-        diff = potential.filter((m, j) => isDifferent(current1, m[2].melody))
+        diff = potential.filter((m, j) => isDifferent(current1, m[2].melody, m[2].index, melody.index))
       else if (rule === 1)
         diff = potential.filter((m, j) => minQuints(current1, m[2].melody, 5))
       diff.forEach((m) => {
@@ -1266,7 +1282,7 @@ export function findAllPolyMelodies(num, rule) {
       current.forEach((current1) => {
         let currjson = JSON.parse(JSON.stringify(current1))
         if (rule === 0)
-          diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody))
+          diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody, m[2].index, melody.index))
         else if (rule === 1)
           diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
         diff.forEach((m) => {
@@ -1287,6 +1303,16 @@ export function findAllPolyMelodies(num, rule) {
   return combined
 }
 
+export function calcArrayforMelo(melo){
+  let array = new Array(melo.totalQuantizedSteps).fill([])
+  melo.notes.forEach(n => {
+    for(let i = n.quantizedStartStep; i<n.quantizedEndStep;i++){
+      array[i] = [...array[i],n.pitch]
+    }
+  })
+  return array
+}
+
 
 export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
   let melody = JSON.parse(JSON.stringify(points[i]))
@@ -1298,7 +1324,7 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
     current.forEach((current1) => {
       let currjson = JSON.parse(JSON.stringify(current1))
       if (rule === 0)
-        diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody))
+        diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody, m[2].index, melody.index))
       else if (rule === 1)
         diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
       diff.forEach((m) => {
@@ -1347,6 +1373,28 @@ export function calcAllTimbre(melody) {
 }
 
 export function calcTimbre(melody, basenote, qc) {
+  if (basenote === -1 || qc === undefined)
+    return { timbre: undefined, timbrescore: 0 }
+  let timbre = 0
+  let timbrescore = 0
+  let hardcase = 0
+  melody.notes.forEach(n => {
+    let note = keysLookup[n.pitch % 12]
+    let index = qc.findLastIndex(v => v === note) - 6
+    if (index === -6)
+      hardcase++
+    else
+      timbre += index > 0 ? 1 : index < 0 ? -1 : 0
+    timbrescore += index
+  })
+  timbre += timbre > 0 ? hardcase : timbre < 0 ? -hardcase : 0
+  let scale = d3.scaleLinear()
+    .domain([-melody.notes.filter(n => n.pitch % 12 !== basenote).length, melody.notes.filter(n => n.pitch % 12 !== basenote).length])
+    .range([0, 1])
+  return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
+}
+
+export function calcWeightedTimbre(melody, basenote, qc) {
   if (basenote === -1 || qc === undefined)
     return { timbre: undefined, timbrescore: 0 }
   let timbre = 0

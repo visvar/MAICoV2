@@ -27,6 +27,8 @@
 
     export let melody, h, w, length, index;
 
+    console.log(melody)
+
     let svg;
 
     let primer = false;
