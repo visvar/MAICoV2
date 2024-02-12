@@ -1369,6 +1369,10 @@ export function calcAllTimbre(melody) {
     let qc = reshuffleQuintCircle(basenote, "dur")
     timbrearray.push(calcTimbre(melody, basenote, qc).timbre)
   }
+  for (let basenote = 0; basenote < 12; basenote++) {
+    let qc = reshuffleQuintCircle(basenote, "dur")
+    timbrearray.push(calcWeightedTimbre(melody, basenote, qc).timbre)
+  }
   return timbrearray
 }
 
@@ -1400,18 +1404,23 @@ export function calcWeightedTimbre(melody, basenote, qc) {
   let timbre = 0
   let timbrescore = 0
   let hardcase = 0
+  let total = 0
   melody.notes.forEach(n => {
     let note = keysLookup[n.pitch % 12]
+    let length = n.quantizedEndStep - n.quantizedStartStep
     let index = qc.findLastIndex(v => v === note) - 6
-    if (index === -6)
-      hardcase++
-    else
-      timbre += index > 0 ? 1 : index < 0 ? -1 : 0
-    timbrescore += index
+    if(index !== 0){
+      if (index === -6)
+        hardcase += length
+      else
+        timbre += index > 0 ? length : index < 0 ? -length : 0
+      timbrescore += index
+      total += length
+    }
   })
   timbre += timbre > 0 ? hardcase : timbre < 0 ? -hardcase : 0
   let scale = d3.scaleLinear()
-    .domain([-melody.notes.filter(n => n.pitch % 12 !== basenote).length, melody.notes.filter(n => n.pitch % 12 !== basenote).length])
+    .domain([-total, total])
     .range([0, 1])
   return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
 }

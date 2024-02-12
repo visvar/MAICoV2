@@ -354,7 +354,7 @@ export const listenfilter = writable(0);
 export const tufilter = writable(false);
 export const tdfilter = writable(false);
 export const expfilter = writable(false);
-
+export const weightTimbre = writable(false);
 export const exclude = writable([])
 
 

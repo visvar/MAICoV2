@@ -111,6 +111,7 @@
                     <button
                         class="option"
                         on:click={() => {
+                            log("exclude Melodies", {melos: $meloselected.map((p) => p[2].index)});
                             exclude.set(
                                 $exclude.concat(
                                     $meloselected.map((p) => p[2].index),
@@ -161,6 +162,7 @@
             {:else}
                 <button
                     on:click={() => {
+                        log("clear excluded Melodies", {});
                         exclude.set([]);
                     }}>Clear Exclude</button
                 >
