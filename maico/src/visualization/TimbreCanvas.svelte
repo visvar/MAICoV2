@@ -89,25 +89,27 @@
     return Math.round(v*20)/20
   }
 
+  $: selectorBaseKey = $weightTimbre?$selectedBaseKeys+12:$selectedBaseKeys
+
   $: showpoints = $selectedBaseKeys !== -1 ?
   $currentpoints.sort((a,b) => {
-    if(a[2].timbre[$selectedBaseKeys] > b[2].timbre[$selectedBaseKeys])
+    if(formatValue(a[2].timbre[selectorBaseKey]) > formatValue(b[2].timbre[selectorBaseKey]))
       return 1
-    else if(a[2].timbre[$selectedBaseKeys] < b[2].timbre[$selectedBaseKeys])
+    else if(formatValue(a[2].timbre[selectorBaseKey]) < formatValue(b[2].timbre[selectorBaseKey]))
       return -1
     else 
       return a[2].melody.notes.length - b[2].melody.notes.length
-  }).map(p => [...p,formatValue(p[2].timbre[$selectedBaseKeys])] ):[]
+  }).map(p => [...p,formatValue(p[2].timbre[selectorBaseKey])] ):[]
 
   $: $selectedBaseKeys, () => {
     showpoints = $selectedBaseKeys !== -1 ?$currentpoints.sort((a,b) => {
-    if(a[2].timbre[$selectedBaseKeys] > b[2].timbre[$selectedBaseKeys])
+    if(a[2].timbre[selectorBaseKey] > b[2].timbre[selectorBaseKey])
       return 1
-    else if(a[2].timbre[$selectedBaseKeys] < b[2].timbre[$selectedBaseKeys])
+    else if(a[2].timbre[selectorBaseKey] < b[2].timbre[selectorBaseKey])
       return -1
     else 
       return a[2].melody.notes.length - b[2].melody.notes.length
-  }).map(p => [...p,formatValue(p[2].timbre[$selectedBaseKeys])] ):[]
+  }).map(p => [...p,formatValue(p[2].timbre[selectorBaseKey])] ):[]
   }
 
   function calcCounter(points){
@@ -115,6 +117,8 @@
         counter = {}
         indexes = {}
       }else{
+        counter = {}
+        indexes = {}
         let i = 0
         points.map(p => p[3]).forEach(ele => {
           if (counter[ele]) {
@@ -122,13 +126,12 @@
           } else {
               counter[ele] = 1;
           }
-          if (!indexes[ele]) {
+          if (indexes[ele] === undefined) {
               indexes[ele] = i;
           }
           i++
         })
       }
-      
   }
 
   $: showpoints, calcCounter(showpoints)
@@ -140,8 +143,6 @@
   let maxsame = 0
   
   $: counter, maxsame = Math.max(...Object.values(counter))
-
-  $: showpoints, console.log(showpoints, maxsame, counter, indexes)
 
   $: ordering = $weightTimbre?
   $qcorder
@@ -231,14 +232,26 @@
     height={$side}
     style="cursor: pointer, position: absolute; top: 0; left: 0;"
   >
-    <Axis
+    {#if $selectedBaseKeys === -1}
+      <Axis
+        type="x"
+        scale={x}
+        tickFormat={(t) =>
+          $qcorder ? orderQuintenzirkel(keysLookup)[t] : keysLookup[t]}
+        tickNumber={10}
+        margin={marginaxis}
+      />
+    {:else}
+      <Axis
       type="x"
-      scale={x}
+      scale={x2}
       tickFormat={(t) =>
-        $qcorder ? orderQuintenzirkel(keysLookup)[t] : keysLookup[t]}
+        t===0||(t+1)%5 === 0?t+1:""}
       tickNumber={10}
       margin={marginaxis}
+      titleLabel={"ASC Number of Notes"}
     />
+    {/if}
     <Axis
       type="y"
       scale={y}
@@ -685,7 +698,7 @@
               {opacity}
               x={x2(index - indexes[data[3]])}
               y={y(data[3])}
-              fill={visutil.getColor(data[2], 7, $selectedBaseKeys)}
+              fill={visutil.getColor(data[2], 7, selectorBaseKey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -699,7 +712,7 @@
               {opacity}
               x={x2(index - indexes[data[3]])}
               y={y(data[3])}
-              fill={visutil.getColor(data[2], 7, $selectedBaseKeys)}
+              fill={visutil.getColor(data[2], 7, selectorBaseKey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -729,7 +742,7 @@
               {opacity}
               x={x2(index - indexes[data[3]])}
               y={y(data[3])}
-              fill={visutil.getColor(data[2], 7, $selectedBaseKeys)}
+              fill={visutil.getColor(data[2], 7, selectorBaseKey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -744,7 +757,7 @@
               {opacity}
               x={x2(index - indexes[data[3]])}
               y={y(data[3])}
-              fill={visutil.getColor(data[2], 7, $selectedBaseKeys)}
+              fill={visutil.getColor(data[2], 7, selectorBaseKey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),
@@ -800,7 +813,7 @@
               {opacity}
               x={x2(index - indexes[data[3]])}
               y={y(data[3])}
-              fill={visutil.getColor(data[2], 7, $selectedBaseKeys)}
+              fill={visutil.getColor(data[2], 7, selectorBaseKey)}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),

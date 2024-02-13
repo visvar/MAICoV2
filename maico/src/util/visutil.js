@@ -49,15 +49,11 @@ export function getTimbreKeySelectedMelodies(x, y, points, spoints, ordering, ma
   let brush = get(brushselection)
   let keyindizes = [...Array(maxsame).keys()].filter((v, i) => x(v) > get(brushselection)[0][0] && x(v) < get(brushselection)[1][0]) // 4,5,6
   let selpoints = spoints.filter((point,i) => {
-    let r = false
-    keyindizes.forEach((v) => {
-      if (y(point[3]) > get(brushselection)[0][1] && y(point[3]) < get(brushselection)[1][1])
-        if(keyindizes.indexOf(i - ordering[point[3]]) !== -1)
-          r = true
-    })
-    return r
+      if (y(point[3]) > get(brushselection)[0][1] && y(point[3]) < get(brushselection)[1][1] && keyindizes.indexOf(i - ordering[point[3]]) !== -1)
+        return true
+      else 
+        return false
   })
-  console.log(selpoints)
   let newpoints = []
   selpoints.forEach(p => {
     if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {

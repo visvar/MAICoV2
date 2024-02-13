@@ -8,7 +8,8 @@
 		margin,
 		tickNumber = 10,
 		tickFormat = (t) => t,
-		type = "x";
+		type = "x",
+		titleLabel = undefined;
 
 	$: ticks = scale.ticks(tickNumber);
 
@@ -50,7 +51,7 @@
 		context.textAlign = "center";
 		if (type === "x") {
 			context.fillText(
-				$axisselect[0]?.label,
+				titleLabel?titleLabel:$axisselect[0]?.label,
 				(width - margin.left - margin.right) / 2,
 				margin.top / 2,
 			);
@@ -64,7 +65,7 @@
 			);
 			context.rotate(Math.PI / 2);
 			context.fillText(
-				$axisselect[1]?.label,
+				titleLabel?titleLabel:$axisselect[1]?.label,
 				0,
 				-height / 2,
 				//width - margin.right / 2,
