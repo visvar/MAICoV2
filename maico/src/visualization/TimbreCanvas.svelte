@@ -249,7 +249,7 @@
         t===0||(t+1)%5 === 0?t+1:""}
       tickNumber={10}
       margin={marginaxis}
-      titleLabel={"ASC Number of Notes"}
+      titleLabel={"ASC Number of Notes       Rootnote: "+keysLookup[$selectedBaseKeys%12]}
     />
     {/if}
     <Axis

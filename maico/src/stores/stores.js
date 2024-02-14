@@ -415,6 +415,8 @@ export const modeactive = writable(false)
 
 export const qcorder = writable(false)
 
+export const edgeBundlingPoly = writable(false)
+
 export const currentcolor = derived(
     pointcolorselect,
     $pointcolorselect => {

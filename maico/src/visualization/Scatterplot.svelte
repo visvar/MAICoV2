@@ -40,6 +40,7 @@
     drpoints,
     hilbert,
     axisselect,
+    edgeBundlingPoly,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -48,6 +49,7 @@
   import { select, brush, interpolateViridis, scaleLinear } from "d3";
 
   import Voronoi from "./Voronoi.svelte";
+  import EdgeBundling from "./EdgeBundling.svelte";
   import ScatterplotCanvas from "./ScatterplotCanvas.svelte";
   import TimbreCanvas from "./TimbreCanvas.svelte";
   import ClusterCanvas from "./ClusterCanvas.svelte";
@@ -834,6 +836,11 @@
       <TimbreCanvas opacity={opacityGlyph} />
     {/if}
   </div>
+  {#if $edgeBundlingPoly && $axisselect[0].label !== "Timbre"}
+    <div class="canvas">
+      <EdgeBundling opacity={opacityVoronoi} />
+    </div>
+  {/if}
   <div class="canvas">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <svg
