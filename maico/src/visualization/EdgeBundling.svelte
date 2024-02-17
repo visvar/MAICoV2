@@ -149,32 +149,48 @@
 
     function calcColorsFromEdges(edges){
         let occedge = {}
+        // id, occ, ranking
+        let ranking = []
         let max = 0
         edges.forEach((e) => {
             if(!occedge[e.source]){
                 occedge[e.source] = 1
+                ranking[e.source] = [e.source, 1, 0]
             }else{
                 occedge[e.source] += 1
+                ranking[e.source][1] += 1
                 if(occedge[e.source]>max)
                     max = occedge[e.source]
             }
             if(!occedge[e.target]){
                 occedge[e.target] = 1
+                ranking[e.target] = [e.target, 1, 0]
             }else{
                 occedge[e.target] += 1
+                ranking[e.target][1] += 1
                 if(occedge[e.target]>max)
                     max = occedge[e.target]
             }
         })
+        ranking.sort((a,b) => a[1]-b[1]).map((v,i) => [v[0], i])
+
         maximum = max
-        return occedge
+        return [occedge, ranking]
     }
 
-    function getColor(index, colors){
-        let e = allEdges[index]
-        let scale = d3.scaleLinear().domain([1,maximum])
-        let value = colors[e.source]>colors[e.target]?colors[e.source]:colors[e.target]
-        return visutil.divergingTimbreScale(scale(value))
+    function getColor(index, color){
+        if(false){
+            let colors = color[0]
+            let e = allEdges[index]
+            let scale = d3.scaleLinear().domain([1,maximum])
+            let value = colors[e.source]>colors[e.target]?colors[e.source]:colors[e.target]
+            return visutil.divergingTimbreScale(scale(value))
+        }else{
+            let colors = color[1]
+            let e = allEdges[index]
+            let value = colors.filter(v => e.source === v[0] || v[0] === e.target)[0][1]
+            return visutil.modelColor10(value%10)
+        }
     }
     
     // @ts-ignore
