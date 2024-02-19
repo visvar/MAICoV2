@@ -50,6 +50,7 @@
     // @ts-ignore
     import * as d3 from "d3";
     import { onMount } from "svelte";
+    import { all, forEach } from "mathjs";
 
     export let opacity = 0.2;
 
@@ -116,7 +117,6 @@
 
     function calcCurrentEdges(){
         let edges = []
-        let edge_data = []
         let nodes = {}
         $currentpoints.forEach((v, index) => {
             if(v[2]?.isPolymix){
@@ -128,15 +128,22 @@
                         if(w[2].polyinfo.basemelody === v[2].polyinfo.basemelody || w[2].polyinfo.combinations.includes(v[2].polyinfo.basemelody)
                             || v[2].polyinfo.combinations.includes(w[2].polyinfo.basemelody) ||  v[2].polyinfo.combinations.filter(element => w[2].polyinfo.combinations.includes(element)).length > 0){
                                 // @ts-ignore
-                                edges.push({p1:v, p2:w, x1:x(v[0][$axisselect[0].value]), x2:x(w[0][$axisselect[0].value]), y1: y(v[1][$axisselect[1].value]),y2:y(w[1][$axisselect[1].value]),source:index,target:i
+                                let a1 = [...v[2].polyinfo.combinations, v[2].polyinfo.basemelody]
+                                let a2 = [...w[2].polyinfo.combinations, w[2].polyinfo.basemelody]
+                                edges.push({p1:v, p2:w, 
+                                    x1: x(v[0][$axisselect[0].value]), x2:x(w[0][$axisselect[0].value]), 
+                                    y1: y(v[1][$axisselect[1].value]), y2:y(w[1][$axisselect[1].value]),
+                                    source:index, target:i,
+                                    commonMelody:a1.filter(x => a2.includes(x))
                             })
                         }
                     }
                 }
             }
         })
-        node_data = nodes
-        allEdges = edges        
+        node_data = nodes   
+        coloring = calcColorsFromEdges(edges)
+        allEdges = edges  
     }
 
    // @ts-ignore
@@ -146,36 +153,48 @@
 
      let maximum = 0
 
+     let coloring = []
+
+     let selectedges = null
+
 
     function calcColorsFromEdges(edges){
         let occedge = {}
         // id, occ, ranking
-        let ranking = []
+        let ranking = {}
         let max = 0
         edges.forEach((e) => {
             if(!occedge[e.source]){
                 occedge[e.source] = 1
-                ranking[e.source] = [e.source, 1, 0]
             }else{
                 occedge[e.source] += 1
-                ranking[e.source][1] += 1
                 if(occedge[e.source]>max)
                     max = occedge[e.source]
             }
             if(!occedge[e.target]){
                 occedge[e.target] = 1
-                ranking[e.target] = [e.target, 1, 0]
             }else{
                 occedge[e.target] += 1
-                ranking[e.target][1] += 1
                 if(occedge[e.target]>max)
                     max = occedge[e.target]
             }
+            if(!ranking[e.commonMelody]){
+                ranking[e.commonMelody] = {commonMelody:e.commonMelody,occ:1}
+            }else{
+                ranking[e.commonMelody].occ += 1
+            }
         })
-        ranking.sort((a,b) => a[1]-b[1]).map((v,i) => [v[0], i])
+
+        let rankarray = [];
+
+        for (let key in ranking) {
+            rankarray.push(ranking[key]);
+        }
+        rankarray = rankarray.sort((a,b) => b.occ-a.occ)
+        rankarray.forEach((v,i) => v.rank = i)
 
         maximum = max
-        return [occedge, ranking]
+        return [occedge, ranking, rankarray]
     }
 
     function getColor(index, color){
@@ -188,14 +207,13 @@
         }else{
             let colors = color[1]
             let e = allEdges[index]
-            let value = colors.filter(v => e.source === v[0] || v[0] === e.target)[0][1]
-            return visutil.modelColor10(value%10)
+            let value = colors[e.commonMelody].rank
+            return value<9?visutil.modelColor10(value%10):d3.schemePaired[(value-9)%12]
         }
     }
     
     // @ts-ignore
     function edgeBundling(node_data, edge_data){
-        let colors = calcColorsFromEdges(edge_data)
         let fbundling = ForceEdgeBundling()
 				.step_size(0.2)
 				// @ts-ignore
@@ -221,16 +239,17 @@
         //results.forEach(function(edge_subpoint_data){	
         // for each of the arrays in the results 
         // draw a line between the subdivions points for that edge
-        	svg.append("g")
+        	selectedges = svg.append("g")
                 .selectAll("path")
                 .data(results)
                 .enter()
                 .append("path")
         	    .attr("d", d => d3line(d))
+                .attr("id", (d,i) => "p"+allEdges[i].p1[2].index+"_"+allEdges[i].p2[2].index)
             	.style("stroke-width", 1)
-            	.style("stroke", (d,i) => getColor(i,colors))
+            	.style("stroke", (d,i) => getColor(i, coloring))
             	.style("fill", "none")
-            	.style('stroke-opacity',0.15); //use opacity as blending
+            	.style('stroke-opacity', 0.15); //use opacity as blending
         //});
 
     }
@@ -255,6 +274,44 @@
                 .attr("x2", d => d.x2)
                 .attr("y1", d => d.y1)
                 .attr("y2", d => d.y2)
+            }
+        }
+    }
+
+    $: $meloselected, selection()
+
+    let previousIDs = []
+
+    function selection(){
+        if(previousIDs.length !== 0){
+            previousIDs.forEach(v => {
+                    d3.select("#p"+v).style("stroke-width", 1)
+            	    .style('stroke-opacity', 0.15)
+                })
+            previousIDs = []
+        }
+        if(false){
+            if($meloselected !== null){
+                    $meloselected.forEach( ms => {
+                        previousIDs = previousIDs.concat(allEdges.filter(e => e.p1[2].index === $meloselected[0][2].index || e.p2[2].index === $meloselected[0][2].index).map(v => v.p1[2].index+"_"+v.p2[2].index))
+                    })
+                    previousIDs.forEach(v => {
+                        let e = d3.select("#p"+v)
+                        .style("stroke-width", 2)
+                        .style('stroke-opacity', 0.5)
+                    })
+            }
+        }else{
+            if($meloselected !== null){
+
+                    $meloselected.forEach( ms => {
+                        previousIDs = previousIDs.concat(allEdges.filter(e => e.commonMelody.includes(ms[2].polyinfo.basemelody) || e.commonMelody.filter(x => ms[2].polyinfo.combinations.includes(x)).length > 0).map(v => v.p1[2].index+"_"+v.p2[2].index))
+                    })
+                    previousIDs.forEach(v => {
+                        d3.select("#p"+v)
+                        .style("stroke-width", 2)
+                        .style('stroke-opacity', 0.5)
+                    })
             }
         }
     }
