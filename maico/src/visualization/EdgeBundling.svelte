@@ -32,6 +32,7 @@
         selectedBaseKeys,
         // @ts-ignore
         exclude,
+        hilbert,
     } from "../stores/stores.js";
     // @ts-ignore
     import { get } from "svelte/store";
@@ -46,7 +47,7 @@
     import { voronoi } from "d3-voronoi";
 
     import * as visutil from "../util/visutil.js";
-    import {ForceEdgeBundling} from "./util/ForceEdgeBundling.js";
+    import { ForceEdgeBundling } from "./util/ForceEdgeBundling.js";
     // @ts-ignore
     import * as d3 from "d3";
     import { onMount } from "svelte";
@@ -57,12 +58,6 @@
     const margin = { top: 25, right: 25, bottom: 25, left: 25 };
 
     let svg;
-
-    // @ts-ignore
-    let polygons;
-
-    // @ts-ignore
-    let vorpol;
 
     $: x =
         $points !== undefined
@@ -104,214 +99,280 @@
                   .range([$side - margin.bottom, margin.top])
                   .nice();
 
+    // @ts-ignore
+    $: $currentpoints, calcCurrentEdges();
 
-   // @ts-ignore
-     $: $currentpoints, calcCurrentEdges()
+    $: $axisselect, calcCurrentEdges();
 
     onMount(() => {
-        calcCurrentEdges()
-    })
+        calcCurrentEdges();
+    });
 
-    $: allEdges = []
-    $: node_data = {}
+    $: allEdges = [];
+    $: node_data = {};
 
-    function calcCurrentEdges(){
-        let edges = []
-        let nodes = {}
+    function calcCurrentEdges() {
+        let edges = [];
+        let nodes = {};
         $currentpoints.forEach((v, index) => {
-            if(v[2]?.isPolymix){
-                nodes[index] = {"x":x(v[0][$axisselect[0].value]), "y":y(v[1][$axisselect[1].value])}
-                for(let i=index + 1; i<$currentpoints.length; i++){
-                    let w = $currentpoints[i]
-                    if(w[2]?.isPolymix){
+            if (v[2]?.isPolymix) {
+                nodes[index] = {
+                    x: x(v[0][$axisselect[0].value]),
+                    y: y(v[1][$axisselect[1].value]),
+                };
+                for (let i = index + 1; i < $currentpoints.length; i++) {
+                    let w = $currentpoints[i];
+                    if (w[2]?.isPolymix) {
                         //console.log(w[2], v[2], w[2]?.polyinfo.basemelody === v[2]?.polyinfo.basemelody ,w[2]?.polyinfo.combinations?.includes(v[2].polyinfo.basemelody), v[2]?.polyinfo.combinations?.includes(w[2].polyinfo.basemelody),v[2]?.polyinfo.combinations?.filter(element => w[2].polyinfo.combinations.includes(element)).length > 0)
-                        if(w[2].polyinfo.basemelody === v[2].polyinfo.basemelody || w[2].polyinfo.combinations.includes(v[2].polyinfo.basemelody)
-                            || v[2].polyinfo.combinations.includes(w[2].polyinfo.basemelody) ||  v[2].polyinfo.combinations.filter(element => w[2].polyinfo.combinations.includes(element)).length > 0){
-                                // @ts-ignore
-                                let a1 = [...v[2].polyinfo.combinations, v[2].polyinfo.basemelody]
-                                let a2 = [...w[2].polyinfo.combinations, w[2].polyinfo.basemelody]
-                                edges.push({p1:v, p2:w, 
-                                    x1: x(v[0][$axisselect[0].value]), x2:x(w[0][$axisselect[0].value]), 
-                                    y1: y(v[1][$axisselect[1].value]), y2:y(w[1][$axisselect[1].value]),
-                                    source:index, target:i,
-                                    commonMelody:a1.filter(x => a2.includes(x))
-                            })
+                        if (
+                            w[2].polyinfo.basemelody ===
+                                v[2].polyinfo.basemelody ||
+                            w[2].polyinfo.combinations.includes(
+                                v[2].polyinfo.basemelody,
+                            ) ||
+                            v[2].polyinfo.combinations.includes(
+                                w[2].polyinfo.basemelody,
+                            ) ||
+                            v[2].polyinfo.combinations.filter((element) =>
+                                w[2].polyinfo.combinations.includes(element),
+                            ).length > 0
+                        ) {
+                            // @ts-ignore
+                            let a1 = [
+                                ...v[2].polyinfo.combinations,
+                                v[2].polyinfo.basemelody,
+                            ];
+                            let a2 = [
+                                ...w[2].polyinfo.combinations,
+                                w[2].polyinfo.basemelody,
+                            ];
+                            edges.push({
+                                p1: v,
+                                p2: w,
+                                x1: x(v[0][$axisselect[0].value]),
+                                x2: x(w[0][$axisselect[0].value]),
+                                y1: y(v[1][$axisselect[1].value]),
+                                y2: y(w[1][$axisselect[1].value]),
+                                source: index,
+                                target: i,
+                                commonMelody: a1.filter((x) => a2.includes(x)),
+                            });
                         }
                     }
                 }
             }
-        })
-        node_data = nodes   
-        coloring = calcColorsFromEdges(edges)
-        allEdges = edges  
+        });
+        node_data = nodes;
+        coloring = calcColorsFromEdges(edges);
+        allEdges = edges;
     }
 
-   // @ts-ignore
-     //$:allEdges, drawEdges()
+    // @ts-ignore
+    //$:allEdges, drawEdges()
 
-     $:allEdges, edgeBundling(node_data, allEdges)
+    $: allEdges, edgeBundling(node_data, allEdges);
 
-     let maximum = 0
+    let maximum = 0;
 
-     let coloring = []
+    let coloring = [];
 
-     let selectedges = null
+    let selectedges = null;
 
-
-    function calcColorsFromEdges(edges){
-        let occedge = {}
+    function calcColorsFromEdges(edges) {
+        let occedge = {};
         // id, occ, ranking
-        let ranking = {}
-        let max = 0
+        let ranking = {};
+        let max = 0;
         edges.forEach((e) => {
-            if(!occedge[e.source]){
-                occedge[e.source] = 1
-            }else{
-                occedge[e.source] += 1
-                if(occedge[e.source]>max)
-                    max = occedge[e.source]
+            if (!occedge[e.source]) {
+                occedge[e.source] = 1;
+            } else {
+                occedge[e.source] += 1;
+                if (occedge[e.source] > max) max = occedge[e.source];
             }
-            if(!occedge[e.target]){
-                occedge[e.target] = 1
-            }else{
-                occedge[e.target] += 1
-                if(occedge[e.target]>max)
-                    max = occedge[e.target]
+            if (!occedge[e.target]) {
+                occedge[e.target] = 1;
+            } else {
+                occedge[e.target] += 1;
+                if (occedge[e.target] > max) max = occedge[e.target];
             }
-            if(!ranking[e.commonMelody]){
-                ranking[e.commonMelody] = {commonMelody:e.commonMelody,occ:1}
-            }else{
-                ranking[e.commonMelody].occ += 1
+            if (!ranking[e.commonMelody]) {
+                ranking[e.commonMelody] = {
+                    commonMelody: e.commonMelody,
+                    occ: 1,
+                };
+            } else {
+                ranking[e.commonMelody].occ += 1;
             }
-        })
+        });
 
         let rankarray = [];
 
         for (let key in ranking) {
             rankarray.push(ranking[key]);
         }
-        rankarray = rankarray.sort((a,b) => b.occ-a.occ)
-        rankarray.forEach((v,i) => v.rank = i)
+        rankarray = rankarray.sort((a, b) => b.occ - a.occ);
+        rankarray.forEach((v, i) => (v.rank = i));
 
-        maximum = max
-        return [occedge, ranking, rankarray]
+        maximum = max;
+        return [occedge, ranking, rankarray];
     }
 
-    function getColor(index, color){
-        if(false){
-            let colors = color[0]
-            let e = allEdges[index]
-            let scale = d3.scaleLinear().domain([1,maximum])
-            let value = colors[e.source]>colors[e.target]?colors[e.source]:colors[e.target]
-            return visutil.divergingTimbreScale(scale(value))
-        }else{
-            let colors = color[1]
-            let e = allEdges[index]
-            let value = colors[e.commonMelody].rank
-            return value<9?visutil.modelColor10(value%10):d3.schemePaired[(value-9)%12]
+    function getColor(index, color) {
+        if (false) {
+            let colors = color[0];
+            let e = allEdges[index];
+            let scale = d3.scaleLinear().domain([1, maximum]);
+            let value =
+                colors[e.source] > colors[e.target]
+                    ? colors[e.source]
+                    : colors[e.target];
+            return visutil.divergingTimbreScale(scale(value));
+        } else {
+            let colors = color[1];
+            let e = allEdges[index];
+            let value = colors[e.commonMelody].rank;
+            return value < 9
+                ? visutil.modelColor10(value % 10)
+                : d3.schemePaired[(value - 9) % 12];
         }
     }
-    
+
     // @ts-ignore
-    function edgeBundling(node_data, edge_data){
+    function edgeBundling(node_data, edge_data) {
+        console.log(coloring);
         let fbundling = ForceEdgeBundling()
-				.step_size(0.2)
-				// @ts-ignore
-				.compatibility_threshold(0.25)
-				// @ts-ignore
-				.nodes(node_data)
-				// @ts-ignore
-				.edges(edge_data);
+            .step_size(0.2)
+            // @ts-ignore
+            .compatibility_threshold(0.25)
+            // @ts-ignore
+            .nodes(node_data)
+            // @ts-ignore
+            .edges(edge_data);
 
-	    let results = fbundling();	
+        let results = fbundling();
 
-        let d3line = d3.line()
-			.x(function(d){ return d.x; })
-            .y(function(d){ return d.y; })
+        let d3line = d3
+            .line()
+            .x(function (d) {
+                return d.x;
+            })
+            .y(function (d) {
+                return d.y;
+            })
             //.curve(d3.curveBundle);
-            .curve(d3.curveBasis)
-            //.curve(d3.curveNatural)
-            //.curve(d3.curveCardinal)
-            //.curve(d3.curveCatmullRom.alpha(0.3))
+            .curve(d3.curveBasis);
+        //.curve(d3.curveNatural)
+        //.curve(d3.curveCardinal)
+        //.curve(d3.curveCatmullRom.alpha(0.3))
 
         svg = d3.select("#edgesSvg");
-                        
-        //results.forEach(function(edge_subpoint_data){	
-        // for each of the arrays in the results 
+        svg.selectAll("*").remove();
+
+        //results.forEach(function(edge_subpoint_data){
+        // for each of the arrays in the results
         // draw a line between the subdivions points for that edge
-        	selectedges = svg.append("g")
-                .selectAll("path")
-                .data(results)
-                .enter()
-                .append("path")
-        	    .attr("d", d => d3line(d))
-                .attr("id", (d,i) => "p"+allEdges[i].p1[2].index+"_"+allEdges[i].p2[2].index)
-            	.style("stroke-width", 1)
-            	.style("stroke", (d,i) => getColor(i, coloring))
-            	.style("fill", "none")
-            	.style('stroke-opacity', 0.15); //use opacity as blending
+        selectedges = svg
+            .append("g")
+            .selectAll("path")
+            .data(results)
+            .enter()
+            .append("path")
+            .attr("d", (d) => d3line(d))
+            .attr(
+                "id",
+                (d, i) =>
+                    "p" +
+                    allEdges[i].p1[2].index +
+                    "_" +
+                    allEdges[i].p2[2].index,
+            )
+            .style("stroke-width", 1)
+            .style("stroke", (d, i) => getColor(i, coloring))
+            .style("fill", "none")
+            .style("stroke-opacity", 0.1); //use opacity as blending
         //});
 
+        selection();
     }
 
-    function drawEdges(){
-        if(allEdges.length > 0){
+    function drawEdges() {
+        if (allEdges.length > 0) {
             svg = d3.select("#edgesSvg");
-            if (
-                svg !== undefined &&
-                svg !== null 
-            ){
+            if (svg !== undefined && svg !== null) {
                 svg.selectAll("*").remove();
                 svg.append("g")
-                .selectAll("line")
-                .data(allEdges)
-                .enter()
-                .append("line")
-                .attr("stroke-width", 1)
-                .attr("stroke", "black")
-                .attr("opacity", opacity)
-                .attr("x1", d => d.x1)
-                .attr("x2", d => d.x2)
-                .attr("y1", d => d.y1)
-                .attr("y2", d => d.y2)
+                    .selectAll("line")
+                    .data(allEdges)
+                    .enter()
+                    .append("line")
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "black")
+                    .attr("opacity", opacity)
+                    .attr("x1", (d) => d.x1)
+                    .attr("x2", (d) => d.x2)
+                    .attr("y1", (d) => d.y1)
+                    .attr("y2", (d) => d.y2);
             }
         }
     }
 
-    $: $meloselected, selection()
+    $: $meloselected, selection();
 
-    let previousIDs = []
+    let previousIDs = [];
 
-    function selection(){
-        if(previousIDs.length !== 0){
-            previousIDs.forEach(v => {
-                    d3.select("#p"+v).style("stroke-width", 1)
-            	    .style('stroke-opacity', 0.15)
-                })
-            previousIDs = []
+    function selection() {
+        if (previousIDs.length !== 0) {
+            previousIDs.forEach((v) => {
+                d3.select("#p" + v)
+                    .style("stroke-width", 1)
+                    .style("stroke-opacity", 0.1);
+            });
+            previousIDs = [];
         }
-        if(false){
-            if($meloselected !== null){
-                    $meloselected.forEach( ms => {
-                        previousIDs = previousIDs.concat(allEdges.filter(e => e.p1[2].index === $meloselected[0][2].index || e.p2[2].index === $meloselected[0][2].index).map(v => v.p1[2].index+"_"+v.p2[2].index))
-                    })
-                    previousIDs.forEach(v => {
-                        let e = d3.select("#p"+v)
+        if (false) {
+            if ($meloselected !== null) {
+                $meloselected.forEach((ms) => {
+                    previousIDs = previousIDs.concat(
+                        allEdges
+                            .filter(
+                                (e) =>
+                                    e.p1[2].index ===
+                                        $meloselected[0][2].index ||
+                                    e.p2[2].index === $meloselected[0][2].index,
+                            )
+                            .map((v) => v.p1[2].index + "_" + v.p2[2].index),
+                    );
+                });
+                previousIDs.forEach((v) => {
+                    let e = d3
+                        .select("#p" + v)
                         .style("stroke-width", 2)
-                        .style('stroke-opacity', 0.5)
-                    })
+                        .style("stroke-opacity", 0.5);
+                });
             }
-        }else{
-            if($meloselected !== null){
-
-                    $meloselected.forEach( ms => {
-                        previousIDs = previousIDs.concat(allEdges.filter(e => e.commonMelody.includes(ms[2].polyinfo.basemelody) || e.commonMelody.filter(x => ms[2].polyinfo.combinations.includes(x)).length > 0).map(v => v.p1[2].index+"_"+v.p2[2].index))
-                    })
-                    previousIDs.forEach(v => {
-                        d3.select("#p"+v)
+        } else {
+            if ($meloselected !== null) {
+                $meloselected.forEach((ms) => {
+                    previousIDs = previousIDs.concat(
+                        allEdges
+                            .filter(
+                                (e) =>
+                                    e.commonMelody.includes(
+                                        ms[2].polyinfo.basemelody,
+                                    ) ||
+                                    e.commonMelody.filter((x) =>
+                                        ms[2].polyinfo.combinations.includes(x),
+                                    ).length > 0,
+                            )
+                            .map((v) => v.p1[2].index + "_" + v.p2[2].index),
+                    );
+                });
+                previousIDs.forEach((v) => {
+                    d3.select("#p" + v)
                         .style("stroke-width", 2)
-                        .style('stroke-opacity', 0.5)
-                    })
+                        .style("stroke-opacity", 0.5);
+                });
             }
         }
     }
@@ -407,7 +468,6 @@
         }
     }
     */
-
 </script>
 
 <svg id="edgesSvg" bind:this={svg} width={$side} height={$side} />

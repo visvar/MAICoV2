@@ -16,6 +16,9 @@
         polyoptions,
         emotionbased,
         selectedBaseKeys,
+        exclude,
+        currentpoints,
+        excludePoly,
     } from "../../stores/stores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
@@ -27,11 +30,10 @@
 
     export let melody, h, w, length, index;
 
-    console.log(melody)
-
     let svg;
 
     let primer = false;
+    let line = true;
     let altkey = false;
     let playbackline;
 
@@ -83,6 +85,7 @@
         };
     $: $currentcolor, changeColor();
     $: shownmelody, drawPianoRoll();
+    $: line, drawPianoRoll();
 
     function selectOption(option) {
         log("rating changed", {
@@ -115,6 +118,17 @@
                 visutil.getColor(melody, $currentcolor, $selectedBaseKeys),
             );
         }
+    }
+
+    function excludeAllMelodies(c) {
+        let temp = [];
+        temp = $currentpoints.filter(
+            (p) =>
+                p[2].polyinfo.basemelody === c ||
+                p[2].polyinfo.combinations.includes(c),
+        );
+        console.log(temp);
+        excludePoly.set($excludePoly.concat(temp.map((p) => p[2].index)));
     }
 
     function listenToMelody(e) {
@@ -183,8 +197,55 @@
                                     return oktaveLookup[t].label;
                                 }
                             })
-                            .tickSize(2),
+                            .tickSize(0),
                     );
+            }
+
+            function pianoRollBackground(g) {
+                for (let t = extend[0] + 1; t < extend[1]; t++) {
+                    if (
+                        t % 12 === 1 ||
+                        t % 12 === 3 ||
+                        t % 12 === 6 ||
+                        t % 12 === 8 ||
+                        t % 12 === 10
+                    ) {
+                        g.append("rect")
+                            .attr(
+                                "transform",
+                                `translate(0,${
+                                    -(y(extend[0]) - y(extend[0] + 1)) / 2
+                                })`,
+                            )
+                            .attr("rx", 0)
+                            .attr("ry", 0)
+                            .attr("height", noteheight)
+                            .attr(
+                                "width",
+                                x(shownmelody.totalQuantizedSteps) - x(0),
+                            )
+                            .attr("x", x(0))
+                            .attr("y", y(t) + noteheight * 0.1)
+                            .attr("fill", "grey")
+                            .attr("opacity", 0.2);
+                    } else if (t % 12 === 4 || t % 12 === 11) {
+                        g.append("line")
+                            .attr(
+                                "transform",
+                                `translate(0,${
+                                    -(y(extend[0]) - y(extend[0] + 1)) / 2
+                                })`,
+                            )
+                            .attr("x1", x(0))
+                            .attr("y1", y(t) + noteheight * 0.1)
+                            .attr("x2", x(shownmelody.totalQuantizedSteps))
+                            .attr("y2", y(t) + noteheight * 0.1)
+                            .attr("stroke", "grey")
+                            .attr("opacity", 0.2);
+                    }
+                }
+                extend;
+                noteheight;
             }
 
             svg.append("g")
@@ -196,9 +257,99 @@
                 });
             svg.append("g").call(yAxis);
 
+            svg.append("g").call(pianoRollBackground);
+
             playbackline = svg.append("line").attr("stroke", "blue");
 
             //console.log(muutil.calcIntervals(shownmelody));
+
+            //context.beginPath();
+            if (line) {
+                const lines = [];
+                const colorsline = [];
+                if (melody.isPolymix) {
+                    let voices = melody.polyinfo.combinations.length;
+                    for (let i = 0; i <= voices; i++) {
+                        let line = [];
+                        let tempnotes = shownmelody.notes.filter((n1) =>
+                            n1?.trackID !== undefined
+                                ? n1.trackID === i
+                                : shownmelody?.indexing !== undefined
+                                  ? shownmelody?.indexing[i].id === n1.meloID
+                                  : n1.meloID === i,
+                        );
+                        tempnotes.forEach((note, j) => {
+                            if (j === 0)
+                                line.push([
+                                    x(note.quantizedStartStep),
+                                    y(note.pitch),
+                                ]);
+                            else
+                                line.push([
+                                    x(note.quantizedStartStep + 0.25),
+                                    y(note.pitch),
+                                ]);
+                            if (j === tempnotes.length - 1)
+                                line.push([
+                                    x(note.quantizedEndStep),
+                                    y(note.pitch),
+                                ]);
+                            else
+                                line.push([
+                                    x(note.quantizedEndStep - 0.25),
+                                    y(note.pitch),
+                                ]);
+                        });
+                        lines.push(line);
+                        colorsline.push(visutil.modelColor10(i));
+                        //context.stroke();
+                    }
+                } else {
+                    let line = [];
+                    shownmelody.notes.forEach((note, j) => {
+                        if (j === 0)
+                            line.push([
+                                x(note.quantizedStartStep),
+                                y(note.pitch),
+                            ]);
+                        else
+                            line.push([
+                                x(note.quantizedStartStep + 0.25),
+                                y(note.pitch),
+                            ]);
+                        if (j === shownmelody.notes.length - 1)
+                            line.push([
+                                x(note.quantizedEndStep),
+                                y(note.pitch),
+                            ]);
+                        else
+                            line.push([
+                                x(note.quantizedEndStep - 0.25),
+                                y(note.pitch),
+                            ]);
+                    });
+                    lines.push(line);
+                    colorsline.push(fill);
+                }
+                const curve = d3
+                    .line()
+                    .x((d) => d[0])
+                    .y((d) => d[1])
+                    .curve(d3.curveCatmullRom);
+
+                svg.append("g")
+                    .selectAll("path")
+                    .data(lines)
+                    .enter()
+                    .append("path")
+                    .attr("d", (d, i) => curve(d))
+                    .style("stroke", (d, i) => {
+                        return colorsline[i];
+                    })
+                    .style("fill", "none")
+                    .style("stroke-width", 2)
+                    .style("opacity", 0.35);
+            }
 
             svg.append("g")
                 .selectAll("rect")
@@ -213,7 +364,7 @@
                 .attr("ry", 4)
                 .attr("stroke-width", 0.9 / h)
                 .attr("stroke", "black")
-                .attr("height", noteheight * 0.8)
+                .attr("height", noteheight)
                 .attr(
                     "width",
                     (d) => x(d.quantizedEndStep) - x(d.quantizedStartStep),
@@ -257,19 +408,26 @@
     >
         {#if melody.model.name === "poly"}
             {melody.model.name.slice(0, 8)} <br />
-            Base:
+            Melodies:
+            <br />
             <div
                 style:display="inline-block"
-                style:color={visutil.modelColor10(melody.melody.indexing.filter(t => t.meloID === melody.polyinfo.basemelody)[0].trackID)}
+                style:color={visutil.modelColor10(
+                    melody.melody.indexing.filter(
+                        (t) => t.meloID === melody.polyinfo.basemelody,
+                    )[0].trackID,
+                )}
             >
                 {melody.polyinfo.basemelody}
             </div>
-            <br />
-            comb:<br />
+            ,
             {#each melody.polyinfo.combinations as c, i}
                 <div
                     style:display="inline-block"
-                    style:color={visutil.modelColor10(melody.melody.indexing.filter(t => t.meloID === c)[0].trackID)}
+                    style:color={visutil.modelColor10(
+                        melody.melody.indexing.filter((t) => t.meloID === c)[0]
+                            .trackID,
+                    )}
                 >
                     {c}
                 </div>
@@ -325,6 +483,48 @@
                     show Primer {melody.primerindex}
                 {/if}
             </label>
+            <div>
+                <label>
+                    <input type="checkbox" bind:checked={line} />
+                    Show Melodyline
+                </label>
+            </div>
+        </div>
+    {:else}
+        <label>
+            <input type="checkbox" bind:checked={line} />
+            Show Melodyline
+        </label>
+        <div>
+            Exclude:
+            <br />
+            <div
+                on:click={() => excludeAllMelodies(melody.polyinfo.basemelody)}
+                style:display="inline-block"
+                style:color={visutil.modelColor10(
+                    melody.melody.indexing.filter(
+                        (t) => t.meloID === melody.polyinfo.basemelody,
+                    )[0].trackID,
+                )}
+            >
+                {melody.polyinfo.basemelody}
+            </div>
+            ,
+            {#each melody.polyinfo.combinations as c, i}
+                <div
+                    on:click={() => excludeAllMelodies(c)}
+                    style:display="inline-block"
+                    style:color={visutil.modelColor10(
+                        melody.melody.indexing.filter((t) => t.meloID === c)[0]
+                            .trackID,
+                    )}
+                >
+                    {c}
+                </div>
+                {#if i !== melody.polyinfo.combinations.length - 1}
+                    ,
+                {/if}
+            {/each}
         </div>
     {/if}
     <div class="liked">

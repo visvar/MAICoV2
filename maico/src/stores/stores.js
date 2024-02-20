@@ -4,7 +4,7 @@ import { getSelectedMelodies } from '../util/visutil';
 import { distanceMatrix } from '../util/drutil';
 import { averageOfGlyphs, calcInformation, calcVariancesCluster, getMiddlePosition, calcModelFromCluster } from '../util/glyphutil';
 import { axisoptions, axisoptionsCor, keysLookup } from './globalValues';
-import { writeToMidi } from '../util/fileutil';
+import { writeToMidi, polyUnselected } from '../util/fileutil';
 
 let oldAxis = [{ value: 3, label: 'DR' }, { value: 3, label: 'DR' }, 1]
 
@@ -356,10 +356,13 @@ export const tdfilter = writable(false);
 export const expfilter = writable(false);
 export const weightTimbre = writable(false);
 export const exclude = writable([])
+export const excludePoly = writable([])
+
+
 
 
 export const currentpoints = derived(
-    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter, exclude],
+    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter, exclude, excludePoly],
     $stores => {
         permutation = new Array($stores[0]).fill(null)
         if ($stores[2] !== null && $stores[2] !== cpointchanged) {
@@ -371,6 +374,7 @@ export const currentpoints = derived(
         } else if ($stores[0] !== null && $stores[0] !== undefined) {
             let temp = $stores[0]
                 ?.filter((point) => $stores[1] !== null ? point[2]?.isPolymix || point[2]?.isPrimer || $stores[1][point[2].model.name] : true)
+                .filter((point) => point[2]?.isPolymix && $stores[1] !== null ? polyUnselected(point[2].polyinfo.combinations.concat([point[2].polyinfo.basemelody]), $stores[1]) : true)
                 // similarity filter
                 .filter((point) => point[2].additional.similarityprimer >= $stores[3][0][0] && point[2].additional.similarityprimer <= $stores[3][0][1])
                 // number notes
@@ -388,6 +392,7 @@ export const currentpoints = derived(
                 //exportfilter
                 .filter((point) => !$stores[12] || (point[2].userspecific.export))
                 .filter((point) => $stores[13].indexOf(point[2].index) === -1)
+                .filter((point) => $stores[14].indexOf(point[2].index) === -1)
             temp.forEach((p, i) => {
                 permutation[i] = p[2].index
             })

@@ -16,6 +16,7 @@
         exclude,
         exportList,
         rate,
+        excludePoly,
     } from "../stores/stores.js";
     import { get } from "svelte/store";
 
@@ -50,11 +51,9 @@
         if (i < 2) {
             $meloselected.forEach((p) => selectOption(i === 0 ? 1 : -1, p[2]));
         } else if (i === 2) {
-            $meloselected.forEach(
-                (p) => {
-                    p[2].userspecific.export = exportChange(p[2], !h)
-                }
-            );
+            $meloselected.forEach((p) => {
+                p[2].userspecific.export = exportChange(p[2], !h);
+            });
         }
     }
 
@@ -107,11 +106,13 @@
         <div class="global">
             {#if $meloselected !== null}
                 <div class="float">
-                    <p class="option">All Selected: </p> 
+                    <p class="option">All Selected:</p>
                     <button
                         class="option"
                         on:click={() => {
-                            log("exclude Melodies", {melos: $meloselected.map((p) => p[2].index)});
+                            log("exclude Melodies", {
+                                melos: $meloselected.map((p) => p[2].index),
+                            });
                             exclude.set(
                                 $exclude.concat(
                                     $meloselected.map((p) => p[2].index),
@@ -165,6 +166,12 @@
                         log("clear excluded Melodies", {});
                         exclude.set([]);
                     }}>Clear Exclude</button
+                >
+                <button
+                    on:click={() => {
+                        log("clear excluded Melodies", {});
+                        excludePoly.set([]);
+                    }}>Clear Excluded PolyMelodies</button
                 >
             {/if}
         </div>

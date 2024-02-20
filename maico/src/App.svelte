@@ -73,7 +73,7 @@
     hilbert,
     brushselection,
     weightTimbre,
-    edgeBundlingPoly
+    edgeBundlingPoly,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -255,6 +255,8 @@
 
   let lengthtemp = 64;
 
+  $: genlength, (lengthtemp = $genlength);
+
   let selectkeyrange = 0;
 
   models.subscribe((value) => {
@@ -308,7 +310,6 @@
     let i = 0;
     progress.set(0);
     let points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
-    console.log(points);
     //progress.set(0)
     let combined = [];
     for (let r = 1; r < 4; r++) combined.push([]);
@@ -814,15 +815,15 @@
           Seen/Rate
         </label>
         <div>
-        <label>
-          <input
-            type="checkbox"
-            bind:checked={$edgeBundlingPoly}
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          Edges for Poly
-        </label>
-      </div>
+          <label>
+            <input
+              type="checkbox"
+              bind:checked={$edgeBundlingPoly}
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            Edges for Poly
+          </label>
+        </div>
       {/if}
     </div>
 
@@ -996,7 +997,7 @@
         <label>
           <input
             type="checkbox"
-            checked={$axisselect[2] === 1}
+            checked={$axisselect[2] === 1 || $axisselect[2]}
             on:change={(e) => {
               if (e.target.checked) {
                 axisselect.updateAxis(true, 1);
@@ -1042,7 +1043,7 @@
           type="checkbox"
           checked={$axisselect[2] === 2}
           on:change={(e) => {
-            brushselection.set(null)
+            brushselection.set(null);
             if (e.target.checked) {
               axisselect.updateAxis(true, 2);
             } else {
@@ -1059,13 +1060,13 @@
         />
         order Co5th
         <div>
-        <input
-          type="checkbox"
-          bind:checked={$weightTimbre}
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-        />
-        weighted
-      </div>
+          <input
+            type="checkbox"
+            bind:checked={$weightTimbre}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          weighted
+        </div>
       </div>
       <div>
         <CorrelationMatrix w={280} h={200} />

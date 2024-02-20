@@ -1,5 +1,5 @@
 // @ts-ignore
-import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession } from '../stores/stores.js'
+import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession, pointcolorselect, vorcolorselect, glyphselect, edgeBundlingPoly } from '../stores/stores.js'
 import { iter, genlength } from '../stores/devStores.js'
 import { get } from 'svelte/store';
 // @ts-ignore
@@ -414,7 +414,8 @@ export function exportModelJson(modelname) {
         variables: {
             strangers: get(strangers), genlength: get(genlength),
             filterextents: get(filterextents), mvaesim: get(mvaesim), iter: get(iter), similarityweight: get(similarityweight),
-            DRumap: get(DRumap), emotionbased: get(emotionbased), numpoly: get(numpoly), axisselect: get(axisselect), selectedKeys: get(selectedKeys), selectedBaseKeys: get(selectedBaseKeys)
+            DRumap: get(DRumap), emotionbased: get(emotionbased), numpoly: get(numpoly), axisselect: get(axisselect), selectedKeys: get(selectedKeys), selectedBaseKeys: get(selectedBaseKeys),
+            pointcolorselect: get(pointcolorselect), vorcolorselect: get(vorcolorselect), glyphselect: get(glyphselect), edgeBundlingPoly: get(edgeBundlingPoly)
         }
     }, replace, 2)
     const blob = new Blob([complete], { type: 'application/json' })
@@ -451,6 +452,12 @@ export async function uploadDatasetFile(event) {
                 selectedKeys.set(obj.variables.selectedKeys)
                 selectedBaseKeys.set(obj.variables.selectedBaseKeys)
                 importedSession.set(get(importedSession) + 1)
+                if (obj?.variables?.pointcolorselect !== undefined) {
+                    pointcolorselect.set(obj.variables.pointcolorselect)
+                    vorcolorselect.set(obj.variables.vorcolorselect)
+                    glyphselect.set(obj.variables.glyphselect)
+                    edgeBundlingPoly.set(obj.variables.edgeBundlingPoly)
+                }
             }
         }
     } catch (e) {

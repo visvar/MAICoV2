@@ -337,7 +337,7 @@
 
             const chromadata = glutil.calcDataPie(melo[0]);
 
-            melo[0].array = muutil.calcArrayforMelo(melo[0])
+            melo[0].array = muutil.calcArrayforMelo(melo[0]);
 
             const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
             // let countSyncope = muutil.computeSyncope(melo[0]);
@@ -829,6 +829,11 @@
       <Voronoi opacity={opacityVoronoi} />
     </div>
   {/if}
+  {#if $edgeBundlingPoly && $axisselect[0].label !== "Timbre"}
+    <div class="canvas">
+      <EdgeBundling opacity={opacityVoronoi} />
+    </div>
+  {/if}
   <div class="canvas">
     {#if $axisselect[0].label !== "Timbre"}
       <ScatterplotCanvas opacity={opacityGlyph} />
@@ -836,11 +841,6 @@
       <TimbreCanvas opacity={opacityGlyph} />
     {/if}
   </div>
-  {#if $edgeBundlingPoly && $axisselect[0].label !== "Timbre"}
-    <div class="canvas">
-      <EdgeBundling opacity={opacityVoronoi} />
-    </div>
-  {/if}
   <div class="canvas">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <svg

@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
-import models, { actionlog, exportList, primerList, progress } from '../stores/stores'
+import models, { actionlog, exportList, modelselected, primerList, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 import * as mu from "./modelutil"
 
@@ -234,4 +234,22 @@ export function writeLogs() {
     link.click()
     URL.revokeObjectURL(url)
   })
+}
+
+export function polyUnselected(index, ms) {
+  let m = get(models)
+  let p = get(primerList)
+  let indexlow = p.length
+  let ret = true
+  m.forEach((model, i) => {
+    if (!ms[model.name] && ret) {
+      let temp = indexlow + model.melodies.length
+      index.forEach((ind) => {
+        if (ind >= indexlow && ind < temp)
+          ret = false
+      })
+    }
+    indexlow += model.melodies.length
+  })
+  return ret
 }
