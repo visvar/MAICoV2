@@ -162,12 +162,14 @@
                 </div>
             {:else}
                 <button
+                    class="button"
                     on:click={() => {
                         log("clear excluded Melodies", {});
                         exclude.set([]);
                     }}>Clear Exclude</button
                 >
                 <button
+                    class="button"
                     on:click={() => {
                         log("clear excluded Melodies", {});
                         excludePoly.set([]);
@@ -241,18 +243,25 @@
         display: flex;
     }
     .global {
-        background-color: aquamarine;
+        background-color: rgb(223, 223, 223);
         align-items: center;
         justify-content: center;
         display: flex;
     }
-    .option {
-        background-color: rgb(110, 224, 186);
+    .button {
+        background-color: rgb(184, 184, 184);
         display: inline-block;
         padding: 10px;
         cursor: pointer;
-        margin-left: 5px;
-        margin-right: 5px;
+        margin: 5px;
+    }
+    .option {
+        background-color: rgb(184, 184, 184);
+        display: inline-block;
+        padding: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin: 5px;
     }
     .liked .selected {
         background-color: rgb(197, 230, 242);
