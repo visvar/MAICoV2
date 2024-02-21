@@ -155,6 +155,10 @@ function writeMidifile(mel, bpm, i, primerfile = "", poly) {
 
 export function importMidi(event, primerList, lastid) {
 
+  if (lastid === 0 && get(primerList).length > 0) {
+    lastid = get(primerList)[get(primerList).length - 1].id + 1
+  }
+
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();

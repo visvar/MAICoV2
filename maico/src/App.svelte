@@ -427,12 +427,22 @@
         <button
           on:click={() => {
             flutil.log("delete primer", { primerList: $primerTodelete });
-            primerList.deleteMelo($primerTodelete);
+            primerList.deleteMelo($primerSelected);
           }}
         >
           Delete Primer selected below
         </button>
         <div class="filter1">
+          <Select
+            class="select"
+            id="selmidi"
+            items={$primerList.map((p, i) => {
+              return { label: p.id, value: i };
+            })}
+            bind:value={$primerTodelete}
+            clearable={false}
+          />
+          <!--
           <input
             type="range"
             bind:value={$primerTodelete}
@@ -441,6 +451,7 @@
             step="1"
             width="50%"
           />
+          -->
           <PianorollSample
             width={50}
             height={50}

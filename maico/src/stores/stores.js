@@ -135,21 +135,25 @@ function createPrimerList() {
             n.push(mel)
             return n
         }),
-        deleteMelo: (index) => update(n => {
+        deleteMelo: (selected) => update(n => {
             if (n.length === 1) {
+                primerTodelete.set({ label: 0, value: 0 })
                 return []
             }
-            return n.splice(index, 1)
+            let res = n.filter(p => p.id !== selected.id)
+            if (res.length <= get(primerTodelete).value)
+                primerTodelete.set({ label: res.length - 1, value: res.length - 1 })
+            return res
         })
     };
 }
 
 export const primerList = createPrimerList()
 
-export const primerTodelete = writable(0);
+export const primerTodelete = writable({ label: 0, value: 0 });
 
 export const primerSelected = derived([primerList, primerTodelete], v => {
-    return v[0][v[1]]
+    return v[0][v[1].value]
 })
 
 export const selectedBaseKeys = writable(-1)
