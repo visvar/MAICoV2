@@ -40,6 +40,7 @@
     drpoints,
     hilbert,
     axisselect,
+    edgeBundlingPoly,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -48,6 +49,7 @@
   import { select, brush, interpolateViridis, scaleLinear } from "d3";
 
   import Voronoi from "./Voronoi.svelte";
+  import EdgeBundling from "./EdgeBundling.svelte";
   import ScatterplotCanvas from "./ScatterplotCanvas.svelte";
   import TimbreCanvas from "./TimbreCanvas.svelte";
   import ClusterCanvas from "./ClusterCanvas.svelte";
@@ -334,6 +336,8 @@
             varInt = muutil.calcVariance(melo[0].notes);
 
             const chromadata = glutil.calcDataPie(melo[0]);
+
+            melo[0].array = muutil.calcArrayforMelo(melo[0]);
 
             const countRhyhtmChange = muutil.computeRhythmChange(melo[0]);
             // let countSyncope = muutil.computeSyncope(melo[0]);
@@ -820,9 +824,16 @@
 </script>
 
 <div id="container">
-  <div class="canvas">
-    <Voronoi opacity={opacityVoronoi} />
-  </div>
+  {#if $axisselect[0].label !== "Timbre"}
+    <div class="canvas">
+      <Voronoi opacity={opacityVoronoi} />
+    </div>
+  {/if}
+  {#if $edgeBundlingPoly && $axisselect[0].label !== "Timbre"}
+    <div class="canvas">
+      <EdgeBundling opacity={opacityVoronoi} />
+    </div>
+  {/if}
   <div class="canvas">
     {#if $axisselect[0].label !== "Timbre"}
       <ScatterplotCanvas opacity={opacityGlyph} />
@@ -831,6 +842,7 @@
     {/if}
   </div>
   <div class="canvas">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <svg
       id="svg"
       width={$side}

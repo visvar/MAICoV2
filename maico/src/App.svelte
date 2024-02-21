@@ -41,6 +41,7 @@
     rate,
     seenratemode,
     filtersim,
+    qcorder,
     filternumbernotes,
     filterinscale,
     filtervarint,
@@ -70,6 +71,9 @@
     polyoptions,
     actionlog,
     hilbert,
+    brushselection,
+    weightTimbre,
+    edgeBundlingPoly,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -251,6 +255,8 @@
 
   let lengthtemp = 64;
 
+  $: genlength, (lengthtemp = $genlength);
+
   let selectkeyrange = 0;
 
   models.subscribe((value) => {
@@ -304,7 +310,6 @@
     let i = 0;
     progress.set(0);
     let points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
-    console.log(points);
     //progress.set(0)
     let combined = [];
     for (let r = 1; r < 4; r++) combined.push([]);
@@ -784,7 +789,7 @@
               )}
               tickFormat={(d) => {
                 if (d === 0) return "dark";
-                if (d === 1) return "light";
+                if (d === 1) return "bright";
               }}
               tickValues={[0, 0.5, 1]}
               tickSize={0}
@@ -809,6 +814,16 @@
           />
           Seen/Rate
         </label>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              bind:checked={$edgeBundlingPoly}
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            Edges for Poly
+          </label>
+        </div>
       {/if}
     </div>
 
@@ -982,7 +997,7 @@
         <label>
           <input
             type="checkbox"
-            checked={$axisselect[2] === 1}
+            checked={$axisselect[2] === 1 || $axisselect[2]}
             on:change={(e) => {
               if (e.target.checked) {
                 axisselect.updateAxis(true, 1);
@@ -1023,23 +1038,36 @@
           </label>
         </div>
       </div>
-      {#if false}
+      <div>
+        <input
+          type="checkbox"
+          checked={$axisselect[2] === 2}
+          on:change={(e) => {
+            brushselection.set(null);
+            if (e.target.checked) {
+              axisselect.updateAxis(true, 2);
+            } else {
+              axisselect.updateAxis(axisoptions[0], 2);
+            }
+          }}
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        />
+        Timbre layout
+        <input
+          type="checkbox"
+          bind:checked={$qcorder}
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        />
+        order Co5th
         <div>
           <input
             type="checkbox"
-            checked={$axisselect[2] === 2}
-            on:change={(e) => {
-              if (e.target.checked) {
-                axisselect.updateAxis(true, 2);
-              } else {
-                axisselect.updateAxis(axisoptions[0], 2);
-              }
-            }}
+            bind:checked={$weightTimbre}
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
-          use timbre layout
+          weighted
         </div>
-      {/if}
+      </div>
       <div>
         <CorrelationMatrix w={280} h={200} />
       </div>

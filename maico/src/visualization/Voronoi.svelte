@@ -17,6 +17,7 @@
         seen,
         rate,
         selectedBaseKeys,
+        exclude,
     } from "../stores/stores.js";
     import { get } from "svelte/store";
 
@@ -45,10 +46,10 @@
                       visutil.makeextentBigger(
                           extent(
                               $points.map(
-                                  (value) => value[0][$axisselect[0].value]
-                              )
-                          )
-                      )
+                                  (value) => value[0][$axisselect[0].value],
+                              ),
+                          ),
+                      ),
                   )
                   .range([margin.left, $side - margin.right])
                   .nice()
@@ -64,10 +65,10 @@
                       visutil.makeextentBigger(
                           extent(
                               $points.map(
-                                  (value) => value[1][$axisselect[1].value]
-                              )
-                          )
-                      )
+                                  (value) => value[1][$axisselect[1].value],
+                              ),
+                          ),
+                      ),
                   )
                   .range([$side - margin.bottom, margin.top])
                   .nice()
@@ -100,6 +101,7 @@
     $: $rate, newColor();
     $: $selectedBaseKeys, newColor();
     $: opacity, newOpacity();
+    $: $axisselect, newPolygons();
 
     function newPolygons() {
         if ($currentpoints.length > 3) {
@@ -134,7 +136,7 @@
                     //the vector representing the line from center to this point
 
                     var vectorLength = Math.sqrt(
-                        vector[0] * vector[0] + vector[1] * vector[1]
+                        vector[0] * vector[0] + vector[1] * vector[1],
                     );
                     //Pythagorus' theorem to get the length of the line
 

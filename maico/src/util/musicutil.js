@@ -1073,16 +1073,34 @@ export function adjustMelodiesToFilters() {
   })
 }
 
-function isDifferent(melody, melody1) {
-  let notes = melody.notes
-  let notes1 = melody1.notes
-  let total = Math.max(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
-  for (let i = 0; i < total; i++) {
-    let t1 = notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
-    let t2 = notes1.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
-    if (t1.filter((n) => t2.indexOf(n) !== -1).length > 0) {
-      return false
+function isDifferent(melody, melody1, a, b) {
+  if(!melody?.isPolymix && b === a)
+    return false
+  if(melody?.isPolymix && (melody.basemelody === a || melody.combinations.includes(a)))
+    return false
+  if(melody?.array !== undefined && melody1?.array !== undefined)
+    return isDifferentArray(melody.array, melody1.array)
+  else{
+    let notes = melody.notes
+    let notes1 = melody1.notes
+    let total = Math.min(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
+    for (let i = 0; i < total; i++) {
+      let t1 = notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
+      let t2 = notes1.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).map(n => n.pitch)
+      if (t1.filter((n) => t2.indexOf(n) !== -1).length > 0) {
+        return false
+      }
     }
+    return true
+  }
+}
+
+function isDifferentArray(melody, melody1) {
+  for(let i = 0; i<Math.min(melody.length, melody1.length);i++){
+    if(melody1[i].filter((n)=> {
+      melody[i].includes(n)
+    }).length >0)
+    return false
   }
   return true
 }
@@ -1162,7 +1180,7 @@ function combineMelo(m1, m2s, idtag) {
     n.meloID = idtag[3]
     return n
   })
-  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] : m1.indexing
+  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] :[...m1.indexing]
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
     combinations = [m2s.index]
@@ -1180,12 +1198,13 @@ function combineMelo(m1, m2s, idtag) {
   let m1notes = m1notesadapt.concat(m2)
   m1notes = m1notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
   let notes = removeOverNotes(m1notes)
-  let indexing = calcIndexing(current, m2s)
-  m1notes.forEach(n => {
-    n.trackID = indexing.filter(t => t.meloID === n.meloID)[0].trackID
+  const indexing = calcIndexing(current, m2s)
+  let notes2 = []
+  notes.forEach(n => {
+    notes2.push({pitch:n.pitch, quantizedStartStep:n.quantizedStartStep, quantizedEndStep:n.quantizedEndStep, meloID:n.meloID, trackID:indexing.filter(t => t.meloID === n.meloID)[0].trackID})
   })
   return {
-    notes: notes,
+    notes: notes2,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
     id_comb: id_comb,
     basemelody: basemelody,
@@ -1224,7 +1243,7 @@ export function findPolyMelodies(num, melody, rule) {
     current.forEach((current1, i) => {
       let currjson = JSON.parse(JSON.stringify(current1))
       if (rule === 0)
-        diff = potential.filter((m, j) => isDifferent(current1, m[2].melody))
+        diff = potential.filter((m, j) => isDifferent(current1, m[2].melody, m[2].index, melody.index))
       else if (rule === 1)
         diff = potential.filter((m, j) => minQuints(current1, m[2].melody, 5))
       diff.forEach((m) => {
@@ -1263,7 +1282,7 @@ export function findAllPolyMelodies(num, rule) {
       current.forEach((current1) => {
         let currjson = JSON.parse(JSON.stringify(current1))
         if (rule === 0)
-          diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody))
+          diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody, m[2].index, melody.index))
         else if (rule === 1)
           diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
         diff.forEach((m) => {
@@ -1284,6 +1303,16 @@ export function findAllPolyMelodies(num, rule) {
   return combined
 }
 
+export function calcArrayforMelo(melo){
+  let array = new Array(melo.totalQuantizedSteps).fill([])
+  melo.notes.forEach(n => {
+    for(let i = n.quantizedStartStep; i<n.quantizedEndStep;i++){
+      array[i] = [...array[i],n.pitch]
+    }
+  })
+  return array
+}
+
 
 export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
   let melody = JSON.parse(JSON.stringify(points[i]))
@@ -1295,7 +1324,7 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
     current.forEach((current1) => {
       let currjson = JSON.parse(JSON.stringify(current1))
       if (rule === 0)
-        diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody))
+        diff = potential.filter((m, j) => isDifferent(currjson, m[2].melody, m[2].index, melody.index))
       else if (rule === 1)
         diff = potential.filter((m, j) => minQuints(currjson, m[2].melody, 5))
       diff.forEach((m) => {
@@ -1340,6 +1369,10 @@ export function calcAllTimbre(melody) {
     let qc = reshuffleQuintCircle(basenote, "dur")
     timbrearray.push(calcTimbre(melody, basenote, qc).timbre)
   }
+  for (let basenote = 0; basenote < 12; basenote++) {
+    let qc = reshuffleQuintCircle(basenote, "dur")
+    timbrearray.push(calcWeightedTimbre(melody, basenote, qc).timbre)
+  }
   return timbrearray
 }
 
@@ -1365,12 +1398,39 @@ export function calcTimbre(melody, basenote, qc) {
   return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
 }
 
+export function calcWeightedTimbre(melody, basenote, qc) {
+  if (basenote === -1 || qc === undefined)
+    return { timbre: undefined, timbrescore: 0 }
+  let timbre = 0
+  let timbrescore = 0
+  let hardcase = 0
+  let total = 0
+  melody.notes.forEach(n => {
+    let note = keysLookup[n.pitch % 12]
+    let length = n.quantizedEndStep - n.quantizedStartStep
+    let index = qc.findLastIndex(v => v === note) - 6
+    if(index !== 0){
+      if (index === -6)
+        hardcase += length
+      else
+        timbre += index > 0 ? length : index < 0 ? -length : 0
+      timbrescore += index
+      total += length
+    }
+  })
+  timbre += timbre > 0 ? hardcase : timbre < 0 ? -hardcase : 0
+  let scale = d3.scaleLinear()
+    .domain([-total, total])
+    .range([0, 1])
+  return { timbre: scale(timbre), timbrescore: timbrescore / melody.notes.length }
+}
+
 export function orderQuintenzirkel(array) {
   // C cis D dis e f fis g gis a ais b
   // 0  1  2  3  4 5  6  7  8  9  10 11
   let temp = new Array(array.length);
-  let index = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]; // top is at the left
-  // let index = [6, 1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 11] // if middle is top 
+  //let index = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5]; // top is at the left
+  let index = [6, 1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 11] // if middle is top 
   array.forEach((d, i) => {
     temp[index[i]] = d;
   });
