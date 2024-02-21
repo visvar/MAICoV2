@@ -74,6 +74,7 @@
     brushselection,
     weightTimbre,
     edgeBundlingPoly,
+    importedSession,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -112,6 +113,7 @@
     signInAnonymously,
   } from "firebase/auth";
   import { getStorage, ref, uploadBytes } from "firebase/storage";
+  import { axisoptionsCor } from "./stores/globalValues.js";
 
   let user1 = null;
   let uniqueID = flutil.makeid(3);
@@ -163,16 +165,16 @@
 
   const glyphoptions = [
     { label: "Points", value: 0 },
-    { label: "Flowerglyph", value: 1 },
-    { label: "Chromapie", value: 2 },
     { label: "Pianoroll", value: 3 },
-    { label: "IntervalHisto", value: 4 },
-    //{ label: "Chromapie5th", value: 5 },
-    { label: "ChromaRoll", value: 6 },
-    { label: "RhythmPie", value: 7 },
-    { label: "FlowerComplexity", value: 8 },
     { label: "Melodyline", value: 9 },
     { label: "MelodylineInt", value: 10 },
+    { label: "Chromapie", value: 2 },
+    { label: "IntervalHisto", value: 4 },
+    { label: "Flowerglyph", value: 1 },
+    //{ label: "Chromapie5th", value: 5 },
+    { label: "RhythmPie", value: 7 },
+    { label: "FlowerComplexity", value: 8 },
+    { label: "ChromaRoll", value: 6 },
   ];
 
   const polyOptionsSelect = [
@@ -181,6 +183,19 @@
   ];
 
   let polyselected = { label: "Diff", value: 0 };
+
+  let polyvoices = { label: "2 Voices", value: 2 };
+
+  let layoutsel = { label: "Similarity", value: 1 };
+
+  importedSession.subscribe((v) => {
+    if (v > 0) {
+      if ($axisselect[2] === 1 || $axisselect[2])
+        layoutsel = { label: "Similarity", value: 1 };
+      else if ($axisselect[2] === 2) layoutsel = { label: "Timbre", value: 2 };
+      else layoutsel = { label: "Correlation", value: 0 };
+    }
+  });
 
   const glyphmodeloptions = [
     { label: "Correlation", value: 0 },
@@ -619,8 +634,8 @@
         </button>
       {/if}
     </div>
+    <!--
     <div>
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div on:click={() => (clustering = !clustering)}>
         <h1 class="mb-4 text-3xl font-bold">Clustering</h1>
       </div>
@@ -667,6 +682,7 @@
         </div>
       {/if}
     </div>
+    -->
 
     <div class="select">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -959,6 +975,7 @@
     </div>
     {#if layout}
       <div>
+        <!--
         <div class="select">
           <label for="selDR">DR method</label>
           <Select
@@ -977,20 +994,36 @@
             clearable={false}
           />
         </div>
+        -->
         <div class="select">
           <label for="selmetric">Metric-based</label>
           <Select
             class="select"
             id="selmetric"
             items={[
-              { label: "Similarity", value: 0 },
-              { label: "Emotion", value: 1 },
+              { label: "Monophonic", value: 0 },
+              //{ label: "Emotion", value: 1 },
               { label: "Polyoptions", value: 2 },
             ]}
             bind:value={$emotionbased}
             clearable={false}
           />
           {#if $emotionbased.value === 2}
+            <Select
+              class="select"
+              id="selmetric"
+              items={[
+                { label: "2 Voices", value: 2 },
+                { label: "3 Voices", value: 3 },
+                { label: "4 Voices", value: 4 },
+              ]}
+              bind:value={polyvoices}
+              on:change={(v) => {
+                numpoly.set(v.detail.value);
+              }}
+              clearable={false}
+            />
+            <!--
             <div class="filter">
               <input
                 type="range"
@@ -1003,8 +1036,31 @@
                 Poly {$numpoly}
               </span>
             </div>
+            -->
           {/if}
         </div>
+        <div class="select">
+          <Select
+            class="select"
+            id="selmetric"
+            items={[
+              { label: "Correlation", value: 0 },
+              { label: "Similarity", value: 1 },
+              { label: "Timbre", value: 2 },
+            ]}
+            bind:value={layoutsel}
+            on:change={(v) => {
+              if (v.detail.value > 0)
+                axisselect.updateAxis(true, v.detail.value);
+              else {
+                axisselect.updateAxis(axisoptions[1], 0, axisoptions[2], 1);
+              }
+            }}
+            clearable={false}
+          />
+        </div>
+        {#if $axisselect[2] === 1 || $axisselect[2] === true}
+          <!--
         <label>
           <input
             type="checkbox"
@@ -1021,35 +1077,44 @@
           use metric-based layout
         </label>
         <div />
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              bind:checked={$grid}
-              on:change={() => {
-                if ($axisselect[2] === 1) {
-                  axisselect.updateAxis(true, 1);
-                }
-                $hilbert = false;
-              }}
-            />
-            use grid
-          </label><label>
-            <input
-              type="checkbox"
-              bind:checked={$hilbert}
-              on:change={() => {
-                if ($axisselect[2] === 1) {
-                  axisselect.updateAxis(true, 1);
-                }
-                $grid = false;
-              }}
-            />
-            use hilbert
-          </label>
-        </div>
+        -->
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                bind:checked={$grid}
+                on:change={() => {
+                  if ($axisselect[2] === 1) {
+                    axisselect.updateAxis(true, 1);
+                  }
+                  $hilbert = false;
+                }}
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+              use grid
+            </label>
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  bind:checked={$hilbert}
+                  on:change={() => {
+                    if ($axisselect[2] === 1) {
+                      axisselect.updateAxis(true, 1);
+                    }
+                    $grid = false;
+                  }}
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                use hilbert
+              </label>
+            </div>
+          </div>
+        {/if}
       </div>
-      <div>
+      {#if $axisselect[2] === 2}
+        <div>
+          <!--
         <input
           type="checkbox"
           checked={$axisselect[2] === 2}
@@ -1064,24 +1129,28 @@
           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         />
         Timbre layout
-        <input
-          type="checkbox"
-          bind:checked={$qcorder}
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-        />
-        order Co5th
-        <div>
+        -->
           <input
             type="checkbox"
-            bind:checked={$weightTimbre}
+            bind:checked={$qcorder}
             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
-          weighted
+          order Co5th
+          <div>
+            <input
+              type="checkbox"
+              bind:checked={$weightTimbre}
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            weighted
+          </div>
         </div>
-      </div>
-      <div>
-        <CorrelationMatrix w={280} h={200} />
-      </div>
+      {/if}
+      {#if $axisselect[2] === 0}
+        <div>
+          <CorrelationMatrix w={280} h={200} />
+        </div>
+      {/if}
     {/if}
     <div>
       <!-- svelte-ignore a11y-click-events-have-key-events -->

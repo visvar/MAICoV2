@@ -193,7 +193,7 @@ function createAxis() {                                                         
                 }
                 n[2] = num
             } else {
-                if (n[2] !== 0 && n[0].value < 4 && num > 1) {
+                if (n[2] !== 0 && n[0].value < 4 && num > 1 && false) {
                     n = { ...oldAxis }
                 } else {
                     n[2] = 0
@@ -230,7 +230,7 @@ export const similarityweight = writable(0.5)
 
 export const glyphinclude = writable(false)
 
-export const emotionbased = writable({ label: "Similarity", value: 0 })
+export const emotionbased = writable({ label: "Monophonic", value: 0 })
 
 export const vorcolorselect = writable({ value: 0, label: 'Temperature' })
 

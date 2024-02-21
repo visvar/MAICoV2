@@ -448,7 +448,10 @@ export async function uploadDatasetFile(event) {
                 DRumap.set(obj.variables.DRumap)
                 emotionbased.set(obj.variables.emotionbased)
                 numpoly.set(obj.variables.numpoly)
-                axisselect.set(obj.variables.axisselect)
+                let axis = obj.variables.axisselect
+                if (axis[2] === true)
+                    axis[2] = 1
+                axisselect.set(axis)
                 selectedKeys.set(obj.variables.selectedKeys)
                 selectedBaseKeys.set(obj.variables.selectedBaseKeys)
                 importedSession.set(get(importedSession) + 1)
