@@ -324,7 +324,23 @@
     //if ($emotionbased.value === 2) return null;
     let i = 0;
     progress.set(0);
-    let points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
+    let points = []
+    try{
+      points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
+    }catch(e){
+      try{
+        let curmin = 0
+        let steps = 100
+        while($currentpoints.length>curmin){
+          points = points.concat(JSON.parse(JSON.stringify($currentpoints.slice(curmin, steps))).map((m) => m[2]));
+          curmin = steps
+          steps = Math.min($currentpoints.length, steps + 100)
+          console.log(steps)
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
     //progress.set(0)
     let combined = [];
     for (let r = 1; r < 4; r++) combined.push([]);
@@ -335,6 +351,7 @@
         clearInterval(intervalID);
       } else {
         progress.set((i / n) * 100);
+        console.log("poly", (i / n) * 100)
         combined = mutil.findAllPolyMelodiesExtern(
           4,
           polyselected.value,

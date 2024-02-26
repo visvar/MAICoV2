@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
-import models, { actionlog, exportList, modelselected, primerList, progress } from '../stores/stores'
+import models, { actionlog, exportList, modelselected, polyoptions, primerList, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 import * as mu from "./modelutil"
 
@@ -9,7 +9,6 @@ export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
     return null
   try {
-    console.log(melodies1)
     const midi = new Midi()
     let newSec = mm.sequences.createQuantizedNoteSequence(4, bpm)
     let sec
@@ -28,14 +27,13 @@ export function writeToMidi(melodies1, bpm, mode) {
       melodies.forEach((mel) => {
         const poly = mel.isPolymix ? true : false
         mel.notes.forEach(n => {
-          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, meloID: poly ? n.trackID : 0 })
+          newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, trackID: poly ? n.trackID : 0 })
         })
         lastTiming += mel.totalQuantizedSteps
         sec = mm.sequences.unquantizeSequence(newSec, bpm)
         sec.notes.forEach((n, i) => {
           n.trackID = newSec.notes[i].trackID
         })
-        console.log(sec)
         tracks.forEach((t, i) => {
           sec.notes.filter(n => n.trackID === i).forEach((note) => {
             t.addNote({
@@ -58,7 +56,6 @@ export function writeToMidi(melodies1, bpm, mode) {
         })
       })
       */
-      console.log(midi)
       const array = midi.toArray()
       const buffer = array.buffer
       /* global Blob */
@@ -214,7 +211,8 @@ export function getDataset() {
   //const primerString = JSON.stringify(get(primerList), replace, 2)
   //const jsonString = JSON.stringify(data, replace, 2)
   const primer = get(primerList)
-  const complete = JSON.stringify({ primerList: { primer }, modelList: { data } }, replace, 2)
+  const poly = get(polyoptions)
+  const complete = JSON.stringify({ primerList: { primer }, modelList: { data }, poly: {poly} }, replace, 2)
   const blob = new Blob([complete], { type: 'application/json' })
   const name = new Date().toISOString().substring(2, 10) + "_dataset" + '.json'
   return [blob, name]

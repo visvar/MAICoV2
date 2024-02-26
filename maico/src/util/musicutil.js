@@ -1233,7 +1233,22 @@ export function findPolyMelodies(num, melody, rule) {
   // 0 = all notes have to be different
   // 1 = minimum of 5 quints 
   let current = [JSON.parse(JSON.stringify(melody.melody))]
-  let potential = JSON.parse(JSON.stringify(get(currentpoints)))
+  let potential = []
+    try{
+      potential = JSON.parse(JSON.stringify(get(currentpoints))).map((m) => m[2]);
+    }catch(e){
+      try{
+        let curmin = 0
+        let steps = 200
+        while(get(currentpoints).length>curmin){
+          potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))).map((m) => m[2]));
+          curmin = steps
+          steps = Math.min(get(currentpoints).length, steps + 200)
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
   let combined = []
   for (let r = 1; r < num; r++)
     combined.push([])
@@ -1263,7 +1278,22 @@ export function findPolyMelodies(num, melody, rule) {
 export function findAllPolyMelodies(num, rule) {
   // 0 = all notes have to be different
   // 1 = minimum of 5 quints 
-  let points = JSON.parse(JSON.stringify(get(currentpoints))).map(m => m[2])
+  let points = []
+    try{
+      points = JSON.parse(JSON.stringify(get(currentpoints))).map((m) => m[2]);
+    }catch(e){
+      try{
+        let curmin = 0
+        let steps = 100
+        while(get(currentpoints).length>curmin){
+          points = points.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))).map((m) => m[2]));
+          curmin = steps
+          steps = Math.min(get(currentpoints).length, steps + 100)
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
   if (points.length === 0) {
     polyoptions.set([[], [], []])
     return null
@@ -1275,7 +1305,23 @@ export function findAllPolyMelodies(num, rule) {
   for (let i = 0; i < points.length; i++) {
     let melody = JSON.parse(JSON.stringify(points[i]))
     let current = [JSON.parse(JSON.stringify(melody.melody))]
-    let potential = JSON.parse(JSON.stringify(get(currentpoints)))
+    //let potential = JSON.parse(JSON.stringify(get(currentpoints)))
+    let potential = []
+    try{
+      potential = JSON.parse(JSON.stringify(get(currentpoints)));
+    }catch(e){
+      try{
+        let curmin = 0
+        let steps = 100
+        while(get(currentpoints).length>curmin){
+          potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))));
+          curmin = steps
+          steps = Math.min(get(currentpoints).length, steps + 100)
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
     let diff = []
     let iter = 1
     while (iter < num) {
@@ -1317,7 +1363,23 @@ export function calcArrayforMelo(melo){
 export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
   let melody = JSON.parse(JSON.stringify(points[i]))
   let current = [JSON.parse(JSON.stringify(melody.melody))]
-  let potential = JSON.parse(JSON.stringify(get(currentpoints)))
+  //let potential = JSON.parse(JSON.stringify(get(currentpoints)))
+  let potential = []
+    try{
+      potential = JSON.parse(JSON.stringify(get(currentpoints)));
+    }catch(e){
+      try{
+        let curmin = 0
+        let steps = 100
+        while(get(currentpoints).length>curmin){
+          potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))));
+          curmin = steps
+          steps = Math.min(get(currentpoints).length, steps + 100)
+        }
+      }catch(e){
+        console.log(e)
+      }
+    }
   let diff = []
   let iter = 1
   while (iter < num) {

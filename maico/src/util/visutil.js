@@ -63,7 +63,7 @@ export function getTimbreKeySelectedMelodies(x, y, points, spoints, ordering, ma
   })
   seen.set(get(seen).concat(newpoints))
   const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
-  log("select brush results in points", { brush, selected: selectedpoints })
+  log("select brush results in timbrekey", { brush, selected: selectedpoints })
   return selpoints
 }
 
@@ -83,7 +83,6 @@ export function getTimbreSelectedMelodies(x, y, points, ordering) {
     })
     return r
   })
-  console.log(selpoints)
   let newpoints = []
   selpoints.forEach(p => {
     if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
@@ -93,7 +92,7 @@ export function getTimbreSelectedMelodies(x, y, points, ordering) {
   })
   seen.set(get(seen).concat(newpoints))
   const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
-  log("select brush results in points", { brush, selected: selectedpoints })
+  log("select brush results in timbre", { brush, selected: selectedpoints })
   return selpoints
 }
 
