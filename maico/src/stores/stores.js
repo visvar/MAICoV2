@@ -74,6 +74,7 @@ function createExportList() {
     return {
         subscribe,
         get: (n) => get(n),
+        set: (n) => set(n),
         clear: (n) => update(n => {
             exportcleared.set(get(exportcleared) + 1);
             return []
@@ -152,11 +153,17 @@ export const primerList = createPrimerList()
 
 export const primerTodelete = writable({ label: 0, value: 0 });
 
+export const exportmetric = writable({ label: "ID asc", value: 0 });
+
+
 export const primerSelected = derived([primerList, primerTodelete], v => {
     return v[0][v[1].value]
 })
 
 export const selectedBaseKeys = writable(-1)
+export const sortedexport = writable([])
+
+
 
 
 function createAxis() {                                                                              // 1 == DR, 2== Timbre
@@ -190,6 +197,10 @@ function createAxis() {                                                         
                 } else if (num === 2) {
                     n[0] = { value: 100, label: 'Timbre' }
                     n[1] = { value: 100, label: 'Timbre' }
+
+                } else if (num === 3) {
+                    n[0] = { value: 101, label: 'Export' }
+                    n[1] = { value: 101, label: 'Export' }
                 }
                 n[2] = num
             } else {
@@ -286,7 +297,7 @@ export const points = writable(undefined)
 
 export const samplingstatus = writable('waiting for user action')
 
-export const filterextents = writable(new Array(64).fill([40, 88]))
+export const filterextents = writable(new Array(64).fill([35, 106]))
 
 export const strangers = writable(0)
 

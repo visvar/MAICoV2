@@ -30,6 +30,7 @@
         scaleY(information.pianoroll.data[0]);
 
     $: render = ({ context }) => {
+        
         context.globalAlpha = opacity;
         const scale = r / 10;
         context.fillStyle = fill;

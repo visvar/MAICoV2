@@ -1053,7 +1053,14 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
           }
         }
       }
-      temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep })
+      if(n?.meloID!==undefined && n?.trackID!==undefined)
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, meloID:n?.meloID, trackID:n?.trackID })
+      else if(n?.meloID!==undefined)
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, meloID:n?.meloID })
+      else if(n?.trackID!==undefined)
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, trackID:n?.trackID })
+      else
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep })
     }
   })
   data.totalQuantizedSteps = steps
@@ -1063,14 +1070,27 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
 
 export function adjustMelodiesToFilters() {
   log("adjust with filters", { pitchmap: get(filterextents), keys: get(selectedKeys) })
-  let temp = []
-  get(models).forEach(model => {
-    temp = []
-    model.melodies.forEach(melody => {
-      temp.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
+  if(get(emotionbased).value === 0){
+    let temp = []
+    get(models).forEach(model => {
+      temp = []
+      model.melodies.forEach(melody => {
+        temp.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
+      })
+      models.addMelodiesToModel(model.name, temp)
     })
-    models.addMelodiesToModel(model.name, temp)
-  })
+  }else if(get(emotionbased).value === 2){
+    let temp = [[],[],[]]
+    get(polyoptions).forEach((voice,i) => {
+      voice.forEach(p => {
+        temp[i].push(adaptMelodiesWithRules(p, p.totalQuantizedSteps, true))
+        if(p.basemelody === 145)
+          console.log(p)
+      })
+    })
+    console.log(temp)
+    polyoptions.set(temp)
+  }
 }
 
 function isDifferent(melody, melody1, a, b) {

@@ -24,27 +24,29 @@ export function writeToMidi(melodies1, bpm, mode) {
       track3.channel = 3
       let tracks = [track0, track1, track2, track3]
       let lastTiming = 0
+      console.log(melodies)
       melodies.forEach((mel) => {
         const poly = mel.isPolymix ? true : false
         mel.notes.forEach(n => {
           newSec.notes.push({ pitch: n.pitch, quantizedEndStep: n.quantizedEndStep + lastTiming, quantizedStartStep: n.quantizedStartStep + lastTiming, trackID: poly ? n.trackID : 0 })
         })
         lastTiming += mel.totalQuantizedSteps
-        sec = mm.sequences.unquantizeSequence(newSec, bpm)
-        sec.notes.forEach((n, i) => {
-          n.trackID = newSec.notes[i].trackID
-        })
-        tracks.forEach((t, i) => {
-          sec.notes.filter(n => n.trackID === i).forEach((note) => {
-            t.addNote({
-              midi: note.pitch,
-              time: note.startTime,
-              duration: note.endTime - note.startTime,
-              velocity: 100,
-            })
+      })
+      sec = mm.sequences.unquantizeSequence(newSec, bpm)
+      sec.notes.forEach((n, i) => {
+        n.trackID = newSec.notes[i].trackID
+      })
+      tracks.forEach((t, i) => {
+        sec.notes.filter(n => n.trackID === i).forEach((note) => {
+          t.addNote({
+            midi: note.pitch,
+            time: note.startTime,
+            duration: note.endTime - note.startTime,
+            velocity: 100,
           })
         })
       })
+      console.log(sec, newSec, tracks)
       /*
       sec = mm.sequences.unquantizeSequence(newSec, bpm)
       sec.notes.forEach((note) => {

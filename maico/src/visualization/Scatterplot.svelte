@@ -52,6 +52,7 @@
   import EdgeBundling from "./EdgeBundling.svelte";
   import ScatterplotCanvas from "./ScatterplotCanvas.svelte";
   import TimbreCanvas from "./TimbreCanvas.svelte";
+  import ExportCanvas from "./ExportCanvas.svelte";
   import ClusterCanvas from "./ClusterCanvas.svelte";
 
   import * as moutil from "../util/modelutil.js";
@@ -824,7 +825,7 @@
 </script>
 
 <div id="container">
-  {#if $axisselect[0].label !== "Timbre"}
+  {#if $axisselect[0].label !== "Timbre" && $axisselect[0].label !== "Export"}
     <div class="canvas">
       <Voronoi opacity={opacityVoronoi} />
     </div>
@@ -835,8 +836,10 @@
     </div>
   {/if}
   <div class="canvas">
-    {#if $axisselect[0].label !== "Timbre"}
+    {#if $axisselect[0].label !== "Timbre" && $axisselect[0].label !== "Export"}
       <ScatterplotCanvas opacity={opacityGlyph} />
+    {:else if $axisselect[0].label === "Export"}
+      <ExportCanvas opacity={opacityGlyph} />
     {:else}
       <TimbreCanvas opacity={opacityGlyph} />
     {/if}

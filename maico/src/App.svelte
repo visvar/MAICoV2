@@ -75,6 +75,8 @@
     weightTimbre,
     edgeBundlingPoly,
     importedSession,
+    exportmetric,
+    sortedexport,
   } from "./stores/stores.js";
 
   import { genlength, iter } from "./stores/devStores.js";
@@ -248,7 +250,7 @@
     { label: "seperate Tracks", value: 1 },
     { label: "successively", value: 2 },
   ];
-  let exportmode = { label: "seperate Files", value: 0 };
+  let exportmode = { label: "successively", value: 2 };
 
   // maybe for selection
   let modeltemp = [];
@@ -1064,6 +1066,7 @@
               { label: "Correlation", value: 0 },
               { label: "Similarity", value: 1 },
               { label: "Timbre", value: 2 },
+              { label: "Export", value: 3 },
             ]}
             bind:value={layoutsel}
             on:change={(v) => {
@@ -1167,6 +1170,33 @@
         <div>
           <CorrelationMatrix w={280} h={200} />
         </div>
+      {/if}
+      {#if $axisselect[2] === 3}
+      <div class="select">
+        <Select
+          class="select"
+          id="selexpmetric"
+          items={[
+            { label: "ID asc", value: 0 },
+            { label: "Sort by Selecting Single", value: 1 },
+            { label: "Timbre L->D", value: 2 },
+            { label: "Timbre D->L", value: 3 },
+            { label: "NumberofNotes asc", value: 4 },
+          ]}
+          bind:value={$exportmetric}
+          clearable={false}
+        />
+      </div>
+      {#if $exportmetric.value === 1}
+      <button
+        class="warning"
+        on:click={() => {
+          sortedexport.set([])
+        }}
+      >
+        Reset sorting in Export
+      </button>
+      {/if}
       {/if}
     {/if}
     <div>

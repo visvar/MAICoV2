@@ -21,7 +21,7 @@
     export let h,
         w,
         length = 32,
-        extent = [40, 88],
+        extent = [35, 106],
         filtervalues = $filterextents;
 
     let svg;

@@ -490,7 +490,7 @@
                 </label>
             </div>
         </div>
-    {:else}
+    {:else if melody?.polyinfo?.basemelody}
         <label>
             <input type="checkbox" bind:checked={line} />
             Show Melodyline
@@ -507,7 +507,7 @@
                     )[0].trackID,
                 )}
             >
-                {melody.polyinfo.basemelody}
+                {melody?.polyinfo?.basemelody}
             </div>
             ,
             {#each melody.polyinfo.combinations as c, i}

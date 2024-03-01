@@ -96,6 +96,32 @@ export function getTimbreSelectedMelodies(x, y, points, ordering) {
   return selpoints
 }
 
+export function getExportSelectedMelodies(x, y, points, ordering) {
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null) {
+    if (get(meloselected) !== null)
+      log("delete brush")
+    return null
+  }
+  let brush = get(brushselection)
+
+  let selpoints = points.filter((point, index) => {
+    if (y(Math.floor(index/10)) > get(brushselection)[0][1] && y(Math.floor(index/10)) < get(brushselection)[1][1] && x(index%10) >get(brushselection)[0][0] && x(index%10) <get(brushselection)[1][0])
+        return true
+    return false
+  })
+  let newpoints = []
+  selpoints.forEach(p => {
+    if (get(seen).filter(p1 => p1.index === p.index).length === 0) {
+      p.userspecific.seen = 1
+      newpoints.push(p)
+    }
+  })
+  seen.set(get(seen).concat(newpoints))
+  const selectedpoints = selpoints.map((m) => { return { primer: m?.isPrimer, melody: m.melody } })
+  log("select brush results in export", { brush, selected: selectedpoints })
+  return selpoints.map(p => [0,0,p])
+}
+
 export function getColor(data, currentcolor, basenote) {
   return get(colors)[currentcolor].scale(data, basenote)
 
