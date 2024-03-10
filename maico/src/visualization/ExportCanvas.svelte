@@ -95,8 +95,8 @@
 
   $: showpoints = 
   $exportList.sort((a,b) => {
-    if($exportmetric.value === 0)
-      return 1
+    if($exportmetric.value === 0 && a.index < b.index)
+      return -1
     else if($exportmetric.value === 1 && $sortedexport.indexOf(a.index)!== -1 && $sortedexport.indexOf(b.index)=== -1){
       return -1
     }
@@ -314,7 +314,7 @@
     />
     {#if $exportList !== undefined}
       {#each showpoints as data, index}
-          {#if $sortedexport.indexOf(data.index) !== -1}
+          {#if $exportmetric.value === 1 && $sortedexport.indexOf(data.index) !== -1}
             <Text
               x={x(index%10)}
               y={y(Math.floor(index/10))-($glyphsize * selectedSize)-10}
