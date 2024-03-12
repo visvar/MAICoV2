@@ -1445,6 +1445,17 @@ export function reshuffleQuintCircle(bn, mode) {
   return quints
 }
 
+export function isBright(p, bk){
+  let qc = reshuffleQuintCircle(bk, "dur")
+  let note = keysLookup[p % 12]
+  let index = qc.findLastIndex(v => v === note) - 6
+  if(index >= 0 || index === -1) 
+    return true
+  else 
+    return false
+
+}
+
 export function calcAllTimbre(melody) {
   let timbrearray = []
   for (let basenote = 0; basenote < 12; basenote++) {

@@ -84,6 +84,7 @@
             drawPianoRoll();
         };
     $: $currentcolor, changeColor();
+    $: $selectedBaseKeys, changeKeyColor();
     $: shownmelody, drawPianoRoll();
     $: line, drawPianoRoll();
 
@@ -117,6 +118,41 @@
                 "fill",
                 visutil.getColor(melody, $currentcolor, $selectedBaseKeys),
             );
+        }
+    }
+
+    function changeKeyColor() {
+        if (svg !== undefined ) {
+            shownmelody.notes.forEach((d) => {
+                svg.selectAll("#p"+d.pitch+d.quantizedStartStep).attr(
+                "fill", d => {
+                if (!primer && d?.meloID !== undefined){
+                        return visutil.modelColor10(
+                            d?.trackID !== undefined
+                                ? d.trackID
+                                : shownmelody.indexing.filter(
+                                      (n) => n.id === d.meloID,
+                                  )[0].meloID,
+                        );
+                    /*fill === "grey"
+                            ? fill
+                            : melody.additional.outScaleNotes.outScale.has(
+                                  d.pitch
+                              )
+                            ? "red"
+                            : "green";*/ 
+                }else if($selectedBaseKeys !== -1 && !primer){
+                    return muutil.isBright(d.pitch, $selectedBaseKeys) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
+                }else{
+                    return fill; /*shownmelody.inScale.includes(d.pitch % 12)
+                        ? "green"
+                        : "red";*/
+                }
+                }
+            );
+                
+            })
+            
         }
     }
 
@@ -360,6 +396,7 @@
                     "transform",
                     `translate(0,${-(y(extend[0]) - y(extend[0] + 1)) / 2})`,
                 )
+                .attr("id", d => "p"+d.pitch+d.quantizedStartStep)
                 .attr("rx", 4)
                 .attr("ry", 4)
                 .attr("stroke-width", 0.9 / h)
@@ -372,7 +409,7 @@
                 .attr("x", (d) => x(d.quantizedStartStep))
                 .attr("y", (d) => y(d.pitch) + noteheight * 0.1)
                 .attr("fill", (d) => {
-                    if (!primer && d.meloID !== undefined)
+                    if (!primer && d.meloID !== undefined){
                         return visutil.modelColor10(
                             d?.trackID !== undefined
                                 ? d.trackID
@@ -386,10 +423,14 @@
                                   d.pitch
                               )
                             ? "red"
-                            : "green";*/ else
+                            : "green";*/ 
+                    }else if($selectedBaseKeys !== -1 && !primer){
+                        return muutil.isBright(d.pitch, $selectedBaseKeys) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
+                    }else{
                         return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                             ? "green"
                             : "red";*/
+                    }
                 })
                 .attr("opacity", 0.7);
         }
