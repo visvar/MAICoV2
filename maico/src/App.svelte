@@ -326,21 +326,25 @@
     //if ($emotionbased.value === 2) return null;
     let i = 0;
     progress.set(0);
-    let points = []
-    try{
+    let points = [];
+    try {
       points = JSON.parse(JSON.stringify($currentpoints)).map((m) => m[2]);
-    }catch(e){
-      try{
-        let curmin = 0
-        let steps = 100
-        while($currentpoints.length>curmin){
-          points = points.concat(JSON.parse(JSON.stringify($currentpoints.slice(curmin, steps))).map((m) => m[2]));
-          curmin = steps
-          steps = Math.min($currentpoints.length, steps + 100)
-          console.log(steps)
+    } catch (e) {
+      try {
+        let curmin = 0;
+        let steps = 100;
+        while ($currentpoints.length > curmin) {
+          points = points.concat(
+            JSON.parse(JSON.stringify($currentpoints.slice(curmin, steps))).map(
+              (m) => m[2],
+            ),
+          );
+          curmin = steps;
+          steps = Math.min($currentpoints.length, steps + 100);
+          console.log(steps);
         }
-      }catch(e){
-        console.log(e)
+      } catch (e) {
+        console.log(e);
       }
     }
     //progress.set(0)
@@ -353,7 +357,7 @@
         clearInterval(intervalID);
       } else {
         progress.set((i / n) * 100);
-        console.log("poly", (i / n) * 100)
+        console.log("poly", (i / n) * 100);
         combined = mutil.findAllPolyMelodiesExtern(
           4,
           polyselected.value,
@@ -1172,31 +1176,31 @@
         </div>
       {/if}
       {#if $axisselect[2] === 3}
-      <div class="select">
-        <Select
-          class="select"
-          id="selexpmetric"
-          items={[
-            { label: "ID asc", value: 0 },
-            { label: "Sort by Selecting Single", value: 1 },
-            { label: "Timbre L->D", value: 2 },
-            { label: "Timbre D->L", value: 3 },
-            { label: "NumberofNotes asc", value: 4 },
-          ]}
-          bind:value={$exportmetric}
-          clearable={false}
-        />
-      </div>
-      {#if $exportmetric.value === 1}
-      <button
-        class="warning"
-        on:click={() => {
-          sortedexport.set([])
-        }}
-      >
-        Reset sorting in Export
-      </button>
-      {/if}
+        <div class="select">
+          <Select
+            class="select"
+            id="selexpmetric"
+            items={[
+              { label: "ID asc", value: 0 },
+              { label: "Sort by Selecting Single", value: 1 },
+              { label: "Timbre L->D", value: 2 },
+              { label: "Timbre D->L", value: 3 },
+              { label: "NumberofNotes asc", value: 4 },
+            ]}
+            bind:value={$exportmetric}
+            clearable={false}
+          />
+        </div>
+        {#if $exportmetric.value === 1}
+          <button
+            class="warning"
+            on:click={() => {
+              sortedexport.set([]);
+            }}
+          >
+            Reset sorting in Export
+          </button>
+        {/if}
       {/if}
     {/if}
     <div>
