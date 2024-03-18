@@ -1,4 +1,4 @@
-import { vorcolorselect, weightTimbre, brushClusterSwitch, clusterdata, models, axisselect, brushselection, modelselected, currentcolor, colors, points, side, setcpoints, currentpoints, seen, meloselected, selectedBaseKeys } from '../stores/stores.js'
+import { vorcolorselect, weightTimbre, brushClusterSwitch, clusterdata, models, axisselect, brushselection, modelselected, currentcolor, colors, points, side, setcpoints, currentpoints, seen, meloselected, selectedBaseKeys, primerList } from '../stores/stores.js'
 import { get } from 'svelte/store';
 import { extent } from 'd3-array';
 import * as d3 from 'd3'
@@ -185,6 +185,12 @@ export function calcAllColorScales(alldata) {
   result.push({
     name: 'Timbre', scale: (data, a) => {              //sequentialScale
       return data?.timbre !== undefined && a !== -1 ? divergingTimbreScale(data.timbre[a]) : 'lightgrey'
+    }
+  })
+
+  result.push({
+    name: 'hasPrimer', scale: (data, a) => {            
+      return data?.isPolymix && (data?.polyinfo?.basemelody < get(primerList).length || data?.polyinfo?.combinations.filter(v => v < get(primerList).length).length > 0) ? 'lightgrey' : '#444'
     }
   })
 

@@ -222,7 +222,8 @@
     { label: "Seen", value: 6 },
     { label: "Rate", value: 7 },
     { label: "Timbre", value: 8 },
-    { label: "None", value: 9 },
+    { label: "hasPrimer", value: 9 },
+    { label: "None", value: 10 },
   ];
 
   const pointcoloroptions = [
@@ -233,6 +234,7 @@
     { label: "Seen", value: 5 },
     { label: "Rate", value: 6 },
     { label: "Timbre", value: 7 },
+    { label: "hasPrimer", value: 8 },
   ];
 
   //TODO: find other axis and insert,
