@@ -232,7 +232,7 @@ export function divergingScaleSymmetric(i) {
 }
 
 export function divergingTimbreScale(i) {
-  return d3.interpolateRdYlGn(i)
+  return d3.interpolateViridis(i)//d3.interpolateRdYlGn(i)
 }
 
 // what kinds of types are major and which are minor? maybe do differentiation not just color?

@@ -659,7 +659,7 @@
         </button>
       {/if}
     </div>
-    <!--
+    
     <div>
       <div on:click={() => (clustering = !clustering)}>
         <h1 class="mb-4 text-3xl font-bold">Clustering</h1>
@@ -707,7 +707,7 @@
         </div>
       {/if}
     </div>
-    -->
+    
 
     <div class="select">
       <!-- svelte-ignore a11y-click-events-have-key-events -->

@@ -142,7 +142,10 @@
                             ? "red"
                             : "green";*/ 
                 }else if($selectedBaseKeys !== -1 && !primer){
-                    return muutil.isBright(d.pitch, $selectedBaseKeys) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
+                    let bd = muutil.isBright(d.pitch, $selectedBaseKeys)
+                    if(bd === 0)
+                        return "lightgrey"
+                    return bd || (bd === -6 && melody.timbre[$selectedBaseKeys] >= 0.5) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
                 }else{
                     return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                         ? "green"
@@ -425,7 +428,10 @@
                             ? "red"
                             : "green";*/ 
                     }else if($selectedBaseKeys !== -1 && !primer){
-                        return muutil.isBright(d.pitch, $selectedBaseKeys) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
+                        let bd = muutil.isBright(d.pitch, $selectedBaseKeys)
+                        if(bd === 0)
+                            return "lightgrey"
+                        return bd || (bd === -6 && melody.timbre[$selectedBaseKeys] >= 0.5) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
                     }else{
                         return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                             ? "green"

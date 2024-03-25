@@ -1449,9 +1449,13 @@ export function isBright(p, bk){
   let qc = reshuffleQuintCircle(bk, "dur")
   let note = keysLookup[p % 12]
   let index = qc.findLastIndex(v => v === note) - 6
-  if(index >= 0 || index === -1) 
+  if(index > 0 || bk === -1) 
     return true
-  else 
+  else if(index === -6)
+    return -6
+  else if(index === 0)
+    return 0
+  else
     return false
 
 }

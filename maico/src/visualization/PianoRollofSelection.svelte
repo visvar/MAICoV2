@@ -85,6 +85,7 @@
     $: h100 = h - 200;
 
     $: h4 = (h - 100 - margin.top - margin.bottom) / 4;
+    $: h3 = (h - 100 - margin.top - margin.bottom) / 3;
 </script>
 
 {#if !$brushClusterSwitch}
@@ -206,14 +207,16 @@
 {:else}
     <!--<h2>Selected Clusters</h2>-->
     <div class="list" bind:clientWidth={w} bind:clientHeight={h}>
+        <!--
         <h7>Occurrences of Key</h7>
         <ClusterInfo mode={"key"} {w} h={h4} />
+        -->
         <h7>Occurrences of Models</h7>
-        <ClusterInfo mode={"model"} {w} h={h4} />
+        <ClusterInfo mode={"model"} {w} h={h3} />
         <h7>Piano roll density</h7>
-        <ClusterInfo mode={"piano"} {w} h={h4} />
+        <ClusterInfo mode={"piano"} {w} h={h3} />
         <h7>Occurrences of harmonic notes</h7>
-        <ClusterInfo mode={"harmonic"} {w} h={h4} />
+        <ClusterInfo mode={"harmonic"} {w} h={h3} />
     </div>
 {/if}
 
