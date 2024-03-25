@@ -82,7 +82,7 @@
 
     $: h = 0;
 
-    $: h100 = h - 200;
+    $: h100 = h - 300;
 
     $: h4 = (h - 100 - margin.top - margin.bottom) / 4;
     $: h3 = (h - 100 - margin.top - margin.bottom) / 3;
@@ -186,7 +186,7 @@
                             melody={data[2]}
                             length={$meloselected.length}
                             {w}
-                            h={h * 0.75}
+                            h={h * 0.7}
                             {index}
                         />
                         <RhythmHighlights

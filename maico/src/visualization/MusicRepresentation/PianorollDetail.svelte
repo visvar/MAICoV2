@@ -530,22 +530,22 @@
                     }}
                 />
                 {#if melody?.isPrimer}
-                    this is Primer {melody.primerindex}
+                    primer <!--{melody.primerindex}-->
                 {:else}
-                    show Primer {melody.primerindex}
+                    primer <!--{melody.primerindex}-->
                 {/if}
             </label>
             <div>
                 <label>
                     <input type="checkbox" bind:checked={line} />
-                    Show Melodyline
+                    mel-line
                 </label>
             </div>
         </div>
     {:else if melody?.polyinfo?.basemelody}
         <label>
             <input type="checkbox" bind:checked={line} />
-            Show Melodyline
+            mel-line
         </label>
         <div>
             Exclude:
@@ -588,6 +588,7 @@
         >
             👍
         </div>
+        <br>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
@@ -668,7 +669,7 @@
     }
     .option {
         display: inline-block;
-        padding: 10px;
+        padding: 2px;
         cursor: pointer;
     }
     .liked .selected {
