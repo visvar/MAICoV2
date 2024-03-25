@@ -1534,18 +1534,20 @@ export function orderQuintenzirkel(array) {
   return temp
 }
 
-export function calcIntervals(melody) {
+export function calcIntervals(melody, voices) {
   if (!melody.isPolymix)
     return []
   else {
     let intervals = []
     for (let i = 0; i < melody.totalQuantizedSteps; i++) {
-      let notesat = melody.notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).sort((a, b) => a.pitch - b.pitch)
+      let notesat = melody.notes.filter(n => n.quantizedStartStep <= i && n.quantizedEndStep > i).sort((a, b) => a.trackID - b.trackID)
       if (notesat.length > 1) {
         let int = []
         for (let j = 0; j < notesat.length - 1; j++) {
-          let interval = { value: notesat[j + 1].pitch - notesat[j].pitch, voices: [notesat[j].meloID, notesat[j + 1].meloID] }
-          int.push(interval)
+          if(Math.abs(notesat[j].trackID - notesat[j + 1].trackID) === 1){
+            let interval = { value: Math.abs(notesat[j + 1].pitch - notesat[j].pitch), voices: Math.max(notesat[j].trackID, notesat[j + 1].trackID) }
+            int.push(interval)
+          }
         }
         intervals.push({ quantizedStartStep: i, quantizedEndStep: i + 1, intervals: int, voices: notesat.length })
       }

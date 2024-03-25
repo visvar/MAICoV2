@@ -20,7 +20,7 @@
 
     let context;
     const margin = 10;
-    const offset = 0;
+    const offset = 10;
     const bars = 40;
 
     onMount(() => {
@@ -124,7 +124,24 @@
                         context.fill();
                         context.stroke();
                     });
+                    
                 }
+                drawAxis(
+                    context,
+                    "x",
+                    scaleY(yextent[0]),
+                    melody.totalQuantizedSteps,
+                    scaleX,
+                    offset,
+                );
+                drawAxis(
+                    context,
+                    "y",
+                    height - 2 * margin - offset,
+                    yextent,
+                    scaleY,
+                    offset,
+                );
             }
         }
     }

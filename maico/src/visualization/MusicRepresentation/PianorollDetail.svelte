@@ -145,7 +145,8 @@
                     let bd = muutil.isBright(d.pitch, $selectedBaseKeys)
                     if(bd === 0)
                         return "lightgrey"
-                    return bd || (bd === -6 && melody.timbre[$selectedBaseKeys] >= 0.5) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
+                    return (bd && melody.timbre[$selectedBaseKeys] >= 0.5) || (!bd && melody.timbre[$selectedBaseKeys] <= 0.5) || (bd === -6) ? "ligthgrey":  "steelblue"
+                            
                 }else{
                     return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                         ? "green"
@@ -430,8 +431,8 @@
                     }else if($selectedBaseKeys !== -1 && !primer){
                         let bd = muutil.isBright(d.pitch, $selectedBaseKeys)
                         if(bd === 0)
-                            return "lightgrey"
-                        return bd || (bd === -6 && melody.timbre[$selectedBaseKeys] >= 0.5) ? visutil.divergingTimbreScale(0.9) : visutil.divergingTimbreScale(0.1)
+                        return "lightgrey"
+                    return (bd && melody.timbre[$selectedBaseKeys] >= 0.5) || (!bd && melody.timbre[$selectedBaseKeys] <= 0.5) || (bd === -6) ? "ligthgrey":  "steelblue"
                     }else{
                         return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                             ? "green"
@@ -484,7 +485,7 @@
             {/each}
         {:else}
             {melody.model.name.slice(0, 8)} <br />
-            {melody.mvaesim !== undefined ? "VaeSim: " + melody.mvaesim : ""}
+            ID: {melody.index}
         {/if}
     </div>
     <div
@@ -501,7 +502,11 @@
         {#if melody.temperature !== undefined}
             Temp: {melody.temperature} <br />
         {/if}
-        ID: {melody.index}
+        {#if melody.model.name === "poly"}
+            ID: {melody.index}
+        {:else}
+            {melody.mvaesim !== undefined ? "VaeSim: " + melody.mvaesim : ""}
+        {/if}
     </div>
     {#if melody?.melody?.primer !== undefined}
         <div

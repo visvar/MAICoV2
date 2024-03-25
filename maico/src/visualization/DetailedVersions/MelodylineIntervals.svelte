@@ -21,7 +21,7 @@
 
     let context;
     const margin = 10;
-    const offset = 0;
+    const offset = 10;
     const bars = 40;
 
     onMount(() => {
@@ -71,7 +71,7 @@
                     voices += data.polyinfo.combinations.length;
                 }
                 let h = bars / voices;
-                let intervals = calcIntervals(data.melody);
+                let intervals = calcIntervals(data.melody, voices);
 
                 const colormap = (i) => sequentialScale(i);
                 for (let i = 0; i <= voices; i++) {
@@ -134,7 +134,7 @@
                         mvlib.Canvas.drawRoundedRect(
                             context,
                             scaleX(int.quantizedStartStep),
-                            margin + h * (int.intervals.length - 1 - j),
+                            margin + h * (voices - interval.voices),
                             scaleX(int.quantizedEndStep) -
                                 scaleX(int.quantizedStartStep),
                             h,
@@ -144,6 +144,22 @@
                         context.stroke();
                     });
                 });
+                drawAxis(
+                    context,
+                    "x",
+                    scaleY(yextent[0]),
+                    melody.totalQuantizedSteps,
+                    scaleX,
+                    offset,
+                );
+                drawAxis(
+                    context,
+                    "y",
+                    height - 2 * margin - offset,
+                    yextent,
+                    scaleY,
+                    offset,
+                );
             }
         }
     }

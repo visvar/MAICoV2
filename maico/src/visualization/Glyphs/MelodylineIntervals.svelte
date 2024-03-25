@@ -46,7 +46,7 @@
         if (information.isPolymix) {
             voices += information.polyinfo.combinations.length;
         }
-        let intervals = muutil.calcIntervals(information.melody);
+        let intervals = muutil.calcIntervals(information.melody, voices);
         let height = r / 2 / voices;
 
         const colormap = (i) => sequentialScale(i);
@@ -111,7 +111,7 @@
                 mvlib.Canvas.drawRoundedRect(
                     context,
                     scaleX(int.quantizedStartStep),
-                    y - r - 2 + height * (int.intervals.length - 1 - j),
+                        y - r - 2 + height * (voices - interval.voices),
                     scaleX(int.quantizedEndStep) -
                         scaleX(int.quantizedStartStep),
                     height,
