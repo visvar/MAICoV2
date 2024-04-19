@@ -33,6 +33,8 @@
         // @ts-ignore
         exclude,
         hilbert,
+        emotionbased,
+        distMatrix,
     } from "../stores/stores.js";
     // @ts-ignore
     import { get } from "svelte/store";
@@ -115,7 +117,7 @@
         let edges = [];
         let nodes = {};
         $currentpoints.forEach((v, index) => {
-            if (v[2]?.isPolymix) {
+            if (v[2]?.isPolymix && $emotionbased.value === 2) {
                 nodes[index] = {
                     x: x(v[0][$axisselect[0].value]),
                     y: y(v[1][$axisselect[1].value]),
@@ -160,10 +162,30 @@
                         }
                     }
                 }
+            } else {
+                nodes[index] = {
+                    x: x(v[0][$axisselect[0].value]),
+                    y: y(v[1][$axisselect[1].value]),
+                };
+                for (let i = index + 1; i < $currentpoints.length; i++) {
+                    let w = $currentpoints[i];
+                    //console.log(w[2], v[2], w[2]?.polyinfo.basemelody === v[2]?.polyinfo.basemelody ,w[2]?.polyinfo.combinations?.includes(v[2].polyinfo.basemelody), v[2]?.polyinfo.combinations?.includes(w[2].polyinfo.basemelody),v[2]?.polyinfo.combinations?.filter(element => w[2].polyinfo.combinations.includes(element)).length > 0)
+                    // @ts-ignore
+                    edges.push({
+                        p1: v,
+                        p2: w,
+                        x1: x(v[0][$axisselect[0].value]),
+                        x2: x(w[0][$axisselect[0].value]),
+                        y1: y(v[1][$axisselect[1].value]),
+                        y2: y(w[1][$axisselect[1].value]),
+                        source: index,
+                        target: i,
+                    });
+                }
             }
         });
         node_data = nodes;
-        coloring = calcColorsFromEdges(edges);
+        if ($emotionbased.value === 0) coloring = calcColorsFromEdges(edges);
         allEdges = edges;
     }
 
@@ -218,8 +240,17 @@
         return [occedge, ranking, rankarray];
     }
 
-    function getColor(index, color) {
-        if (false) {
+    function getColor(index, color, edge) {
+        if ($emotionbased.value === 0) {
+            console.log(
+                $distMatrix[edge.source][edge.target],
+                edge.source,
+                edge.target,
+            );
+            return visutil.divergingScale(
+                $distMatrix[edge.source][edge.target],
+            );
+        } else if (false) {
             let colors = color[0];
             let e = allEdges[index];
             let scale = d3.scaleLinear().domain([1, maximum]);
@@ -240,7 +271,6 @@
 
     // @ts-ignore
     function edgeBundling(node_data, edge_data) {
-        console.log(coloring);
         let fbundling = ForceEdgeBundling()
             .step_size(0.2)
             // @ts-ignore
@@ -288,7 +318,7 @@
                     allEdges[i].p2[2].index,
             )
             .style("stroke-width", 1)
-            .style("stroke", (d, i) => getColor(i, coloring))
+            .style("stroke", (d, i) => getColor(i, coloring, allEdges[i]))
             .style("fill", "none")
             .style("stroke-opacity", 0.1); //use opacity as blending
         //});
@@ -352,22 +382,40 @@
                 });
             }
         } else {
-            if ($meloselected !== null) {
-                $meloselected.forEach((ms) => {
+            if ($meloselected !== null && $meloselected.length === 1) {
+                if ($emotionbased.value === 0) {
+                    console.log($meloselected[0][2].index, previousIDs);
                     previousIDs = previousIDs.concat(
                         allEdges
                             .filter(
                                 (e) =>
-                                    e.commonMelody.includes(
-                                        ms[2].polyinfo.basemelody,
-                                    ) ||
-                                    e.commonMelody.filter((x) =>
-                                        ms[2].polyinfo.combinations.includes(x),
-                                    ).length > 0,
+                                    e.p1[2].index ===
+                                        $meloselected[0][2].index ||
+                                    e.p2[2].index === $meloselected[0][2].index,
                             )
                             .map((v) => v.p1[2].index + "_" + v.p2[2].index),
                     );
-                });
+                } else {
+                    $meloselected.forEach((ms) => {
+                        previousIDs = previousIDs.concat(
+                            allEdges
+                                .filter(
+                                    (e) =>
+                                        e.commonMelody.includes(
+                                            ms[2].polyinfo.basemelody,
+                                        ) ||
+                                        e.commonMelody.filter((x) =>
+                                            ms[2].polyinfo.combinations.includes(
+                                                x,
+                                            ),
+                                        ).length > 0,
+                                )
+                                .map(
+                                    (v) => v.p1[2].index + "_" + v.p2[2].index,
+                                ),
+                        );
+                    });
+                }
                 previousIDs.forEach((v) => {
                     d3.select("#p" + v)
                         .style("stroke-width", 2)

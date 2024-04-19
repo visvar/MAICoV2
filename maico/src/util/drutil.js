@@ -50,7 +50,7 @@ function getDrProjectedPoints(distMatrix, umap, emotion) {
   return points
 }
 
-function getDistanceMatrix(array, distanceFunction, weight, symmetric) {
+function getDistanceMatrix(array, distanceFunction, weight, symmetric, altsim) {
   const n = array.length
   const matrix = Array.from({ length: n }).map(() => Array.from({ length: n }))
   for (const [index1, item1] of array.entries()) {
@@ -58,6 +58,8 @@ function getDistanceMatrix(array, distanceFunction, weight, symmetric) {
     for (let index2 = start; index2 < n; index2++) {
       const item2 = array[index2]
       let distance = distanceFunction(item1, item2, 1, weight)
+      if (altsim !== undefined)
+        distance = altsim(item1, item2, index1, index2)
       if (isNaN(distance)) { distance = 1 }
       // Need a distance matrix, so invert similarity
       matrix[index1][index2] = distance
@@ -79,7 +81,7 @@ export function getPoints(distMatrix, umap, emotion) {
 export function distanceMatrix(melodies, weight) {
 
   if (melodies.length > 0) {
-    const distMatrix = getDistanceMatrix(melodies, muutil.ourDistanceFunction, weight, true)
+    const distMatrix = getDistanceMatrix(melodies, muutil.ourDistanceFunction, weight, true, muutil.newSimilarityTestFunction)
     return distMatrix
 
   }
