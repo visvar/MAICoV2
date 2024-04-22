@@ -225,7 +225,7 @@ export function newSimilarityTestFunction(rec1, rec2, index1, index2) {
 
   let scale = d3.scaleLinear().domain([1, 0.5]).range([1, 0])
 
-  const sim10 = scale(shapeSimilarity(line1, line2, { estimationPoints: 2, checkRotations: false }))
+  const sim10 = scale(shapeSimilarity(line1, line2, { estimationPoints: 2, rotations: 10 }))
   const sim30 = scale(shapeSimilarity(line1, line2, { estimationPoints: 5, checkRotations: false }))
   const sim50 = scale(shapeSimilarity(line1, line2, { estimationPoints: 10, checkRotations: false }))
   const sim100 = scale(shapeSimilarity(line1, line2, { estimationPoints: 50, checkRotations: false }))
