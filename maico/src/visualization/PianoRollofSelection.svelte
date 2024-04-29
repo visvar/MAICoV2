@@ -59,7 +59,7 @@
 
     function selectOption(option, melody) {
         log("rating changed", {
-            melody: melody.melody,
+            melody: melody.melody.uniqueID,
             user: melody.userspecific,
             rating: option,
         });
@@ -74,7 +74,7 @@
 
     function exportChange(melody, add) {
         log(!add ? "added toExport:" : "removed Export:", {
-            melody,
+            id: melody.melody.uniqueID,
         });
         !add ? exportList.addMelo(melody) : exportList.deleteMelo(melody);
         return !add;
@@ -112,7 +112,9 @@
                         class="option"
                         on:click={() => {
                             log("exclude Melodies", {
-                                melos: $meloselected.map((p) => p[2].index),
+                                melos: $meloselected.map(
+                                    (p) => p[2].melody.uniqueID,
+                                ),
                             });
                             exclude.set(
                                 $exclude.concat(

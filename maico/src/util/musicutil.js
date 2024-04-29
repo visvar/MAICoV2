@@ -1053,12 +1053,12 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
           }
         }
       }
-      if(n?.meloID!==undefined && n?.trackID!==undefined)
-        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, meloID:n?.meloID, trackID:n?.trackID })
-      else if(n?.meloID!==undefined)
-        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, meloID:n?.meloID })
-      else if(n?.trackID!==undefined)
-        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, trackID:n?.trackID })
+      if (n?.meloID !== undefined && n?.trackID !== undefined)
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, meloID: n?.meloID, trackID: n?.trackID })
+      else if (n?.meloID !== undefined)
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, meloID: n?.meloID })
+      else if (n?.trackID !== undefined)
+        temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep, trackID: n?.trackID })
       else
         temp.push({ pitch: pitch, quantizedStartStep: startstep, quantizedEndStep: endstep })
     }
@@ -1070,7 +1070,7 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
 
 export function adjustMelodiesToFilters() {
   log("adjust with filters", { pitchmap: get(filterextents), keys: get(selectedKeys) })
-  if(get(emotionbased).value === 0){
+  if (get(emotionbased).value === 0) {
     let temp = []
     get(models).forEach(model => {
       temp = []
@@ -1079,12 +1079,12 @@ export function adjustMelodiesToFilters() {
       })
       models.addMelodiesToModel(model.name, temp)
     })
-  }else if(get(emotionbased).value === 2){
-    let temp = [[],[],[]]
-    get(polyoptions).forEach((voice,i) => {
+  } else if (get(emotionbased).value === 2) {
+    let temp = [[], [], []]
+    get(polyoptions).forEach((voice, i) => {
       voice.forEach(p => {
         temp[i].push(adaptMelodiesWithRules(p, p.totalQuantizedSteps, true))
-        if(p.basemelody === 145)
+        if (p.basemelody === 145)
           console.log(p)
       })
     })
@@ -1094,13 +1094,13 @@ export function adjustMelodiesToFilters() {
 }
 
 function isDifferent(melody, melody1, a, b) {
-  if(!melody?.isPolymix && b === a)
+  if (!melody?.isPolymix && b === a)
     return false
-  if(melody?.isPolymix && (melody.basemelody === a || melody.combinations.includes(a)))
+  if (melody?.isPolymix && (melody.basemelody === a || melody.combinations.includes(a)))
     return false
-  if(melody?.array !== undefined && melody1?.array !== undefined)
+  if (melody?.array !== undefined && melody1?.array !== undefined)
     return isDifferentArray(melody.array, melody1.array)
-  else{
+  else {
     let notes = melody.notes
     let notes1 = melody1.notes
     let total = Math.min(melody.totalQuantizedSteps, melody1.totalQuantizedSteps)
@@ -1116,11 +1116,11 @@ function isDifferent(melody, melody1, a, b) {
 }
 
 function isDifferentArray(melody, melody1) {
-  for(let i = 0; i<Math.min(melody.length, melody1.length);i++){
-    if(melody1[i].filter((n)=> {
+  for (let i = 0; i < Math.min(melody.length, melody1.length); i++) {
+    if (melody1[i].filter((n) => {
       melody[i].includes(n)
-    }).length >0)
-    return false
+    }).length > 0)
+      return false
   }
   return true
 }
@@ -1200,7 +1200,7 @@ function combineMelo(m1, m2s, idtag) {
     n.meloID = idtag[3]
     return n
   })
-  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] :[...m1.indexing]
+  let current = idtag[0] <= 1 ? [{ meloID: idtag[3], trackID: 0, meanpitch: meanpitch(m1) }] : [...m1.indexing]
   if (idtag[0] <= 1) {
     basemelody = idtag[3]
     combinations = [m2s.index]
@@ -1221,7 +1221,7 @@ function combineMelo(m1, m2s, idtag) {
   const indexing = calcIndexing(current, m2s)
   let notes2 = []
   notes.forEach(n => {
-    notes2.push({pitch:n.pitch, quantizedStartStep:n.quantizedStartStep, quantizedEndStep:n.quantizedEndStep, meloID:n.meloID, trackID:indexing.filter(t => t.meloID === n.meloID)[0].trackID})
+    notes2.push({ pitch: n.pitch, quantizedStartStep: n.quantizedStartStep, quantizedEndStep: n.quantizedEndStep, meloID: n.meloID, trackID: indexing.filter(t => t.meloID === n.meloID)[0].trackID })
   })
   return {
     notes: notes2,
@@ -1230,7 +1230,8 @@ function combineMelo(m1, m2s, idtag) {
     basemelody: basemelody,
     combinations: combinations,
     indexing: indexing,
-    isPolymix: true
+    isPolymix: true,
+    uniqueID: id_comb,
   }
 }
 
@@ -1254,21 +1255,21 @@ export function findPolyMelodies(num, melody, rule) {
   // 1 = minimum of 5 quints 
   let current = [JSON.parse(JSON.stringify(melody.melody))]
   let potential = []
-    try{
-      potential = JSON.parse(JSON.stringify(get(currentpoints))).map((m) => m[2]);
-    }catch(e){
-      try{
-        let curmin = 0
-        let steps = 200
-        while(get(currentpoints).length>curmin){
-          potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))).map((m) => m[2]));
-          curmin = steps
-          steps = Math.min(get(currentpoints).length, steps + 200)
-        }
-      }catch(e){
-        console.log(e)
+  try {
+    potential = JSON.parse(JSON.stringify(get(currentpoints))).map((m) => m[2]);
+  } catch (e) {
+    try {
+      let curmin = 0
+      let steps = 200
+      while (get(currentpoints).length > curmin) {
+        potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))).map((m) => m[2]));
+        curmin = steps
+        steps = Math.min(get(currentpoints).length, steps + 200)
       }
+    } catch (e) {
+      console.log(e)
     }
+  }
   let combined = []
   for (let r = 1; r < num; r++)
     combined.push([])
@@ -1299,21 +1300,21 @@ export function findAllPolyMelodies(num, rule) {
   // 0 = all notes have to be different
   // 1 = minimum of 5 quints 
   let points = []
-    try{
-      points = JSON.parse(JSON.stringify(get(currentpoints))).map((m) => m[2]);
-    }catch(e){
-      try{
-        let curmin = 0
-        let steps = 100
-        while(get(currentpoints).length>curmin){
-          points = points.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))).map((m) => m[2]));
-          curmin = steps
-          steps = Math.min(get(currentpoints).length, steps + 100)
-        }
-      }catch(e){
-        console.log(e)
+  try {
+    points = JSON.parse(JSON.stringify(get(currentpoints))).map((m) => m[2]);
+  } catch (e) {
+    try {
+      let curmin = 0
+      let steps = 100
+      while (get(currentpoints).length > curmin) {
+        points = points.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))).map((m) => m[2]));
+        curmin = steps
+        steps = Math.min(get(currentpoints).length, steps + 100)
       }
+    } catch (e) {
+      console.log(e)
     }
+  }
   if (points.length === 0) {
     polyoptions.set([[], [], []])
     return null
@@ -1327,18 +1328,18 @@ export function findAllPolyMelodies(num, rule) {
     let current = [JSON.parse(JSON.stringify(melody.melody))]
     //let potential = JSON.parse(JSON.stringify(get(currentpoints)))
     let potential = []
-    try{
+    try {
       potential = JSON.parse(JSON.stringify(get(currentpoints)));
-    }catch(e){
-      try{
+    } catch (e) {
+      try {
         let curmin = 0
         let steps = 100
-        while(get(currentpoints).length>curmin){
+        while (get(currentpoints).length > curmin) {
           potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))));
           curmin = steps
           steps = Math.min(get(currentpoints).length, steps + 100)
         }
-      }catch(e){
+      } catch (e) {
         console.log(e)
       }
     }
@@ -1369,11 +1370,11 @@ export function findAllPolyMelodies(num, rule) {
   return combined
 }
 
-export function calcArrayforMelo(melo){
+export function calcArrayforMelo(melo) {
   let array = new Array(melo.totalQuantizedSteps).fill([])
   melo.notes.forEach(n => {
-    for(let i = n.quantizedStartStep; i<n.quantizedEndStep;i++){
-      array[i] = [...array[i],n.pitch]
+    for (let i = n.quantizedStartStep; i < n.quantizedEndStep; i++) {
+      array[i] = [...array[i], n.pitch]
     }
   })
   return array
@@ -1385,21 +1386,21 @@ export function findAllPolyMelodiesExtern(num, rule, points, combined, i) {
   let current = [JSON.parse(JSON.stringify(melody.melody))]
   //let potential = JSON.parse(JSON.stringify(get(currentpoints)))
   let potential = []
-    try{
-      potential = JSON.parse(JSON.stringify(get(currentpoints)));
-    }catch(e){
-      try{
-        let curmin = 0
-        let steps = 100
-        while(get(currentpoints).length>curmin){
-          potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))));
-          curmin = steps
-          steps = Math.min(get(currentpoints).length, steps + 100)
-        }
-      }catch(e){
-        console.log(e)
+  try {
+    potential = JSON.parse(JSON.stringify(get(currentpoints)));
+  } catch (e) {
+    try {
+      let curmin = 0
+      let steps = 100
+      while (get(currentpoints).length > curmin) {
+        potential = potential.concat(JSON.parse(JSON.stringify(get(currentpoints).slice(curmin, steps))));
+        curmin = steps
+        steps = Math.min(get(currentpoints).length, steps + 100)
       }
+    } catch (e) {
+      console.log(e)
     }
+  }
   let diff = []
   let iter = 1
   while (iter < num) {
@@ -1445,15 +1446,15 @@ export function reshuffleQuintCircle(bn, mode) {
   return quints
 }
 
-export function isBright(p, bk){
+export function isBright(p, bk) {
   let qc = reshuffleQuintCircle(bk, "dur")
   let note = keysLookup[p % 12]
   let index = qc.findLastIndex(v => v === note) - 6
-  if(index > 0 || bk === -1) 
+  if (index > 0 || bk === -1)
     return true
-  else if(index === -6)
+  else if (index === -6)
     return -6
-  else if(index === 0)
+  else if (index === 0)
     return 0
   else
     return false
@@ -1506,7 +1507,7 @@ export function calcWeightedTimbre(melody, basenote, qc) {
     let note = keysLookup[n.pitch % 12]
     let length = n.quantizedEndStep - n.quantizedStartStep
     let index = qc.findLastIndex(v => v === note) - 6
-    if(index !== 0){
+    if (index !== 0) {
       if (index === -6)
         hardcase += length
       else
@@ -1544,7 +1545,7 @@ export function calcIntervals(melody, voices) {
       if (notesat.length > 1) {
         let int = []
         for (let j = 0; j < notesat.length - 1; j++) {
-          if(Math.abs(notesat[j].trackID - notesat[j + 1].trackID) === 1){
+          if (Math.abs(notesat[j].trackID - notesat[j + 1].trackID) === 1) {
             let interval = { value: Math.abs(notesat[j + 1].pitch - notesat[j].pitch), voices: Math.max(notesat[j].trackID, notesat[j + 1].trackID) }
             int.push(interval)
           }

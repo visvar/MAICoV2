@@ -90,7 +90,7 @@
 
     function selectOption(option) {
         log("rating changed", {
-            melody: melody.melody,
+            melody: melody.melody.uniqueID,
             user: melody.userspecific,
             rating: option,
         });
@@ -105,7 +105,7 @@
 
     function exportChange(melody, add) {
         log(!add ? "added toExport:" : "removed Export:", {
-            melody,
+            id: melody.melody.uniqueID,
         });
         !add ? exportList.addMelo(melody) : exportList.deleteMelo(melody);
         return !add;
@@ -122,41 +122,47 @@
     }
 
     function changeKeyColor() {
-        if (svg !== undefined ) {
+        if (svg !== undefined) {
             shownmelody.notes.forEach((d) => {
-                svg.selectAll("#p"+d.pitch+d.quantizedStartStep).attr(
-                "fill", d => {
-                if (!primer && d?.meloID !== undefined){
-                        return visutil.modelColor10(
-                            d?.trackID !== undefined
-                                ? d.trackID
-                                : shownmelody.indexing.filter(
-                                      (n) => n.id === d.meloID,
-                                  )[0].meloID,
-                        );
-                    /*fill === "grey"
+                svg.selectAll("#p" + d.pitch + d.quantizedStartStep).attr(
+                    "fill",
+                    (d) => {
+                        if (!primer && d?.meloID !== undefined) {
+                            return visutil.modelColor10(
+                                d?.trackID !== undefined
+                                    ? d.trackID
+                                    : shownmelody.indexing.filter(
+                                          (n) => n.id === d.meloID,
+                                      )[0].meloID,
+                            );
+                            /*fill === "grey"
                             ? fill
                             : melody.additional.outScaleNotes.outScale.has(
                                   d.pitch
                               )
                             ? "red"
-                            : "green";*/ 
-                }else if($selectedBaseKeys !== -1 && !primer){
-                    let bd = muutil.isBright(d.pitch, $selectedBaseKeys)
-                    if(bd === 0)
-                        return "lightgrey"
-                    return (bd && melody.timbre[$selectedBaseKeys] >= 0.5) || (!bd && melody.timbre[$selectedBaseKeys] <= 0.5) || (bd === -6) ? "ligthgrey":  "steelblue"
-                            
-                }else{
-                    return fill; /*shownmelody.inScale.includes(d.pitch % 12)
+                            : "green";*/
+                        } else if ($selectedBaseKeys !== -1 && !primer) {
+                            let bd = muutil.isBright(
+                                d.pitch,
+                                $selectedBaseKeys,
+                            );
+                            if (bd === 0) return "lightgrey";
+                            return (bd &&
+                                melody.timbre[$selectedBaseKeys] >= 0.5) ||
+                                (!bd &&
+                                    melody.timbre[$selectedBaseKeys] <= 0.5) ||
+                                bd === -6
+                                ? "ligthgrey"
+                                : "steelblue";
+                        } else {
+                            return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                         ? "green"
                         : "red";*/
-                }
-                }
-            );
-                
-            })
-            
+                        }
+                    },
+                );
+            });
         }
     }
 
@@ -191,7 +197,11 @@
             (60000 / ($bpm * 4)) * shownmelody.totalQuantizedSteps, // if 120 bpm but we only use that
             x(0),
             melody,
-            { melody: melody.melody, user: melody.userspecific },
+            {
+                melody: melody.melody.uniqueID,
+                melodyID: melody.uniqueID,
+                user: melody.userspecific,
+            },
         );
     }
 
@@ -400,7 +410,7 @@
                     "transform",
                     `translate(0,${-(y(extend[0]) - y(extend[0] + 1)) / 2})`,
                 )
-                .attr("id", d => "p"+d.pitch+d.quantizedStartStep)
+                .attr("id", (d) => "p" + d.pitch + d.quantizedStartStep)
                 .attr("rx", 4)
                 .attr("ry", 4)
                 .attr("stroke-width", 0.9 / h)
@@ -413,7 +423,7 @@
                 .attr("x", (d) => x(d.quantizedStartStep))
                 .attr("y", (d) => y(d.pitch) + noteheight * 0.1)
                 .attr("fill", (d) => {
-                    if (!primer && d.meloID !== undefined){
+                    if (!primer && d.meloID !== undefined) {
                         return visutil.modelColor10(
                             d?.trackID !== undefined
                                 ? d.trackID
@@ -421,19 +431,23 @@
                                       (n) => n.id === d.meloID,
                                   )[0].meloID,
                         );
-                    /*fill === "grey"
+                        /*fill === "grey"
                             ? fill
                             : melody.additional.outScaleNotes.outScale.has(
                                   d.pitch
                               )
                             ? "red"
-                            : "green";*/ 
-                    }else if($selectedBaseKeys !== -1 && !primer){
-                        let bd = muutil.isBright(d.pitch, $selectedBaseKeys)
-                        if(bd === 0)
-                        return "lightgrey"
-                    return (bd && melody.timbre[$selectedBaseKeys] >= 0.5) || (!bd && melody.timbre[$selectedBaseKeys] <= 0.5) || (bd === -6) ? "ligthgrey":  "steelblue"
-                    }else{
+                            : "green";*/
+                    } else if ($selectedBaseKeys !== -1 && !primer) {
+                        let bd = muutil.isBright(d.pitch, $selectedBaseKeys);
+                        if (bd === 0) return "lightgrey";
+                        return (bd &&
+                            melody.timbre[$selectedBaseKeys] >= 0.5) ||
+                            (!bd && melody.timbre[$selectedBaseKeys] <= 0.5) ||
+                            bd === -6
+                            ? "ligthgrey"
+                            : "steelblue";
+                    } else {
                         return fill; /*shownmelody.inScale.includes(d.pitch % 12)
                             ? "green"
                             : "red";*/
@@ -588,7 +602,7 @@
         >
             👍
         </div>
-        <br>
+        <br />
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div

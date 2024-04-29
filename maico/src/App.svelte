@@ -602,8 +602,9 @@
         </div>
         <button
           on:click={() => {
+            let exp = $exportList.map((n) => n.uniqueID);
             flutil.log("writeToMidi with bpm and store to mode", {
-              $exportList,
+              exp,
               $bpm,
               exportmode,
             });
@@ -659,7 +660,7 @@
         </button>
       {/if}
     </div>
-    
+
     <div>
       <div on:click={() => (clustering = !clustering)}>
         <h1 class="mb-4 text-3xl font-bold">Clustering</h1>
@@ -707,7 +708,6 @@
         </div>
       {/if}
     </div>
-    
 
     <div class="select">
       <!-- svelte-ignore a11y-click-events-have-key-events -->

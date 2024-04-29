@@ -35,7 +35,7 @@ export function getSelectedMelodies(x, y, points) {
     }
   })
   seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
+  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
   log("select brush results in points", { brush, selected: selectedpoints })
   return selpoints
 }
@@ -48,11 +48,11 @@ export function getTimbreKeySelectedMelodies(x, y, points, spoints, ordering, ma
   }
   let brush = get(brushselection)
   let keyindizes = [...Array(maxsame).keys()].filter((v, i) => x(v) > get(brushselection)[0][0] && x(v) < get(brushselection)[1][0]) // 4,5,6
-  let selpoints = spoints.filter((point,i) => {
-      if (y(point[3]) > get(brushselection)[0][1] && y(point[3]) < get(brushselection)[1][1] && keyindizes.indexOf(i - ordering[point[3]]) !== -1)
-        return true
-      else 
-        return false
+  let selpoints = spoints.filter((point, i) => {
+    if (y(point[3]) > get(brushselection)[0][1] && y(point[3]) < get(brushselection)[1][1] && keyindizes.indexOf(i - ordering[point[3]]) !== -1)
+      return true
+    else
+      return false
   })
   let newpoints = []
   selpoints.forEach(p => {
@@ -62,7 +62,7 @@ export function getTimbreKeySelectedMelodies(x, y, points, spoints, ordering, ma
     }
   })
   seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
+  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
   log("select brush results in timbrekey", { brush, selected: selectedpoints })
   return selpoints
 }
@@ -91,7 +91,7 @@ export function getTimbreSelectedMelodies(x, y, points, ordering) {
     }
   })
   seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, melody: m[2].melody } })
+  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
   log("select brush results in timbre", { brush, selected: selectedpoints })
   return selpoints
 }
@@ -105,8 +105,8 @@ export function getExportSelectedMelodies(x, y, points, ordering) {
   let brush = get(brushselection)
 
   let selpoints = points.filter((point, index) => {
-    if (y(Math.floor(index/10)) > get(brushselection)[0][1] && y(Math.floor(index/10)) < get(brushselection)[1][1] && x(index%10) >get(brushselection)[0][0] && x(index%10) <get(brushselection)[1][0])
-        return true
+    if (y(Math.floor(index / 10)) > get(brushselection)[0][1] && y(Math.floor(index / 10)) < get(brushselection)[1][1] && x(index % 10) > get(brushselection)[0][0] && x(index % 10) < get(brushselection)[1][0])
+      return true
     return false
   })
   let newpoints = []
@@ -117,9 +117,9 @@ export function getExportSelectedMelodies(x, y, points, ordering) {
     }
   })
   seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m?.isPrimer, melody: m.melody } })
+  const selectedpoints = selpoints.map((m) => { return { primer: m?.isPrimer, poly: m?.isPolymix, melody: m?.melody?.uniqueID } })
   log("select brush results in export", { brush, selected: selectedpoints })
-  return selpoints.map(p => [0,0,p])
+  return selpoints.map(p => [0, 0, p])
 }
 
 export function getColor(data, currentcolor, basenote) {
@@ -189,7 +189,7 @@ export function calcAllColorScales(alldata) {
   })
 
   result.push({
-    name: 'hasPrimer', scale: (data, a) => {            
+    name: 'hasPrimer', scale: (data, a) => {
       return data?.isPolymix && (data?.polyinfo?.basemelody < get(primerList).length || data?.polyinfo?.combinations.filter(v => v < get(primerList).length).length > 0) ? 'lightgrey' : '#444'
     }
   })
