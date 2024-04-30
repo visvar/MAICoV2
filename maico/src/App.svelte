@@ -602,7 +602,7 @@
         </div>
         <button
           on:click={() => {
-            let exp = $exportList.map((n) => n.uniqueID);
+            let exp = $exportList.map((n) => n.melody.uniqueID);
             flutil.log("writeToMidi with bpm and store to mode", {
               exp,
               $bpm,

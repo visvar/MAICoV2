@@ -96,6 +96,20 @@ export function updirection(melo) {
   return up > 0 ? true : up < 0 ? false : null
 }
 
+export function fixImport(obj) {
+  console.log(obj)
+  obj.forEach((voice) =>
+    voice.forEach((mel) => {
+      if (mel?.uniqueID === undefined) {
+        mel.id_comb = mel.basemelody + "_" + mel.combinations.join("_")
+        mel.uniqueID = mel.id_comb + '_' + makeid(3)
+      }
+    })
+  )
+  console.log(obj)
+  return obj
+}
+
 export function calcIntervalsFeature(melo) {
   let clean = 0
   let unclean = 0
@@ -705,7 +719,7 @@ export function isPolyphonic(mel) {
 
 import { getAxisScale } from '../util/visutil.js'
 import { allPrimer, keysLookup, oktaveLookup, quintcircle } from '../stores/globalValues.js';
-import { log } from './fileutil.js';
+import { log, makeid } from './fileutil.js';
 
 export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
   let player1 = get(player)
@@ -1193,7 +1207,6 @@ export function calcIndexing(current, m2) {
 }
 
 function combineMelo(m1, m2s, idtag) {
-  let id_comb = idtag[1] !== undefined ? idtag[0] + "_" + idtag[1] + "_" + idtag[2] : idtag[0] + "_" + idtag[2]
   let basemelody
   let combinations
   let m1notesadapt = idtag[1] !== undefined ? m1.notes : m1.notes.map((n, i) => {
@@ -1223,6 +1236,7 @@ function combineMelo(m1, m2s, idtag) {
   notes.forEach(n => {
     notes2.push({ pitch: n.pitch, quantizedStartStep: n.quantizedStartStep, quantizedEndStep: n.quantizedEndStep, meloID: n.meloID, trackID: indexing.filter(t => t.meloID === n.meloID)[0].trackID })
   })
+  let id_comb = basemelody + "_" + combinations.join("_")
   return {
     notes: notes2,
     totalQuantizedSteps: Math.max(m1.totalQuantizedSteps, m2s.melody.totalQuantizedSteps),
@@ -1231,7 +1245,7 @@ function combineMelo(m1, m2s, idtag) {
     combinations: combinations,
     indexing: indexing,
     isPolymix: true,
-    uniqueID: id_comb,
+    uniqueID: id_comb + '_' + makeid(3),
   }
 }
 

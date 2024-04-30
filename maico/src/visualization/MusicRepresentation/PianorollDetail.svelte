@@ -113,7 +113,6 @@
 
     function changeColor() {
         if (svg !== undefined) {
-            console.log(melody);
             svg.selectAll("rect").attr(
                 "fill",
                 visutil.getColor(melody, $currentcolor, $selectedBaseKeys),
@@ -189,6 +188,7 @@
             .attr("y2", y(extend[1]))
             .attr("stroke", "blue");
 
+        console.log(melody);
         muutil.playMelody(
             shownmelody.notes,
             false,

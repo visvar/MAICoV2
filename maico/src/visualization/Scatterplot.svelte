@@ -690,6 +690,9 @@
             });
           }
 
+          if (melo[0]?.uniqueID === undefined)
+            melo[0].uniqueID =
+              melo[0]?.id_comb !== undefined ? melo[0]?.id_comb : melo[0]?.id;
           information = {
             isPrimer: false,
             isPolymix: true,

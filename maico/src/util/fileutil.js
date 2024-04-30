@@ -214,8 +214,7 @@ export function getDataset() {
   //const jsonString = JSON.stringify(data, replace, 2)
   const primer = get(primerList)
   const poly = get(polyoptions)
-  const point = get(points)
-  const complete = JSON.stringify({ primerList: { primer }, modelList: { data }, poly: { poly }, currentpoints: { point } }, replace, 2)
+  const complete = JSON.stringify({ primerList: { primer }, modelList: { data }, poly: { poly } }, replace, 2)
   const blob = new Blob([complete], { type: 'application/json' })
   const name = new Date().toISOString().substring(2, 10) + "_dataset" + '.json'
   return [blob, name]

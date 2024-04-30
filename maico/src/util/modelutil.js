@@ -436,7 +436,9 @@ export async function uploadDatasetFile(event) {
             models.setAll(obj.modelList.data)
             primerList.set(obj.primerList.primer)
             if (obj?.polyoptions !== undefined) {
-                polyoptions.set(obj.polyoptions.poly)
+                let polobj = mu.fixImport(obj.polyoptions.poly)
+                console.log(polobj)
+                polyoptions.set(polobj)//obj.polyoptions.poly)
             }
             if (obj?.variables !== undefined) {
                 strangers.set(obj.variables.strangers)
