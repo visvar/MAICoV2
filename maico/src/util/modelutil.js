@@ -27,6 +27,9 @@ export async function addModel(model) {
             const files = import.meta.glob("../checkpoints/*.json");//require.context('./checkpoints', false, /\.json$/)
             let loadedModels = await importAll(files)
             models.setAll(loadedModels)
+            let selecttemp = {};
+            loadedModels.forEach((model) => (selecttemp[model.name] = true));
+            modelselected.set(selecttemp);
         } else {
 
         }
@@ -69,7 +72,7 @@ export async function requestModels(allprimer) {
     let modelsFinished = 0
     try {
         let queue = []
-        await get(models).forEach(async (model, indexm) => {
+        await get(models).filter(m => get(modelselected)[m.name]).forEach(async (model, indexm) => {
 
             const checkpointURL = model.checkpointURL
             console.log(checkpointURL)

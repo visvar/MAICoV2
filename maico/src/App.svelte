@@ -282,9 +282,11 @@
     modeltemp = value;
   });
   models.subscribe((value) => {
-    let selecttemp = {};
-    value.forEach((model) => (selecttemp[model.name] = true));
-    modelselected.set(selecttemp);
+    if ($modelselected === {}) {
+      let selecttemp = {};
+      value.forEach((model) => (selecttemp[model.name] = true));
+      modelselected.set(selecttemp);
+    }
     oldmodelselected = { ...selecttemp };
   });
 
