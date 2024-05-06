@@ -286,8 +286,8 @@
       let selecttemp = {};
       value.forEach((model) => (selecttemp[model.name] = true));
       modelselected.set(selecttemp);
+      oldmodelselected = { ...selecttemp };
     }
-    oldmodelselected = { ...selecttemp };
   });
 
   $: width = 600;
