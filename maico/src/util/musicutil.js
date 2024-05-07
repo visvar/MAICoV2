@@ -1,5 +1,6 @@
 import * as tonal from 'tonal'
-import { models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew } from '../stores/stores.js'
+import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew } from '../stores/stores.js'
+import { playing, playingHighlight } from "../stores/devStores.js"
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -798,6 +799,15 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
 
   // play melody
   if (player1 !== undefined && player1 !== null) {
+    player1.callbackObject = {
+      run: (note) => {
+        if (!playline)
+          changePlay(true)
+      },
+      stop: () => {
+        changePlay(false)
+      }
+    }
     if (notes?.length > 0) {
       const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
       seq.notes = notes
@@ -818,6 +828,103 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
       //})
     }
   }
+}
+
+export function playExportArrangement() {
+  let player1 = get(player)
+  if (player1 === null || player1 === undefined) {
+    player1 = new mm.Player(true)//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
+    player1.callbackObject = {
+      run: (note) => {
+        if (!playline)
+          changePlay(true)
+      },
+      stop: () => {
+        changePlay(false)
+      }
+    }
+    //player1.loadAllSamples(1, false).then(() => { console.log('playerLoaded'); player.set(player1) })
+    player.set(player1)
+    playing.set(false)
+  } else if (player1.isPlaying()) {
+    log("stopped listening arrangement", {})
+    player1.stop()
+    playing.set(false)
+    playingHighlight.set(null)
+    return null
+  }
+
+
+  if (player1 !== undefined && player1 !== null) {
+
+    playing.set(true)
+
+    // calculate arrangement
+
+    let list = get(exportList)
+    let notes = []
+
+    let totalstep = 0
+    list.forEach((m) => {
+      mm.sequences.clone(m.melody).notes.forEach((n) => {
+        n.quantizedStartStep += totalstep
+        n.quantizedEndStep += totalstep
+        n.index = m.index
+        n.maxStep = totalstep + m.melody.totalQuantizedSteps
+        notes.push(n)
+      })
+      totalstep += m.melody.totalQuantizedSteps
+    })
+
+    if (notes?.length > 0) {
+      const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
+      seq.notes = notes
+
+      const unseq = mm.sequences.unquantizeSequence(seq, get(bpm))
+      unseq.notes.forEach((n, i) => {
+        n.index = notes[i].index
+      })
+      log("listening arrangement", { exportList: get(exportList) })
+      player1.playClick = get(playclick)
+      player1.callbackObject = {
+        run: (note) => {
+          // color of the played melody
+          let index = unseq.notes.filter((n) => n.pitch === note.pitch && n.startTime === note.startTime && n.endTime === note.endTime)[0].index
+          playingHighlight.set(index)
+        },
+        stop: () => {
+          // everything back to previous
+          playing.set(false)
+          playingHighlight.set(null)
+          player1.callbackObject = {
+            run: (note) => {
+              if (!playline)
+                changePlay(true)
+            },
+            stop: () => {
+              changePlay(false)
+            }
+          }
+        }
+      }
+
+      player1.start(seq, get(bpm)).then(() => {
+        console.log()
+        player1.callbackObject = {
+          run: (note) => {
+            if (!playline)
+              changePlay(true)
+          },
+          stop: () => {
+            changePlay(false)
+          }
+        }
+        player1.stop()
+      })
+
+    }
+  }
+
 }
 
 testChangeEvent.on("play", (playbackline, time, xend) => {

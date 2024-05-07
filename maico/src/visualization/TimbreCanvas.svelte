@@ -71,6 +71,7 @@
   import MelodylineIntervals from "./Glyphs/MelodylineIntervals.svelte";
   import { keysLookup } from "../stores/globalValues.js";
   import { orderQuintenzirkel } from "../util/musicutil.js";
+  import { playingHighlight } from "../stores/devStores.js";
 
   export let opacity;
 
@@ -85,72 +86,92 @@
 
   let selectedSize = 30;
 
-  function formatValue(v){
-    return Math.round(v*20)/20
+  function formatValue(v) {
+    return Math.round(v * 20) / 20;
   }
 
-  $: selectorBaseKey = $weightTimbre?$selectedBaseKeys+12:$selectedBaseKeys
+  $: selectorBaseKey = $weightTimbre
+    ? $selectedBaseKeys + 12
+    : $selectedBaseKeys;
 
-  $: showpoints = $selectedBaseKeys !== -1 ?
-  $currentpoints.sort((a,b) => {
-    if(formatValue(a[2].timbre[selectorBaseKey]) > formatValue(b[2].timbre[selectorBaseKey]))
-      return 1
-    else if(formatValue(a[2].timbre[selectorBaseKey]) < formatValue(b[2].timbre[selectorBaseKey]))
-      return -1
-    else 
-      return a[2].melody.notes.length - b[2].melody.notes.length
-  }).map(p => [...p,formatValue(p[2].timbre[selectorBaseKey])] ):[]
+  $: showpoints =
+    $selectedBaseKeys !== -1
+      ? $currentpoints
+          .sort((a, b) => {
+            if (
+              formatValue(a[2].timbre[selectorBaseKey]) >
+              formatValue(b[2].timbre[selectorBaseKey])
+            )
+              return 1;
+            else if (
+              formatValue(a[2].timbre[selectorBaseKey]) <
+              formatValue(b[2].timbre[selectorBaseKey])
+            )
+              return -1;
+            else return a[2].melody.notes.length - b[2].melody.notes.length;
+          })
+          .map((p) => [...p, formatValue(p[2].timbre[selectorBaseKey])])
+      : [];
 
-  $: $selectedBaseKeys, () => {
-    showpoints = $selectedBaseKeys !== -1 ?$currentpoints.sort((a,b) => {
-    if(a[2].timbre[selectorBaseKey] > b[2].timbre[selectorBaseKey])
-      return 1
-    else if(a[2].timbre[selectorBaseKey] < b[2].timbre[selectorBaseKey])
-      return -1
-    else 
-      return a[2].melody.notes.length - b[2].melody.notes.length
-  }).map(p => [...p,formatValue(p[2].timbre[selectorBaseKey])] ):[]
-  }
+  $: $selectedBaseKeys,
+    () => {
+      showpoints =
+        $selectedBaseKeys !== -1
+          ? $currentpoints
+              .sort((a, b) => {
+                if (a[2].timbre[selectorBaseKey] > b[2].timbre[selectorBaseKey])
+                  return 1;
+                else if (
+                  a[2].timbre[selectorBaseKey] < b[2].timbre[selectorBaseKey]
+                )
+                  return -1;
+                else return a[2].melody.notes.length - b[2].melody.notes.length;
+              })
+              .map((p) => [...p, formatValue(p[2].timbre[selectorBaseKey])])
+          : [];
+    };
 
-  function calcCounter(points){
-      if(points.length === 0){
-        counter = {}
-        indexes = {}
-      }else{
-        counter = {}
-        indexes = {}
-        let i = 0
-        points.map(p => p[3]).forEach(ele => {
+  function calcCounter(points) {
+    if (points.length === 0) {
+      counter = {};
+      indexes = {};
+    } else {
+      counter = {};
+      indexes = {};
+      let i = 0;
+      points
+        .map((p) => p[3])
+        .forEach((ele) => {
           if (counter[ele]) {
-              counter[ele] += 1;
+            counter[ele] += 1;
           } else {
-              counter[ele] = 1;
+            counter[ele] = 1;
           }
           if (indexes[ele] === undefined) {
-              indexes[ele] = i;
+            indexes[ele] = i;
           }
-          i++
-        })
-      }
+          i++;
+        });
+    }
   }
 
-  $: showpoints, calcCounter(showpoints)
+  $: showpoints, calcCounter(showpoints);
 
-  $: counter = {}
+  $: counter = {};
 
-  $: indexes = {}
+  $: indexes = {};
 
-  let maxsame = 0
-  
-  $: counter, maxsame = Math.max(...Object.values(counter))
+  let maxsame = 0;
 
-  $: ordering = $weightTimbre?
-  $qcorder
-    ? orderQuintenzirkel([12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])
-    : [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]:
-    $qcorder
-    ? orderQuintenzirkel([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
-    : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  $: counter, (maxsame = Math.max(...Object.values(counter)));
+
+  $: ordering = $weightTimbre
+    ? $qcorder
+      ? orderQuintenzirkel([12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])
+      : [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    : $qcorder
+      ? orderQuintenzirkel([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+      : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   $: x = scaleLinear()
     .domain([0, 11])
@@ -170,8 +191,16 @@
   brushselection.subscribe((value) => {
     // need different selection calculation
     meloselected.set(
-      $selectedBaseKeys === -1?visutil.getTimbreSelectedMelodies(x, y, $currentpoints, ordering):
-        visutil.getTimbreKeySelectedMelodies(x2, y, $currentpoints, showpoints, indexes, maxsame),
+      $selectedBaseKeys === -1
+        ? visutil.getTimbreSelectedMelodies(x, y, $currentpoints, ordering)
+        : visutil.getTimbreKeySelectedMelodies(
+            x2,
+            y,
+            $currentpoints,
+            showpoints,
+            indexes,
+            maxsame,
+          ),
     );
   });
   currentpoints.subscribe((value) => {
@@ -243,14 +272,14 @@
       />
     {:else}
       <Axis
-      type="x"
-      scale={x2}
-      tickFormat={(t) =>
-        t===0||(t+1)%5 === 0?t+1:""}
-      tickNumber={10}
-      margin={marginaxis}
-      titleLabel={"ASC Number of Notes       Rootnote: "+keysLookup[$selectedBaseKeys%12]}
-    />
+        type="x"
+        scale={x2}
+        tickFormat={(t) => (t === 0 || (t + 1) % 5 === 0 ? t + 1 : "")}
+        tickNumber={10}
+        margin={marginaxis}
+        titleLabel={"ASC Number of Notes       Rootnote: " +
+          keysLookup[$selectedBaseKeys % 12]}
+      />
     {/if}
     <Axis
       type="y"
@@ -291,10 +320,11 @@
                   ? $glyphsize * 24
                   : $glyphsize * 15}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[2].timbre)}
-                  y={y(indexkey)}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -302,12 +332,9 @@
                   )
                     ? $glyphsize * 24
                     : $glyphsize * 15}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 1}
@@ -326,10 +353,10 @@
                 information={data[2].starglyph.data}
                 drawbounds={$outercircle}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[2].timbre)}
-                  y={y(data[2].timbre[indexkey])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -337,12 +364,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 2}
@@ -359,10 +383,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[2].timbre)}
-                  y={y(data[2].timbre[indexkey])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -370,12 +394,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 3}
@@ -393,10 +414,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[2].timbre)}
-                  y={y(data[2].timbre[indexkey])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -404,11 +425,8 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
+                  percent={1}
+                  color={"orange"}
                   round={false}
                 />
               {/if}
@@ -427,10 +445,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -438,11 +456,8 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
+                  percent={1}
+                  color={"orange"}
                   round={false}
                 />
               {/if}
@@ -460,10 +475,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -471,12 +486,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 6}
@@ -493,10 +505,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -504,11 +516,8 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
+                  percent={1}
+                  color={"orange"}
                   round={false}
                 />
               {/if}
@@ -525,10 +534,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -536,12 +545,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 8}
@@ -560,10 +566,10 @@
                 information={data[2].starglyphRhythm.data}
                 drawbounds={$outercircle}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -571,12 +577,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 9}
@@ -593,10 +596,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -604,12 +607,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {:else if $glyphselect.value === 10}
@@ -626,10 +626,10 @@
                   : $glyphsize * 30}
                 information={data[2]}
               />
-              {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+              {#if $playingHighlight === data[2]?.index}
                 <DonutForValue
-                  x={x(data[0][currentaxis[0].value])}
-                  y={y(data[1][currentaxis[1].value])}
+                  x={x(indexkey)}
+                  y={y(data[2].timbre[basekey])}
                   r={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
@@ -637,12 +637,9 @@
                   )
                     ? $glyphsize * selectedSize
                     : $glyphsize * 30}
-                  percent={data[2]?.additional?.key?.type !== undefined
-                    ? data[2]?.additional?.key?.type.includes("major")
-                      ? 1
-                      : 0.5
-                    : 0}
-                  round={true}
+                  percent={1}
+                  color={"orange"}
+                  round={false}
                 />
               {/if}
             {/if}
@@ -656,14 +653,16 @@
                     y(data[1][currentaxis[1].value]),
                     $brushselection,
                   )
-                    ? x(data[0][currentaxis[0].value]) - $glyphsize * selectedSize
+                    ? x(data[0][currentaxis[0].value]) -
+                      $glyphsize * selectedSize
                     : x(data[0][currentaxis[0].value]) - $glyphsize * 30}
                   y={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
                     $brushselection,
                   )
-                    ? y(data[1][currentaxis[1].value]) - $glyphsize * selectedSize
+                    ? y(data[1][currentaxis[1].value]) -
+                      $glyphsize * selectedSize
                     : y(data[1][currentaxis[1].value]) - $glyphsize * 30}
                 />
               {/if}
@@ -677,14 +676,16 @@
                     y(data[1][currentaxis[1].value]),
                     $brushselection,
                   )
-                    ? x(data[0][currentaxis[0].value]) + $glyphsize * selectedSize
+                    ? x(data[0][currentaxis[0].value]) +
+                      $glyphsize * selectedSize
                     : x(data[0][currentaxis[0].value]) + $glyphsize * 30}
                   y={visutil.isBrushed(
                     x(data[0][currentaxis[0].value]),
                     y(data[1][currentaxis[1].value]),
                     $brushselection,
                   )
-                    ? y(data[1][currentaxis[1].value]) - $glyphsize * selectedSize
+                    ? y(data[1][currentaxis[1].value]) -
+                      $glyphsize * selectedSize
                     : y(data[1][currentaxis[1].value]) - $glyphsize * 30}
                 />
               {/if}
@@ -797,8 +798,8 @@
             />
           {:else if $glyphselect.value === 7}
             <RhythmPie
-            x={x2(index - indexes[data[3]])}
-            y={y(data[3])}
+              x={x2(index - indexes[data[3]])}
+              y={y(data[3])}
               r={visutil.isBrushed(
                 x(data[0][currentaxis[0].value]),
                 y(data[1][currentaxis[1].value]),

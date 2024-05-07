@@ -67,6 +67,7 @@
   import ComplexityPie from "./Glyphs/ComplexityPie.svelte";
   import Emoji from "./Emojis/Emoji.svelte";
   import MelodylineIntervals from "./Glyphs/MelodylineIntervals.svelte";
+  import { playingHighlight } from "../stores/devStores.js";
 
   export let opacity;
 
@@ -182,7 +183,9 @@
             {opacity}
             x={x(data[0][currentaxis[0].value])}
             y={y(data[1][currentaxis[1].value])}
-            fill={visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
+            fill={$playingHighlight === data[2].index
+              ? "orange"
+              : visutil.getColor(data[2], $currentcolor, $selectedBaseKeys)}
             r={visutil.isBrushed(
               x(data[0][currentaxis[0].value]),
               y(data[1][currentaxis[1].value]),
@@ -191,7 +194,7 @@
               ? $glyphsize * 24
               : $glyphsize * 15}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -200,14 +203,11 @@
                 y(data[1][currentaxis[1].value]),
                 $brushselection,
               )
-                ? $glyphsize * 24
-                : $glyphsize * 15}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 1}
@@ -226,7 +226,7 @@
             information={data[2].starglyph.data}
             drawbounds={$outercircle}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -237,12 +237,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 2}
@@ -259,7 +256,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -270,12 +267,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 3}
@@ -293,7 +287,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -304,11 +298,8 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
+              percent={1}
+              color={"orange"}
               round={false}
             />
           {/if}
@@ -327,7 +318,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -338,11 +329,8 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
+              percent={1}
+              color={"orange"}
               round={false}
             />
           {/if}
@@ -360,7 +348,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -371,12 +359,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 6}
@@ -393,7 +378,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -404,11 +389,8 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
+              percent={1}
+              color={"orange"}
               round={false}
             />
           {/if}
@@ -425,7 +407,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -436,12 +418,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 8}
@@ -460,7 +439,7 @@
             information={data[2].starglyphRhythm.data}
             drawbounds={$outercircle}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -471,12 +450,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 9}
@@ -493,7 +469,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -504,12 +480,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {:else if $glyphselect.value === 10}
@@ -526,7 +499,7 @@
               : $glyphsize * 30}
             information={data[2]}
           />
-          {#if ($currentcolor === 2 || $vorcolorselect.value === 2) && $modeactive}
+          {#if $playingHighlight === data[2]?.index}
             <DonutForValue
               x={x(data[0][currentaxis[0].value])}
               y={y(data[1][currentaxis[1].value])}
@@ -537,12 +510,9 @@
               )
                 ? $glyphsize * selectedSize
                 : $glyphsize * 30}
-              percent={data[2]?.additional?.key?.type !== undefined
-                ? data[2]?.additional?.key?.type.includes("major")
-                  ? 1
-                  : 0.5
-                : 0}
-              round={true}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
         {/if}

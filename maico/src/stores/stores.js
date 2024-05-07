@@ -650,3 +650,5 @@ export const selectedClusterData = derived(
 // test
 
 export const player = writable(null)
+
+export const recorder = writable(null)

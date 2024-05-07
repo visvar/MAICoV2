@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import {
     currentcolor,
@@ -41,6 +41,7 @@
     exportmetric,
     sortedexport,
   } from "../stores/stores.js";
+  import { playingHighlight } from "../stores/devStores.js";
   import { get } from "svelte/store";
 
   import { Canvas } from "svelte-canvas";
@@ -76,7 +77,7 @@
   import MelodylineIntervals from "./Glyphs/MelodylineIntervals.svelte";
   import { keysLookup } from "../stores/globalValues.js";
   import { orderQuintenzirkel } from "../util/musicutil.js";
-    import Text from "./util/Text.svelte";
+  import Text from "./util/Text.svelte";
 
   export let opacity;
 
@@ -92,49 +93,75 @@
 
   let selectedSize = 30;
 
+  $: showpoints = $exportList.sort((a, b) => {
+    if ($exportmetric.value === 0 && a.index < b.index) return -1;
+    else if (
+      $exportmetric.value === 1 &&
+      $sortedexport.indexOf(a.index) !== -1 &&
+      $sortedexport.indexOf(b.index) === -1
+    ) {
+      return -1;
+    } else if (
+      $exportmetric.value === 1 &&
+      $sortedexport.indexOf(a.index) !== -1 &&
+      $sortedexport.indexOf(b.index) !== -1 &&
+      $sortedexport.indexOf(b.index) > $sortedexport.indexOf(a.index)
+    ) {
+      return -1;
+    } else if (
+      $exportmetric.value === 2 &&
+      a.timbre[$selectedBaseKeys] > b.timbre[$selectedBaseKeys]
+    )
+      return -1;
+    else if (
+      $exportmetric.value === 3 &&
+      a.timbre[$selectedBaseKeys] < b.timbre[$selectedBaseKeys]
+    )
+      return -1;
+    else if (
+      $exportmetric.value === 4 &&
+      a.melody.notes.length < b.melody.notes.length
+    )
+      return -1;
+    else return 1;
+  });
 
-  $: showpoints = 
-  $exportList.sort((a,b) => {
-    if($exportmetric.value === 0 && a.index < b.index)
-      return -1
-    else if($exportmetric.value === 1 && $sortedexport.indexOf(a.index)!== -1 && $sortedexport.indexOf(b.index)=== -1){
-      return -1
-    }
-    else if($exportmetric.value === 1 &&$sortedexport.indexOf(a.index) !== -1&&$sortedexport.indexOf(b.index)!==-1&& $sortedexport.indexOf(b.index) > $sortedexport.indexOf(a.index)){
-      return -1
-    }
-    else if($exportmetric.value === 2 && a.timbre[$selectedBaseKeys] > b.timbre[$selectedBaseKeys])
-      return -1
-    else if($exportmetric.value === 3 && a.timbre[$selectedBaseKeys] < b.timbre[$selectedBaseKeys])
-      return -1
-    else if($exportmetric.value === 4 && a.melody.notes.length < b.melody.notes.length)
-      return -1
-    else 
-      return 1
-  })
-
-  $: $sortedexport, () => {
-    showpoints = 
-    $exportList.sort((a,b) => {
-      if($exportmetric.value === 0)
-        return 1
-      else if($exportmetric.value === 1 && $sortedexport.indexOf(a.index)!== -1 && $sortedexport.indexOf(b.index)=== -1){
-        return -1
-      }
-      else if($exportmetric.value === 1 &&$sortedexport.indexOf(a.index) !== -1&&$sortedexport.indexOf(b.index)!==-1&& $sortedexport.indexOf(b.index) > $sortedexport.indexOf(a.index)){
-        return -1
-      }
-      else if($exportmetric.value === 2 && a.timbre[$selectedBaseKeys] > b.timbre[$selectedBaseKeys])
-        return -1
-      else if($exportmetric.value === 3 && a.timbre[$selectedBaseKeys] < b.timbre[$selectedBaseKeys])
-        return -1
-      else if($exportmetric.value === 4 && a.melody.notes.length < b.melody.notes.length)
-        return -1
-      else 
-        return 1
-    })
-    exportList.set(showpoints)
-}
+  $: $sortedexport,
+    () => {
+      showpoints = $exportList.sort((a, b) => {
+        if ($exportmetric.value === 0) return 1;
+        else if (
+          $exportmetric.value === 1 &&
+          $sortedexport.indexOf(a.index) !== -1 &&
+          $sortedexport.indexOf(b.index) === -1
+        ) {
+          return -1;
+        } else if (
+          $exportmetric.value === 1 &&
+          $sortedexport.indexOf(a.index) !== -1 &&
+          $sortedexport.indexOf(b.index) !== -1 &&
+          $sortedexport.indexOf(b.index) > $sortedexport.indexOf(a.index)
+        ) {
+          return -1;
+        } else if (
+          $exportmetric.value === 2 &&
+          a.timbre[$selectedBaseKeys] > b.timbre[$selectedBaseKeys]
+        )
+          return -1;
+        else if (
+          $exportmetric.value === 3 &&
+          a.timbre[$selectedBaseKeys] < b.timbre[$selectedBaseKeys]
+        )
+          return -1;
+        else if (
+          $exportmetric.value === 4 &&
+          a.melody.notes.length < b.melody.notes.length
+        )
+          return -1;
+        else return 1;
+      });
+      exportList.set(showpoints);
+    };
 
   /*
   $: $selectedBaseKeys, () => {
@@ -196,9 +223,9 @@
   })
   */
 
-  $: showpoints, () => exportList.set(showpoints)
+  $: showpoints, () => exportList.set(showpoints);
 
-  $: length = Math.min(10, showpoints.length)
+  $: length = Math.min(10, showpoints.length);
 
   $: x = scaleLinear()
     .domain([-1, length])
@@ -209,7 +236,7 @@
     .domain([Math.floor(showpoints.length / 10) + 1, -1])
     .range([$side - margin.bottom, margin.top])
     .nice();
-/*
+  /*
   brushselection.subscribe((value) => {
     // need different selection calculation
 
@@ -241,17 +268,19 @@
 
   brushselection.subscribe((value) => {
     // need different selection calculation
-    let selected = visutil.getExportSelectedMelodies(x, y, showpoints)
-    meloselected.set(
-      selected
-    );
-    if($exportmetric.value === 1 && selected !== null && selected?.length === 1){
-      let ind = $sortedexport.indexOf(selected[0][2].index)
-      if(ind === -1){
-        sortedexport.set([...$sortedexport, selected[0][2].index])
-      }else{
-        $sortedexport.splice(ind,1)
-        sortedexport.set([...$sortedexport, selected[0][2].index])
+    let selected = visutil.getExportSelectedMelodies(x, y, showpoints);
+    meloselected.set(selected);
+    if (
+      $exportmetric.value === 1 &&
+      selected !== null &&
+      selected?.length === 1
+    ) {
+      let ind = $sortedexport.indexOf(selected[0][2].index);
+      if (ind === -1) {
+        sortedexport.set([...$sortedexport, selected[0][2].index]);
+      } else {
+        $sortedexport.splice(ind, 1);
+        sortedexport.set([...$sortedexport, selected[0][2].index]);
       }
     }
   });
@@ -290,7 +319,6 @@
 </script>
 
 {#if true}
-  
   <Canvas
     width={$side}
     height={$side}
@@ -299,8 +327,7 @@
     <Axis
       type="x"
       scale={x}
-      tickFormat={(t) =>
-        t===0||(t+1)%5 === 0?t+1:""}
+      tickFormat={(t) => (t === 0 || (t + 1) % 5 === 0 ? t + 1 : "")}
       tickNumber={10}
       margin={marginaxis}
       titleLabel={"Left to Right then next row"}
@@ -308,180 +335,367 @@
     <Axis
       type="y"
       scale={y}
-      tickFormat={(t) => t >= 0?t*length:""}
+      tickFormat={(t) => (t >= 0 ? t * length : "")}
       tickNumber={2}
       margin={marginaxis}
     />
     {#if $exportList !== undefined}
       {#each showpoints as data, index}
-          {#if $exportmetric.value === 1 && $sortedexport.indexOf(data.index) !== -1}
-            <Text
-              x={x(index%10)}
-              y={y(Math.floor(index/10))-($glyphsize * selectedSize)-10}
-              text={$sortedexport.indexOf(data.index)}
-            />
-          {/if}
-          {#if $glyphselect.value === 0 || ($brushClusterSwitch && !$glyphinclude)}
-            <Point
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
+        {#if $exportmetric.value === 1 && $sortedexport.indexOf(data.index) !== -1}
+          <Text
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10)) - $glyphsize * selectedSize - 10}
+            text={$sortedexport.indexOf(data.index)}
+          />
+        {/if}
+        {#if $glyphselect.value === 0 || ($brushClusterSwitch && !$glyphinclude)}
+          <Point
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * 24
+              : $glyphsize * 15}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
               fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
               r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
+                x(index % 10),
+                y(Math.floor(index / 10)),
                 $brushselection,
               )
                 ? $glyphsize * 24
                 : $glyphsize * 15}
-            />
-          {:else if $glyphselect.value === 1}
-            <Flowerglyph
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data.starglyph.data}
-              drawbounds={$outercircle}
-            />
-          {:else if $glyphselect.value === 2}
-            <Chromapie
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 3}
-            <Pianoroll
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 4}
-            <HistogramInterval
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 5}
-            <Fivecirclepie
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 6}
-            <ColorGraph
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 7}
-            <RhythmPie
-            x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 8}
-            <Flowerglyph
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data.starglyphRhythm.data}
-              drawbounds={$outercircle}
-            />
-          {:else if $glyphselect.value === 9}
-            <Melodyline
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
-            />
-          {:else if $glyphselect.value === 10}
-            <MelodylineIntervals
-              {opacity}
-              x={x(index%10)}
-              y={y(Math.floor(index/10))}
-              r={visutil.isBrushed(
-                x(index%10),
-                y(Math.floor(index/10)),
-                $brushselection,
-              )
-                ? $glyphsize * selectedSize
-                : $glyphsize * 30}
-              information={data}
+              percent={1}
+              color={"orange"}
+              round={false}
             />
           {/if}
-        {/each}
-      {/if}
+        {:else if $glyphselect.value === 1}
+          <Flowerglyph
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data.starglyph.data}
+            drawbounds={$outercircle}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 2}
+          <Chromapie
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 3}
+          <Pianoroll
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 4}
+          <HistogramInterval
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 5}
+          <Fivecirclepie
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 6}
+          <ColorGraph
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 7}
+          <RhythmPie
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 8}
+          <Flowerglyph
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data.starglyphRhythm.data}
+            drawbounds={$outercircle}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 9}
+          <Melodyline
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {:else if $glyphselect.value === 10}
+          <MelodylineIntervals
+            {opacity}
+            x={x(index % 10)}
+            y={y(Math.floor(index / 10))}
+            r={visutil.isBrushed(
+              x(index % 10),
+              y(Math.floor(index / 10)),
+              $brushselection,
+            )
+              ? $glyphsize * selectedSize
+              : $glyphsize * 30}
+            information={data}
+          />
+          {#if $playingHighlight === data?.index}
+            <DonutForValue
+              x={x(index % 10)}
+              y={y(Math.floor(index / 10))}
+              fill={visutil.getColor(data, $currentcolor, $selectedBaseKeys)}
+              r={visutil.isBrushed(
+                x(index % 10),
+                y(Math.floor(index / 10)),
+                $brushselection,
+              )
+                ? $glyphsize * selectedSize
+                : $glyphsize * 30}
+              percent={1}
+              color={"orange"}
+              round={false}
+            />
+          {/if}
+        {/if}
+      {/each}
+    {/if}
   </Canvas>
 {/if}

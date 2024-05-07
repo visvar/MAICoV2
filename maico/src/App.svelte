@@ -77,11 +77,19 @@
     importedSession,
     exportmetric,
     sortedexport,
+    player,
   } from "./stores/stores.js";
 
-  import { genlength, iter } from "./stores/devStores.js";
+  import {
+    genlength,
+    iter,
+    recording,
+    playing,
+    midiinputs,
+    selectedMidiInput,
+  } from "./stores/devStores.js";
 
-  import { Progressbar } from "flowbite-svelte";
+  import { Progressbar, Fileupload, Label } from "flowbite-svelte";
 
   import Scatterplot from "./visualization/Scatterplot.svelte";
   import PianoRollofSelection from "./visualization/PianoRollofSelection.svelte";
@@ -96,6 +104,7 @@
   import * as mutil from "./util/musicutil.js";
   import * as gu from "./util/glyphutil.js";
   import * as visutil from "./util/visutil.js";
+  import * as midiutil from "./util/midiutil.js";
   import * as d3 from "d3";
 
   import { allPrimer, keysLookup } from "./stores/globalValues.js";
@@ -381,6 +390,7 @@
 
   onMount(async () => {
     mu.addModel();
+    midiutil.initRecorder();
   });
 
   let progressval = 100;
@@ -452,12 +462,95 @@
           </div>
         {/if}
         <h5 class="mb-4 text-l font-bold">Import Midi as Primer</h5>
+
         <input
           class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
           type="file"
           accept=".mid"
           on:change={(e) => (lastid = flutil.importMidi(e, primerList, lastid))}
         />
+        <!--
+          <label class="icon">
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 12V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4m5-13v4a1 1 0 0 1-1 1H5m0 6h9m0 0-2-2m2 2-2 2"
+              />
+            </svg>
+            <input
+              type="file"
+              accept=".mid"
+              class="hidden"
+              on:change={(e) =>
+                (lastid = flutil.importMidi(e, primerList, lastid))}
+            />
+          </label>
+          -->
+        <label for="selectmidi">select midiinput</label>
+        <Select
+          class="select"
+          id="selectmidi"
+          items={$midiinputs}
+          bind:value={$selectedMidiInput}
+          clearable={false}
+        />
+        <h5>Record Midiinput</h5>
+        <div
+          class="icon"
+          on:click={() => {
+            lastid = midiutil.startRecording($recording, lastid);
+          }}
+        >
+          {#if !$recording}
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9v3a5.006 5.006 0 0 1-5 5h-4a5.006 5.006 0 0 1-5-5V9m7 9v3m-3 0h6M11 3h2a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"
+              />
+            </svg>
+          {:else}
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="red"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5 8a1 1 0 0 1 1 1v3a4.006 4.006 0 0 0 4 4h4a4.006 4.006 0 0 0 4-4V9a1 1 0 1 1 2 0v3.001A6.006 6.006 0 0 1 14.001 18H13v2h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2H9.999A6.006 6.006 0 0 1 4 12.001V9a1 1 0 0 1 1-1Z"
+                clip-rule="evenodd"
+              />
+              <path
+                d="M7 6a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V6Z"
+              />
+            </svg>
+          {/if}
+        </div>
         <button
           on:click={() => {
             flutil.log("primer clear");
@@ -592,6 +685,45 @@
         </button>
 
         <div>-</div>
+        <h5>Play arrangement:</h5>
+        <div
+          class="icon"
+          on:click={() => {
+            mutil.playExportArrangement();
+          }}
+        >
+          {#if !$playing}
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          {:else}
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M7 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7Z"
+              />
+            </svg>
+          {/if}
+        </div>
         <div class="select">
           <label for="selmidi">Format to export as MIDI</label>
           <Select
@@ -1486,6 +1618,27 @@
     display: flex;
   }
 
+  .icon {
+    display: flex;
+    cursor: pointer;
+    text-align: center;
+    place-items: center;
+    padding: 5px;
+    margin: 5px 5%;
+    width: 20%;
+  }
+
+  .hidden {
+    opacity: 0;
+    position: "absolute";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 45%;
+    height: 100%;
+  }
+
   button {
     display: block;
     cursor: pointer;
@@ -1515,6 +1668,12 @@
     width: 300px;
     float: left;
     overflow-y: scroll;
+    position: relative;
+  }
+
+  .containericon {
+    width: 380px;
+    float: center;
     position: relative;
   }
   .container2 {
