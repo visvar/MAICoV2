@@ -87,6 +87,8 @@
     playing,
     midiinputs,
     selectedMidiInput,
+    recordedNotes,
+    playrecord,
   } from "./stores/devStores.js";
 
   import { Progressbar, Fileupload, Label } from "flowbite-svelte";
@@ -137,6 +139,13 @@
   onDestroy(() => {
     console.log("the component is being destroyed");
     uploadLogDataFiles();
+    if (midiAccess) {
+      midiAccess.onstatechange = null;
+      const inputs = midiAccess.inputs.values();
+      for (let input of inputs) {
+        input.onmidimessage = null;
+      }
+    }
   });
 
   actionlog.subscribe(() => {
@@ -278,6 +287,7 @@
   let filter = false;
   let layout = false;
   let modeldesc = false;
+  let recordsection = false;
 
   let lastid = 0;
 
@@ -394,6 +404,97 @@
   });
 
   let progressval = 100;
+  let midiAccess = null;
+  let isWaitingForMIDIMessage = false;
+  let storedMIDIMessage = null;
+  let allOutputs = [];
+  let selectedOutput = { label: "none", value: 0 };
+
+  async function initializeMIDI() {
+    try {
+      midiAccess = await navigator.requestMIDIAccess();
+      midiAccess.onstatechange = handleMIDIStateChange;
+      console.log("MIDI initialized", midiAccess);
+    } catch (error) {
+      console.error("Failed to initialize MIDI:", error);
+    }
+  }
+
+  function handleMIDIStateChange(event) {
+    const { port, type } = event;
+    midiutil.initRecorder();
+    const outputs = midiAccess.outputs.values();
+    let temp = [];
+    for (let output of outputs) {
+      if (output && output !== null) temp.push(output);
+    }
+    selectedOutput =
+      temp.length > 0
+        ? { label: temp[0].name, value: 0 }
+        : { label: "none", value: 0 };
+    allOutputs = temp;
+    if (type === "connected") {
+      console.log(`MIDI controller connected: ${port.name}`);
+      // Call your function when a MIDI controller is connected
+      // e.g., yourFunction(port);
+    } else if (type === "disconnected") {
+      console.log(`MIDI controller disconnected: ${port.name}`);
+      // Call your function when a MIDI controller is disconnected
+      // e.g., yourFunction(port);
+    }
+  }
+
+  function waitForMIDIMessage() {
+    isWaitingForMIDIMessage = true;
+    console.log("Press a MIDI controller button to store the next message...");
+  }
+
+  function handleMIDIMessage(event) {
+    if (isWaitingForMIDIMessage) {
+      storedMIDIMessage = { e: event.data, id: event.srcElement.id };
+      console.log("MIDI message stored:", storedMIDIMessage);
+      isWaitingForMIDIMessage = false;
+    } else {
+      const receivedMIDIMessage = event.data;
+      if (
+        storedMIDIMessage &&
+        JSON.stringify(receivedMIDIMessage) ===
+          JSON.stringify(storedMIDIMessage.e)
+      ) {
+        console.log(
+          "Stored MIDI message received:",
+          receivedMIDIMessage,
+          lastid,
+        );
+        lastid = midiutil.startRecording($recording, lastid);
+        // Call your function when the stored MIDI message is received
+        // e.g., yourFunction(receivedMIDIMessage);
+      }
+    }
+  }
+
+  $: {
+    if (midiAccess !== null) {
+      const inputs = midiAccess.inputs.values();
+      for (let input of inputs) {
+        input.onmidimessage = (e) => {
+          if (storedMIDIMessage === null || input.id === storedMIDIMessage.id)
+            handleMIDIMessage(e);
+        };
+      }
+      const outputs = midiAccess.outputs.values();
+      let temp = [];
+      for (let output of outputs) {
+        console.log(output);
+        if (output && output !== null) temp.push(output);
+      }
+      allOutputs = temp;
+    }
+  }
+
+  $: if (midiAccess === null) {
+    initializeMIDI();
+  }
 
   $: $progress,
     (v) => {
@@ -497,60 +598,91 @@
             />
           </label>
           -->
-        <label for="selectmidi">select midiinput</label>
-        <Select
-          class="select"
-          id="selectmidi"
-          items={$midiinputs}
-          bind:value={$selectedMidiInput}
-          clearable={false}
-        />
-        <h5>Record Midiinput</h5>
-        <div
-          class="icon"
-          on:click={() => {
-            lastid = midiutil.startRecording($recording, lastid);
-          }}
-        >
-          {#if !$recording}
-            <svg
-              class="w-6 h-6 text-gray-800 dark:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9v3a5.006 5.006 0 0 1-5 5h-4a5.006 5.006 0 0 1-5-5V9m7 9v3m-3 0h6M11 3h2a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"
-              />
-            </svg>
-          {:else}
-            <svg
-              class="w-6 h-6 text-gray-800 dark:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="red"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5 8a1 1 0 0 1 1 1v3a4.006 4.006 0 0 0 4 4h4a4.006 4.006 0 0 0 4-4V9a1 1 0 1 1 2 0v3.001A6.006 6.006 0 0 1 14.001 18H13v2h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2H9.999A6.006 6.006 0 0 1 4 12.001V9a1 1 0 0 1 1-1Z"
-                clip-rule="evenodd"
-              />
-              <path
-                d="M7 6a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V6Z"
-              />
-            </svg>
-          {/if}
+        <div on:click={() => (recordsection = !recordsection)}>
+          <h1 class="mb-4 text-3xl font-bold">Recording</h1>
         </div>
+        {#if recordsection}
+          <div class="select">
+            <label for="selectmidi">select midiinput</label>
+            <Select
+              class="select"
+              id="selectmidi"
+              items={$midiinputs.map((m, i) => {
+                return { label: m.name, value: i };
+              })}
+              bind:value={$selectedMidiInput}
+              clearable={false}
+            />
+          </div>
+          <button
+            on:click={() => {
+              storedMIDIMessage = null;
+              waitForMIDIMessage();
+            }}
+            >Bind recording - {storedMIDIMessage === null
+              ? "none"
+              : "bound"}</button
+          >
+          <label>
+            <input
+              type="checkbox"
+              bind:checked={$playrecord}
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            play sound during recording
+          </label>
+
+          <h5>Record Midiinput</h5>
+          <div
+            class="icon"
+            on:click={() => {
+              lastid = midiutil.startRecording($recording, lastid);
+            }}
+          >
+            {#if !$recording}
+              <svg
+                class="w-6 h-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9v3a5.006 5.006 0 0 1-5 5h-4a5.006 5.006 0 0 1-5-5V9m7 9v3m-3 0h6M11 3h2a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-2a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Z"
+                />
+              </svg>
+            {:else}
+              <svg
+                class="w-6 h-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="red"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5 8a1 1 0 0 1 1 1v3a4.006 4.006 0 0 0 4 4h4a4.006 4.006 0 0 0 4-4V9a1 1 0 1 1 2 0v3.001A6.006 6.006 0 0 1 14.001 18H13v2h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2H9.999A6.006 6.006 0 0 1 4 12.001V9a1 1 0 0 1 1-1Z"
+                  clip-rule="evenodd"
+                />
+                <path
+                  d="M7 6a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4V6Z"
+                />
+              </svg>
+            {/if}
+            <p>
+              {$recordedNotes.length}
+            </p>
+          </div>
+          <div>--</div>
+        {/if}
         <button
           on:click={() => {
             flutil.log("primer clear");
@@ -572,6 +704,7 @@
             class="select"
             id="selmidi"
             items={$primerList.map((p, i) => {
+              console.log(p, i);
               return { label: p.id, value: i };
             })}
             bind:value={$primerTodelete}
@@ -724,6 +857,27 @@
             </svg>
           {/if}
         </div>
+        <div class="select">
+          <label for="selmidi">Format to export as MIDI</label>
+          <Select
+            class="select"
+            id="selmidi"
+            items={allOutputs.map((o, i) => {
+              return { label: o.name, value: i };
+            })}
+            bind:value={selectedOutput}
+            clearable={false}
+          />
+        </div>
+        <button
+          on:click={() => {
+            if (selectedOutput.label !== "none")
+              midiutil.playMidiOut(allOutputs[selectedOutput.value]);
+          }}
+        >
+          Play as MidiOut
+        </button>
+        <div>--</div>
         <div class="select">
           <label for="selmidi">Format to export as MIDI</label>
           <Select
@@ -1322,6 +1476,8 @@
               { label: "Timbre L->D", value: 2 },
               { label: "Timbre D->L", value: 3 },
               { label: "NumberofNotes asc", value: 4 },
+              { label: "Mean pitch rising", value: 5 },
+              { label: "Mean pitch desc", value: 6 },
             ]}
             bind:value={$exportmetric}
             clearable={false}

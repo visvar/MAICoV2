@@ -91,9 +91,9 @@
     currentaxis = v;
   });
 
-  let selectedSize = 30;
-
-  $: showpoints = $exportList.sort((a, b) => {
+  function sortfunction(a, b) {
+    let meana = muutil.meanpitch(a);
+    let meanb = muutil.meanpitch(b);
     if ($exportmetric.value === 0 && a.index < b.index) return -1;
     else if (
       $exportmetric.value === 1 &&
@@ -123,43 +123,18 @@
       a.melody.notes.length < b.melody.notes.length
     )
       return -1;
+    else if ($exportmetric.value === 5 && meana < meanb) return -1;
+    else if ($exportmetric.value === 6 && meanb < meana) return -1;
     else return 1;
-  });
+  }
+
+  let selectedSize = 30;
+
+  $: showpoints = $exportList.sort((a, b) => sortfunction(a, b));
 
   $: $sortedexport,
     () => {
-      showpoints = $exportList.sort((a, b) => {
-        if ($exportmetric.value === 0) return 1;
-        else if (
-          $exportmetric.value === 1 &&
-          $sortedexport.indexOf(a.index) !== -1 &&
-          $sortedexport.indexOf(b.index) === -1
-        ) {
-          return -1;
-        } else if (
-          $exportmetric.value === 1 &&
-          $sortedexport.indexOf(a.index) !== -1 &&
-          $sortedexport.indexOf(b.index) !== -1 &&
-          $sortedexport.indexOf(b.index) > $sortedexport.indexOf(a.index)
-        ) {
-          return -1;
-        } else if (
-          $exportmetric.value === 2 &&
-          a.timbre[$selectedBaseKeys] > b.timbre[$selectedBaseKeys]
-        )
-          return -1;
-        else if (
-          $exportmetric.value === 3 &&
-          a.timbre[$selectedBaseKeys] < b.timbre[$selectedBaseKeys]
-        )
-          return -1;
-        else if (
-          $exportmetric.value === 4 &&
-          a.melody.notes.length < b.melody.notes.length
-        )
-          return -1;
-        else return 1;
-      });
+      showpoints = $exportList.sort((a, b) => sortfunction(a, b));
       exportList.set(showpoints);
     };
 

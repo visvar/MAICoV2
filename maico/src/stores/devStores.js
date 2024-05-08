@@ -13,3 +13,9 @@ export const midiinputs = writable([])
 export const selectedMidiInput = writable({ label: 'none', value: 0 })
 
 export const playingHighlight = writable(null)
+
+export const recordedNotes = writable([])
+
+export const playrecord = writable(true)
+
+export const midiplayer = writable(null)
