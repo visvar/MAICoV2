@@ -78,6 +78,7 @@
     exportmetric,
     sortedexport,
     player,
+    brushOrdering,
   } from "./stores/stores.js";
 
   import {
@@ -1513,6 +1514,14 @@
             }}
           >
             Reset sorting in Export
+          </button>
+          <button
+            class="warning"
+            on:click={() => {
+              brushOrdering.set(!$brushOrdering);
+            }}
+          >
+            {$brushOrdering ? "Ordering" : "Order disabled"}
           </button>
         {/if}
       {/if}

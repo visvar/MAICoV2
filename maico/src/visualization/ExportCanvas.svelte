@@ -40,6 +40,7 @@
     exportList,
     exportmetric,
     sortedexport,
+    brushOrdering,
   } from "../stores/stores.js";
   import { playingHighlight } from "../stores/devStores.js";
   import { get } from "svelte/store";
@@ -92,8 +93,6 @@
   });
 
   function sortfunction(a, b) {
-    let meana = muutil.meanpitch(a);
-    let meanb = muutil.meanpitch(b);
     if ($exportmetric.value === 0 && a.index < b.index) return -1;
     else if (
       $exportmetric.value === 1 &&
@@ -123,8 +122,8 @@
       a.melody.notes.length < b.melody.notes.length
     )
       return -1;
-    else if ($exportmetric.value === 5 && meana < meanb) return -1;
-    else if ($exportmetric.value === 6 && meanb < meana) return -1;
+    else if ($exportmetric.value === 5 && a.meanpitch < b.meanpitch) return -1;
+    else if ($exportmetric.value === 6 && a.meanpitch > b.meanpitch) return -1;
     else return 1;
   }
 
@@ -132,11 +131,15 @@
 
   $: showpoints = $exportList.sort((a, b) => sortfunction(a, b));
 
-  $: $sortedexport,
-    () => {
-      showpoints = $exportList.sort((a, b) => sortfunction(a, b));
-      exportList.set(showpoints);
-    };
+  sortedexport.subscribe(() => {
+    showpoints = $exportList.sort((a, b) => sortfunction(a, b));
+    exportList.set(showpoints);
+  });
+
+  exportmetric.subscribe(() => {
+    showpoints = $exportList.sort((a, b) => sortfunction(a, b));
+    exportList.set(showpoints);
+  });
 
   /*
   $: $selectedBaseKeys, () => {
@@ -248,7 +251,8 @@
     if (
       $exportmetric.value === 1 &&
       selected !== null &&
-      selected?.length === 1
+      selected?.length === 1 &&
+      $brushOrdering
     ) {
       let ind = $sortedexport.indexOf(selected[0][2].index);
       if (ind === -1) {

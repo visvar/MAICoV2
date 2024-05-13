@@ -350,6 +350,7 @@
               melody: melo[0],
               temperature: melo[1].temperature,
               timbre: muutil.calcAllTimbre(melo[0]),
+              meanpitch: muutil.meanpitch(melo[0]),
               mvaesim: melo[0].mvaesim,
               primerindex:
                 melo[0]?.primer?.id !== undefined ? melo[0]?.primer?.id : 0,
@@ -464,6 +465,7 @@
               melody: melo[0],
               temperature: undefined,
               timbre: muutil.calcAllTimbre(melo[0]),
+              meanpitch: muutil.meanpitch(melo[0]),
               mvaesim: undefined,
               primerindex: undefined,
               model: { name: "primer" },
@@ -703,6 +705,7 @@
             melody: melo[0],
             temperature: undefined,
             timbre: muutil.calcAllTimbre(melo[0]),
+            meanpitch: muutil.meanpitch(melo[0]),
             mvaesim: undefined,
             primerindex: undefined,
             model: { name: "poly" },

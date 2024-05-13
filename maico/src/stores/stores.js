@@ -163,6 +163,7 @@ export const primerSelected = derived([primerList, primerTodelete], v => {
 export const selectedBaseKeys = writable(-1)
 export const sortedexport = writable([])
 
+export const brushOrdering = writable(true)
 
 
 
