@@ -473,6 +473,24 @@
     }
   }
 
+  function reconnectMIDI() {
+    midiutil.initRecorder();
+    const inputs = midiAccess.inputs.values();
+    for (let input of inputs) {
+      input.onmidimessage = (e) => {
+        if (storedMIDIMessage === null || input.id === storedMIDIMessage.id)
+          handleMIDIMessage(e);
+      };
+    }
+    midiinputs.set(inputs);
+    const outputs = midiAccess.outputs.values();
+    let temp = [];
+    for (let output of outputs) {
+      if (output && output !== null) temp.push(output);
+    }
+    allOutputs = temp;
+  }
+
   $: {
     if (midiAccess !== null) {
       const inputs = midiAccess.inputs.values();
@@ -485,7 +503,6 @@
       const outputs = midiAccess.outputs.values();
       let temp = [];
       for (let output of outputs) {
-        console.log(output);
         if (output && output !== null) temp.push(output);
       }
       allOutputs = temp;
@@ -598,6 +615,11 @@
             />
           </label>
           -->
+        <button
+          on:click={() => {
+            reconnectMIDI();
+          }}>Reload Midi I/O</button
+        >
         <div on:click={() => (recordsection = !recordsection)}>
           <h1 class="mb-4 text-3xl font-bold">Recording</h1>
         </div>
@@ -872,7 +894,7 @@
         <button
           on:click={() => {
             if (selectedOutput.label !== "none")
-              midiutil.playMidiOut(allOutputs[selectedOutput.value]);
+              midiutil.playMidiOut([allOutputs[selectedOutput.value]]);
           }}
         >
           Play as MidiOut

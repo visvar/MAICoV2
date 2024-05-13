@@ -1,5 +1,5 @@
 import { recorder, bpm, primerList, player, exportList } from '../stores/stores.js'
-import { recording, midiinputs, selectedMidiInput, recordedNotes, playrecord, midiplayer } from "../stores/devStores.js";
+import { recording, midiinputs, selectedMidiInput, recordedNotes, playrecord, midiplayer, playingHighlight } from "../stores/devStores.js";
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import { log, makeid } from './fileutil.js';
@@ -103,22 +103,6 @@ function transformNotesToStart(result) {
 
 export function playMidiOut(output) {
     let player = get(midiplayer)
-    if (player === null || player === undefined) {
-        player = new mm.MIDIPlayer({
-            run: (note) => {
-                console.log(note)
-            },
-            stop: null
-        });
-        midiplayer.set(player)
-    }
-
-    if (player.isPlaying()) {
-        player.stop()
-        return null
-    }
-
-    player.outputs = output;
 
     let list = get(exportList)
     let notes = []
@@ -135,10 +119,44 @@ export function playMidiOut(output) {
         totalstep += m.melody.totalQuantizedSteps
     })
 
+    const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
+    seq.notes = notes
+
+    const unseq = mm.sequences.unquantizeSequence(seq, get(bpm))
+    unseq.notes.forEach((n, i) => {
+        n.index = notes[i].index
+    })
+
+    if (player === null || player === undefined) {
+        player = new mm.MIDIPlayer({
+            run: (note) => {
+                console.log(note)
+                //player.playNote(0, note)
+                let index = unseq.notes.filter((n) => n.pitch === note.pitch && n.startTime === note.startTime && n.endTime === note.endTime)[0].index
+                playingHighlight.set(index)
+            },
+            stop: () => {
+                playingHighlight.set(null)
+            }
+        });
+        midiplayer.set(player)
+    }
+
+    if (player.isPlaying()) {
+        playingHighlight.set(null)
+        player.stop()
+        return null
+    }
+
+    player.outputs = output;
+    console.log(output, player.outputs)
+
+
+
 
     if (notes?.length > 0) {
-        const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
-        seq.notes = notes
+
+
         player.start(seq)
     }
 }
