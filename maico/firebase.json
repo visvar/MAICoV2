@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "maicov2",
     "public": "dist",
     "ignore": [
       "firebase.json",
