@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "deploy": "npx gh-pages -d dist",
     "download": "python src/Scripts/download.py",
-    "firedeploy": "firebase deploy --only hosting:maicov2"
+    "firedeploy": "firebase deploy --only hosting:maicov2",
+    "midideploy": "firebase deploy --only hosting:maicomidi"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
