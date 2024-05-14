@@ -120,6 +120,8 @@
   import { onMount, onDestroy } from "svelte";
   import { sineOut } from "svelte/easing";
 
+  import { WebMidi } from "webmidi";
+
   import db from "./firebase.js";
   import {
     getAuth,
@@ -450,7 +452,50 @@
     console.log("Press a MIDI controller button to store the next message...");
   }
 
+  let running = false;
+  // this is for testing colors on the launchpad
+  // only works in chrome due to detecting LP
+  // colors range from 0 - 127 i guess but can be a bit tricky as they have different brightness
+  function sendMessage(e) {
+    if (running) return null;
+    running = true;
+    let output = allOutputs[1];
+    let time = new Date().getMilliseconds();
+    WebMidi.enable().then(() => {
+      let ou = WebMidi.getOutputByName(output.name);
+
+      let colors = [51, 45, 78, 77, 12, 61, 60, 120];
+      // channel 1 = dauerhaft, 2 = flashing, 3 breathing,
+      for (let i = 0; i < 64; i++) {
+        for (let v = 36; v < 100; v++) {
+          try {
+            setTimeout(() => {
+              ou.channels[1].playNote(v, {
+                rawAttack: 2 * i,
+                duration: 200,
+              });
+            }, i * 800);
+            setTimeout(
+              () => {
+                ou.channels[1].playNote(v, {
+                  rawAttack: 2 * i + 1,
+                  duration: 200,
+                });
+                if (i === 99) running = true;
+              },
+              i * 800 + 400,
+            );
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+    });
+  }
+
   function handleMIDIMessage(event) {
+    //sendMessage(event);
+    console.log(event);
     if (isWaitingForMIDIMessage) {
       storedMIDIMessage = { e: event.data, id: event.srcElement.id };
       console.log("MIDI message stored:", storedMIDIMessage);
@@ -475,21 +520,25 @@
   }
 
   function reconnectMIDI() {
-    midiutil.initRecorder();
-    const inputs = midiAccess.inputs.values();
-    for (let input of inputs) {
-      input.onmidimessage = (e) => {
-        if (storedMIDIMessage === null || input.id === storedMIDIMessage.id)
-          handleMIDIMessage(e);
-      };
+    if (midiAccess === null) {
+      initializeMIDI();
+    } else {
+      midiutil.initRecorder();
+      const inputs = midiAccess.inputs.values();
+      for (let input of inputs) {
+        input.onmidimessage = (e) => {
+          if (storedMIDIMessage === null || input.id === storedMIDIMessage.id)
+            handleMIDIMessage(e);
+        };
+      }
+      midiinputs.set(inputs);
+      const outputs = midiAccess.outputs.values();
+      let temp = [];
+      for (let output of outputs) {
+        if (output && output !== null) temp.push(output);
+      }
+      allOutputs = temp;
     }
-    midiinputs.set(inputs);
-    const outputs = midiAccess.outputs.values();
-    let temp = [];
-    for (let output of outputs) {
-      if (output && output !== null) temp.push(output);
-    }
-    allOutputs = temp;
   }
 
   $: {
@@ -881,7 +930,7 @@
           {/if}
         </div>
         <div class="select">
-          <label for="selmidi">Format to export as MIDI</label>
+          <label for="selmidi">MIDI-Out Stream</label>
           <Select
             class="select"
             id="selmidi"

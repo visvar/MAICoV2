@@ -40,6 +40,7 @@
     "svelte-select": "^5.6.0",
     "sveltefire": "^0.4.5",
     "tonal": "^4.14.1",
+    "webmidi": "^3.1.9",
     "yootils": "^0.3.1"
   }
 }
