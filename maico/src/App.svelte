@@ -459,11 +459,9 @@
   function sendMessage(e) {
     if (running) return null;
     running = true;
-    let output = allOutputs[1];
-    let time = new Date().getMilliseconds();
     WebMidi.enable().then(() => {
-      let ou = WebMidi.getOutputByName(output.name);
-
+      let ou = WebMidi.getOutputByName("MIDIOUT2 (LPMiniMK3 MIDI)");
+      if (ou.state !== "connected") return null;
       let colors = [51, 45, 78, 77, 12, 61, 60, 120];
       // channel 1 = dauerhaft, 2 = flashing, 3 breathing,
       for (let i = 0; i < 64; i++) {
@@ -481,7 +479,7 @@
                   rawAttack: 2 * i + 1,
                   duration: 200,
                 });
-                if (i === 99) running = true;
+                if (i === 99) running = false;
               },
               i * 800 + 400,
             );
@@ -494,7 +492,7 @@
   }
 
   function handleMIDIMessage(event) {
-    //sendMessage(event);
+    sendMessage(event);
     console.log(event);
     if (isWaitingForMIDIMessage) {
       storedMIDIMessage = { e: event.data, id: event.srcElement.id };
