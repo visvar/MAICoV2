@@ -461,7 +461,7 @@
     running = true;
     WebMidi.enable().then(() => {
       let ou = WebMidi.getOutputByName("MIDIOUT2 (LPMiniMK3 MIDI)");
-      if (ou.state !== "connected") return null;
+      if (ou === undefined || ou.state !== "connected") return null;
       let colors = [51, 45, 78, 77, 12, 61, 60, 120];
       // channel 1 = dauerhaft, 2 = flashing, 3 breathing,
       for (let i = 0; i < 64; i++) {
