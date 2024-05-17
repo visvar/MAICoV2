@@ -68,6 +68,7 @@
   import Emoji from "./Emojis/Emoji.svelte";
   import MelodylineIntervals from "./Glyphs/MelodylineIntervals.svelte";
   import { playingHighlight } from "../stores/devStores.js";
+  import { melodyColors } from "../util/midiutil.js";
 
   export let opacity;
 
@@ -117,6 +118,10 @@
   });
   currentpoints.subscribe((value) => {
     meloselected.set(visutil.getSelectedMelodies(x, y, value));
+  });
+
+  meloselected.subscribe((ms) => {
+    melodyColors(ms === null, ms);
   });
 
   seen.subscribe((v) => {

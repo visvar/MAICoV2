@@ -741,8 +741,9 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
     log("stopped listening", {})
     player1.stop()
     changePlay(false)
-    playbackline.transition().attr("stroke", null).attr("x1", reset)
-      .attr("x2", reset)
+    if (playline !== undefined)
+      playbackline.transition().attr("stroke", null).attr("x1", reset)
+        .attr("x2", reset)
     return null
   }
 
@@ -799,15 +800,16 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
 
   // play melody
   if (player1 !== undefined && player1 !== null) {
-    player1.callbackObject = {
-      run: (note) => {
-        if (!playline)
-          changePlay(true)
-      },
-      stop: () => {
-        changePlay(false)
+    if (playline !== undefined)
+      player1.callbackObject = {
+        run: (note) => {
+          if (!playline)
+            changePlay(true)
+        },
+        stop: () => {
+          changePlay(false)
+        }
       }
-    }
     if (notes?.length > 0) {
       const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
       seq.notes = notes
@@ -817,8 +819,11 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
 
       player1.playClick = get(playclick)
       //player1.loadSamples(seq).then(() => {
-      player1.start(seq, get(bpm)).then(() => playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
-        ?.attr("x2", reset))
+      player1.start(seq, get(bpm)).then(() => {
+        if (playline !== undefined)
+          playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
+            ?.attr("x2", reset)
+      })
 
       if (playbackline !== undefined) {
         pbl = playbackline
@@ -928,8 +933,8 @@ export function playExportArrangement() {
 }
 
 testChangeEvent.on("play", (playbackline, time, xend) => {
-  if (playline)
-    playbackline.transition().duration(time).ease(d3.easeLinear).attr("x1", xend)
+  if (playline !== undefined)
+    playbackline?.transition().duration(time).ease(d3.easeLinear).attr("x1", xend)
       .attr("x2", xend)
 })
 

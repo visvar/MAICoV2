@@ -1,3 +1,14 @@
+import { get } from 'svelte/store'
+import * as midiutil from '../util/midiutil'
+import * as mutil from "../util/musicutil.js";
+import * as mu from "../util/modelutil.js";
+import * as gu from "../util/glyphutil.js";
+import * as visutil from "../util/visutil.js";
+import { genlength, iter, recording, selectedMeloColors } from './devStores'
+import { modelselected, primerList, currentpoints, mvaesim, opacityVoronoi, pointcolorselect, vorcolorselect, glyphselect, glyphsize, emotionbased, numpoly, axisselect, grid, hilbert, meloselected } from './stores'
+import * as d3 from 'd3';
+import { controlColor } from '../util/midiutil';
+
 // maybe as array when use multiple, maybe as store
 export const allPrimer = [{
   notes: [
@@ -348,3 +359,233 @@ export const instrumentsSoundfont = [
   "applause",
   "gunshot",
 ]
+const glyphoptions = [
+  { label: "Points", value: 0 },
+  { label: "Pianoroll", value: 3 },
+  { label: "Melodyline", value: 9 },
+  { label: "MelodylineInt", value: 10 },
+  { label: "Chromapie", value: 2 },
+  { label: "IntervalHisto", value: 4 },
+  { label: "Flowerglyph", value: 1 },
+  //{ label: "Chromapie5th", value: 5 },
+  { label: "RhythmPie", value: 7 },
+  { label: "FlowerComplexity", value: 8 },
+  { label: "ChromaRoll", value: 6 },
+];
+
+const vorcoloroptions = [
+  { label: "Temperature", value: 0 },
+  { label: "Cluster", value: 1 },
+  { label: "Model", value: 3 },
+  { label: "Primer", value: 4 },
+  { label: "Rhythm", value: 5 },
+  { label: "Seen", value: 6 },
+  { label: "Rate", value: 7 },
+  { label: "Timbre", value: 8 },
+  { label: "hasPrimer", value: 9 },
+  { label: "None", value: 10 },
+];
+
+const pointcoloroptions = [
+  { label: "Model", value: 0 },
+  { label: "Temperature", value: 1 },
+  { label: "Primer", value: 3 },
+  { label: "Rhythm", value: 4 }, // was 3
+  { label: "Seen", value: 5 },
+  { label: "Rate", value: 6 },
+  { label: "Timbre", value: 7 },
+  { label: "hasPrimer", value: 8 },
+];
+
+let padlighting = -1
+
+export const midiMapping =
+{
+  "Launchkey Mini MK3 MIDI": [
+    { message: [191, 117, 127], call: () => { midiutil.startRecording(get(recording)) }, action: 'Record midi' },
+    { message: [191, 115, 127], call: () => { mutil.playExportArrangement(); }, action: 'Play Arrangement' },
+    {
+      message: [191, 104, 127], call: () => { mu.requestModels(get(primerList)); }, action: 'Generate'
+    },
+    {
+      message: [191, 105, 127], call: () => { mutil.findAllPolyMelodies(4, 0,); }, action: 'Combine for Polyphonie'
+    },
+    {
+      message: [176, 21], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleQuantize().domain([0, 127]).range([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        iter.set(s(value))
+      }, action: 'Iterations'
+    },
+    {
+      message: [176, 22], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([0.5, 1])
+        mvaesim.set(s(value))
+      }, action: 'MVAE Similarity'
+    },
+    {
+      message: [176, 23], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([16, 128])
+        genlength.set(Math.round(s(value)))
+      }, action: 'Melody Length'
+    },
+    {
+      message: [176, 24], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([0, pointcoloroptions.length - 1])
+        pointcolorselect.set(pointcoloroptions[Math.round(s(value))])
+      }, action: 'Color Select'
+    },
+    {
+      message: [176, 25], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([0, vorcoloroptions.length - 1])
+        vorcolorselect.set(vorcoloroptions[Math.round(s(value))])
+      }, action: 'Backgroundcolor Select'
+    },
+    {
+      message: [176, 26], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([0, 0.5])
+        opacityVoronoi.set(s(value))
+      }, action: 'Background Opacity'
+    },
+    {
+      message: [176, 27], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([0, glyphoptions.length - 1])
+        glyphselect.set(glyphoptions[Math.round(s(value))])
+      }, action: 'Glyph'
+    },
+    {
+      message: [176, 28], call: (e) => {
+        let value = e.data[2]
+        let s = d3.scaleLinear().domain([0, 127]).range([0.2, 2])
+        glyphsize.set(s(value))
+      }, action: 'Glyphsize'
+    },
+    { message: [153, 40, 127], call: () => { emotionbased.set({ label: "Monophonic", value: 0 }) }, action: 'Monophonic' },
+    { message: [153, 36, 127], call: () => { emotionbased.set({ label: "Polyoptions", value: 2 }) }, action: 'Polyphonic' },
+    { message: [153, 37, 127], call: () => { numpoly.set(2) }, action: '2 Voices' },
+    { message: [153, 38, 127], call: () => { numpoly.set(3) }, action: '3 Voices' },
+    { message: [153, 39, 127], call: () => { numpoly.set(4) }, action: '4 Voices' },
+    { message: [153, 48, 127], call: () => { axisselect.updateAxis(axisoptions[1], 0, axisoptions[2], 1) }, action: 'Correlation' },
+    { message: [153, 49, 127], call: () => { axisselect.updateAxis(true, 1) }, action: 'Similarity' },
+    { message: [153, 50, 127], call: () => { axisselect.updateAxis(true, 2) }, action: 'Timbre' },
+    { message: [153, 51, 127], call: () => { axisselect.updateAxis(true, 3) }, action: 'Export' },
+    { message: [153, 46, 127], call: () => { grid.set(!get(grid)), hilbert.set(false) }, action: 'Grid' },
+    { message: [153, 47, 127], call: () => { hilbert.set(!get(hilbert)), grid.set(false) }, action: 'Hilbert' },
+  ],
+  "MIDIIN2 (LPMiniMK3 MIDI)": [
+    {
+      message: [144, 99, 127], call: () => {
+        let entries = Object.entries(get(modelselected))
+        if (!entries[0][1]) {
+          controlColor(99, true, 1, 45)
+        } else {
+          controlColor(99, true, 3, 45)
+        }
+        entries[0][1] = !entries[0][1]
+        modelselected.set(Object.fromEntries(entries));
+      }, action: 'Model 1'
+    },
+    {
+      message: [144, 95, 127], call: () => {
+        let entries = Object.entries(get(modelselected))
+        if (!entries[1][1]) {
+          controlColor(95, true, 1, 9)
+        } else {
+          controlColor(95, true, 3, 9)
+        }
+        entries[1][1] = !entries[1][1]
+        modelselected.set(Object.fromEntries(entries));
+      }, action: 'Model 2'
+    },
+    {
+      message: [144, 91, 127], call: () => {
+        let entries = Object.entries(get(modelselected))
+        if (!entries[2][1]) {
+          controlColor(91, true, 1, 5)
+        } else {
+          controlColor(91, true, 3, 5)
+        }
+        entries[2][1] = !entries[2][1]
+        modelselected.set(Object.fromEntries(entries));
+      }, action: 'Model 3'
+    },
+    {
+      message: [144, 87, 127], call: () => {
+        let entries = Object.entries(get(modelselected))
+        if (!entries[3][1]) {
+          controlColor(87, true, 1, 33)
+        } else {
+          controlColor(87, true, 3, 33)
+        }
+        entries[3][1] = !entries[3][1]
+        modelselected.set(Object.fromEntries(entries));
+      }, action: 'Model 4'
+    },
+    {
+      message: [144, 83, 127], call: () => {
+        let entries = Object.entries(get(modelselected))
+        if (!entries[4][1]) {
+          controlColor(83, true, 1, 21)
+        } else {
+          controlColor(83, true, 3, 21)
+        }
+        entries[4][1] = !entries[4][1]
+        modelselected.set(Object.fromEntries(entries));
+      }, action: 'Model 5'
+    },
+    {
+      message: [144, null, 127], call: (e) => {
+        console.log(e)
+        let value = null
+        if (e < 70)
+          value = e - 36
+        if (value !== null && get(meloselected)?.length > value && get(selectedMeloColors)?.length > value) {
+          //console.log(get(meloselected)[value], get(selectedMeloColors)[value])
+          if (padlighting === -1) {
+            padlighting = e
+            controlColor(e, true, 3, 3) //
+            let melody = get(meloselected)[value][2]
+            console.log(melody)
+
+            mutil.playMelody(
+              melody.melody.notes,
+              false,
+              undefined,
+              0,
+              0, // if 120 bpm but we only use that
+              0,
+              melody,
+              {
+                melody: melody?.melody?.uniqueID,
+                melodyID: melody?.uniqueID,
+                user: melody?.userspecific,
+              },
+            );
+          } else {
+            padlighting = -1
+            controlColor(e, true, 1, 3)
+            mutil.playMelody(
+              null,
+              null,
+              undefined,
+              0,
+              0, // if 120 bpm but we only use that
+              0,
+              null
+            );
+          }
+
+        } else {
+          console.log(get(meloselected), value)
+        }
+
+      }, action: 'Play Selected Melody by Index'
+    }, //36 -> 98 ohne models
+  ]
+}

@@ -165,6 +165,8 @@ export const sortedexport = writable([])
 
 export const brushOrdering = writable(true)
 
+export const opacityVoronoi = writable(0.1)
+
 
 
 function createAxis() {                                                                              // 1 == DR, 2== Timbre

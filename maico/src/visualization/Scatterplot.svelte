@@ -41,6 +41,7 @@
     hilbert,
     axisselect,
     edgeBundlingPoly,
+    opacityVoronoi,
   } from "../stores/stores.js";
   // @ts-ignore
   import { get } from "svelte/store";
@@ -68,7 +69,6 @@
   let pointarray = [];
 
   let showControls = true;
-  let opacityVoronoi = 0.1;
   let opacityClusterHull = 0.1;
   let opacityGlyph = 1;
 
@@ -833,12 +833,12 @@
 <div id="container">
   {#if $axisselect[0].label !== "Timbre" && $axisselect[0].label !== "Export"}
     <div class="canvas">
-      <Voronoi opacity={opacityVoronoi} />
+      <Voronoi opacity={$opacityVoronoi} />
     </div>
   {/if}
   {#if $edgeBundlingPoly && $axisselect[0].label !== "Timbre"}
     <div class="canvas">
-      <EdgeBundling opacity={opacityVoronoi} />
+      <EdgeBundling opacity={$opacityVoronoi} />
     </div>
   {/if}
   <div class="canvas">
@@ -917,8 +917,8 @@
             min="0"
             max="0.5"
             step="0.05"
-            bind:value={opacityVoronoi}
-            on:mouseup={log("opacity voronoi changed", opacityVoronoi)}
+            bind:value={$opacityVoronoi}
+            on:mouseup={log("opacity voronoi changed", $opacityVoronoi)}
           />
         </label>
         <label>

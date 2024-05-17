@@ -90,6 +90,7 @@
     selectedMidiInput,
     recordedNotes,
     playrecord,
+    lastidPrimer,
   } from "./stores/devStores.js";
 
   import { Progressbar, Fileupload, Label } from "flowbite-svelte";
@@ -129,7 +130,7 @@
     signInAnonymously,
   } from "firebase/auth";
   import { getStorage, ref, uploadBytes } from "firebase/storage";
-  import { axisoptionsCor } from "./stores/globalValues.js";
+  import { axisoptionsCor, midiMapping } from "./stores/globalValues.js";
 
   let user1 = null;
   let uniqueID = flutil.makeid(3);
@@ -292,8 +293,6 @@
   let modeldesc = false;
   let recordsection = false;
 
-  let lastid = 0;
-
   let lengthtemp = 64;
 
   $: genlength, (lengthtemp = $genlength);
@@ -403,6 +402,7 @@
 
   onMount(async () => {
     mu.addModel();
+    midiutil.modelColor();
     midiutil.initRecorder();
   });
 
@@ -492,8 +492,7 @@
   }
 
   function handleMIDIMessage(event) {
-    sendMessage(event);
-    console.log(event);
+    //sendMessage(event);
     if (isWaitingForMIDIMessage) {
       storedMIDIMessage = { e: event.data, id: event.srcElement.id };
       console.log("MIDI message stored:", storedMIDIMessage);
@@ -503,18 +502,53 @@
       if (
         storedMIDIMessage &&
         JSON.stringify(receivedMIDIMessage) ===
-          JSON.stringify(storedMIDIMessage.e)
+          JSON.stringify(storedMIDIMessage.e) &&
+        JSON.stringify(event.srcElement.id) ===
+          JSON.stringify(storedMIDIMessage.id)
       ) {
         console.log(
           "Stored MIDI message received:",
           receivedMIDIMessage,
-          lastid,
+          $lastidPrimer,
         );
-        lastid = midiutil.startRecording($recording, lastid);
+        midiutil.startRecording($recording);
         // Call your function when the stored MIDI message is received
         // e.g., yourFunction(receivedMIDIMessage);
       }
     }
+  }
+
+  function handleInputControls(e) {
+    console.log(e);
+    let map = midiMapping[e.currentTarget.name];
+    let func = map.filter((m) => m.message[0] === e.data[0]);
+    let value = null;
+    if (map.length !== 0 && map.length < 7) {
+      let func2 = func.filter(
+        (m) => m.message[2] === e.data[2] && m.message[1] === e.data[1],
+      );
+      let func1 = func.filter((m) => m.message[2] === e.data[2]);
+      if (func2.length > 0) {
+        func = func2;
+      } else if (func1.length > 0) {
+        func = [func1[func1.length - 1]];
+        value = e.data[1];
+      } else {
+        func = [];
+      }
+    } else {
+      func = map.filter(
+        (m) => m.message[0] === e.data[0] && m.message[1] === e.data[1],
+      );
+      if (func[0].message[2] !== undefined) {
+        func = func.filter((m) => m.message[2] === e.data[2]);
+      } else {
+        value = e.data[2];
+      }
+    }
+    console.log(value, func[0]);
+    if (func[0] !== undefined)
+      value !== null ? func[0].call(value) : func[0].call();
   }
 
   function reconnectMIDI() {
@@ -525,6 +559,7 @@
       const inputs = midiAccess.inputs.values();
       for (let input of inputs) {
         input.onmidimessage = (e) => {
+          handleInputControls(e);
           if (storedMIDIMessage === null || input.id === storedMIDIMessage.id)
             handleMIDIMessage(e);
         };
@@ -544,6 +579,7 @@
       const inputs = midiAccess.inputs.values();
       for (let input of inputs) {
         input.onmidimessage = (e) => {
+          handleInputControls(e);
           if (storedMIDIMessage === null || input.id === storedMIDIMessage.id)
             handleMIDIMessage(e);
         };
@@ -633,7 +669,7 @@
           class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
           type="file"
           accept=".mid"
-          on:change={(e) => (lastid = flutil.importMidi(e, primerList, lastid))}
+          on:change={(e) => flutil.importMidi(e, primerList)}
         />
         <!--
           <label class="icon">
@@ -706,7 +742,7 @@
           <div
             class="icon"
             on:click={() => {
-              lastid = midiutil.startRecording($recording, lastid);
+              midiutil.startRecording($recording);
             }}
           >
             {#if !$recording}
@@ -1719,6 +1755,7 @@
                           clusterSelect.set(null);
                           somethingChanged.set(false);
                         }
+                        console.log(oldmodelselected, $modelselected);
                         const modelselect = Object.values($modelselected);
                         flutil.log(
                           "modelselection: " + model.name + " changed",

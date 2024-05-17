@@ -1,13 +1,16 @@
-import { recorder, bpm, primerList, player, exportList } from '../stores/stores.js'
-import { recording, midiinputs, selectedMidiInput, recordedNotes, playrecord, midiplayer, playingHighlight } from "../stores/devStores.js";
+import { recorder, bpm, primerList, player, exportList, meloselected, currentcolor, selectedBaseKeys } from '../stores/stores.js'
+import { recording, midiinputs, selectedMidiInput, recordedNotes, playrecord, midiplayer, playingHighlight, lastidPrimer, selectedMeloColors } from "../stores/devStores.js";
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import { log, makeid } from './fileutil.js';
+
+import { WebMidi } from "webmidi";
 
 
 const synth = new Tone.PolySynth().toDestination()
 import * as Tone from 'tone'
 import { oktaveLookup } from '../stores/globalValues.js';
+import { getColor } from './visutil.js';
 
 export function initRecorder() {
     let rec = new mm.Recorder()//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
@@ -33,10 +36,9 @@ export function initRecorder() {
     })
 }
 
-export function startRecording(record, lastid) {
+export function startRecording(record) {
     try {
-        if (lastid === undefined)
-            lastid = get(primerList).length
+        let lastid = get(lastidPrimer)
         let rec = get(recorder)
         if (rec === null || rec === undefined) {
             initRecorder()
@@ -77,6 +79,7 @@ function showTrimResult(result, lastid) {
             result.recorded = true
             primerList.addMelo(result)
             console.log(lastid++, 'show', get(primerList))
+            lastidPrimer.set(lastid++)
             return lastid++
         } else {
             console.log('No recorded notes')
@@ -161,3 +164,50 @@ export function playMidiOut(output) {
     }
 }
 
+// colors: https://fael-downloads-prod.focusrite.com/customer/prod/s3fs-public/downloads/LPP3_prog_ref_guide_200415.pdf
+
+export function controlColor(note, on, mode = 1, color = null) {
+    WebMidi.enable().then(() => {
+        let ou = WebMidi.getOutputByName("MIDIOUT2 (LPMiniMK3 MIDI)");
+        if (ou === undefined || ou.state !== "connected") return null;
+        if (on) {
+            let options = color !== null ? {
+                rawAttack: color
+            } : {}
+            ou.channels[mode].playNote(note, options);
+        } else {
+            ou.stopNote(note)
+        }
+    });
+}
+
+export function melodyColors(reset, melos = null) {
+    console.log(reset)
+    if (reset) {
+        for (let i = 36; i < 70; i++) {
+            controlColor(i, false)
+        }
+        selectedMeloColors.set(null)
+    } else {
+        if (melos !== null) {
+            let temp = []
+            melos.forEach((m, i) => {
+                let color = getColor(m, get(currentcolor), get(selectedBaseKeys));
+                console.log(m, color)
+                temp.push(color)
+                controlColor(36 + i, true, 1, 3)
+                selectedMeloColors.set(temp)
+            })
+        }
+    }
+
+
+}
+
+export function modelColor() {
+    controlColor(99, true, 1, 45)
+    controlColor(95, true, 1, 9)
+    controlColor(91, true, 1, 5)
+    controlColor(87, true, 1, 33)
+    controlColor(83, true, 1, 21)
+}
