@@ -412,56 +412,56 @@ export const midiMapping =
     },
     {
       message: [176, 21], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleQuantize().domain([0, 127]).range([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         iter.set(s(value))
       }, action: 'Iterations'
     },
     {
       message: [176, 22], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([0.5, 1])
         mvaesim.set(s(value))
       }, action: 'MVAE Similarity'
     },
     {
       message: [176, 23], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([16, 128])
         genlength.set(Math.round(s(value)))
       }, action: 'Melody Length'
     },
     {
       message: [176, 24], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([0, pointcoloroptions.length - 1])
         pointcolorselect.set(pointcoloroptions[Math.round(s(value))])
       }, action: 'Color Select'
     },
     {
       message: [176, 25], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([0, vorcoloroptions.length - 1])
         vorcolorselect.set(vorcoloroptions[Math.round(s(value))])
       }, action: 'Backgroundcolor Select'
     },
     {
       message: [176, 26], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([0, 0.5])
         opacityVoronoi.set(s(value))
       }, action: 'Background Opacity'
     },
     {
       message: [176, 27], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([0, glyphoptions.length - 1])
         glyphselect.set(glyphoptions[Math.round(s(value))])
       }, action: 'Glyph'
     },
     {
       message: [176, 28], call: (e) => {
-        let value = e.data[2]
+        let value = e
         let s = d3.scaleLinear().domain([0, 127]).range([0.2, 2])
         glyphsize.set(s(value))
       }, action: 'Glyphsize'
