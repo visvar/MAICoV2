@@ -475,8 +475,22 @@ export const midiMapping =
     { message: [153, 49, 127], call: () => { axisselect.updateAxis(true, 1) }, action: 'Similarity' },
     { message: [153, 50, 127], call: () => { axisselect.updateAxis(true, 2) }, action: 'Timbre' },
     { message: [153, 51, 127], call: () => { axisselect.updateAxis(true, 3) }, action: 'Export' },
-    { message: [153, 46, 127], call: () => { grid.set(!get(grid)), hilbert.set(false) }, action: 'Grid' },
-    { message: [153, 47, 127], call: () => { hilbert.set(!get(hilbert)), grid.set(false) }, action: 'Hilbert' },
+    {
+      message: [153, 46, 127], call: () => {
+        grid.set(!get(grid));
+        if (get(axisselect)[2] === 1) {
+          axisselect.updateAxis(true, 1);
+        }; hilbert.set(false)
+      }, action: 'Grid'
+    },
+    {
+      message: [153, 47, 127], call: () => {
+        hilbert.set(!get(hilbert));
+        if (get(axisselect)[2] === 1) {
+          axisselect.updateAxis(true, 1);
+        }; grid.set(false)
+      }, action: 'Hilbert'
+    },
   ],
   "MIDIIN2 (LPMiniMK3 MIDI)": [
     {

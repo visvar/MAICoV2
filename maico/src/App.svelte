@@ -520,34 +520,39 @@
 
   function handleInputControls(e) {
     let map = midiMapping[e.currentTarget.name];
-    if (map.length === 0) return null;
-    let func = map.filter((m) => m.message[0] === e.data[0]);
-    let value = null;
-    if (map.length !== 0 && map.length < 7) {
-      let func2 = func.filter(
-        (m) => m.message[2] === e.data[2] && m.message[1] === e.data[1],
-      );
-      let func1 = func.filter((m) => m.message[2] === e.data[2]);
-      if (func2.length > 0) {
-        func = func2;
-      } else if (func1.length > 0) {
-        func = [func1[func1.length - 1]];
-        value = e.data[1];
-      } else {
-        func = [];
-      }
-    } else {
-      func = map.filter(
-        (m) => m.message[0] === e.data[0] && m.message[1] === e.data[1],
-      );
-      if (func[0].message[2] !== undefined) {
-        func = func.filter((m) => m.message[2] === e.data[2]);
-      } else {
-        value = e.data[2];
+    if (map?.length > 0) {
+      let func = map.filter((m) => m.message[0] === e.data[0]);
+      if (func?.length > 0) {
+        let value = null;
+        if (map.length < 7) {
+          let func2 = func.filter(
+            (m) => m.message[2] === e.data[2] && m.message[1] === e.data[1],
+          );
+          let func1 = func.filter((m) => m.message[2] === e.data[2]);
+          if (func2.length > 0) {
+            func = func2;
+          } else if (func1.length > 0) {
+            func = [func1[func1.length - 1]];
+            value = e.data[1];
+          } else {
+            func = [];
+          }
+        } else {
+          func = map.filter(
+            (m) => m.message[0] === e.data[0] && m.message[1] === e.data[1],
+          );
+          if (func?.length > 0) {
+            if (func[0].message[2] !== undefined) {
+              func = func.filter((m) => m.message[2] === e.data[2]);
+            } else {
+              value = e.data[2];
+            }
+          }
+        }
+        if (func[0] !== undefined)
+          value !== null ? func[0].call(value) : func[0].call();
       }
     }
-    if (func[0] !== undefined)
-      value !== null ? func[0].call(value) : func[0].call();
   }
 
   function reconnectMIDI() {
