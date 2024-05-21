@@ -5,7 +5,7 @@ import * as mu from "../util/modelutil.js";
 import * as gu from "../util/glyphutil.js";
 import * as visutil from "../util/visutil.js";
 import { genlength, iter, recording, selectedMeloColors } from './devStores'
-import { modelselected, primerList, currentpoints, mvaesim, opacityVoronoi, pointcolorselect, vorcolorselect, glyphselect, glyphsize, emotionbased, numpoly, axisselect, grid, hilbert, meloselected } from './stores'
+import { modelselected, primerList, currentpoints, mvaesim, opacityVoronoi, pointcolorselect, vorcolorselect, glyphselect, glyphsize, emotionbased, numpoly, axisselect, grid, hilbert, meloselected, player } from './stores'
 import * as d3 from 'd3';
 import { controlColor } from '../util/midiutil';
 
@@ -546,12 +546,44 @@ export const midiMapping =
         if (e < 70)
           value = e - 36
         if (value !== null && get(meloselected)?.length > value && get(selectedMeloColors)?.length > value) {
-          //console.log(get(meloselected)[value], get(selectedMeloColors)[value])
-          if (padlighting === -1) {
+          let player1 = get(player)
+          if (player1 !== null && player1 !== undefined) {
+            if (!player1.isPlaying()) {
+              padlighting = -1
+            }
+          }
+          if (padlighting !== -1 && padlighting !== e) {
+            mutil.playMelody(
+              null,
+              null,
+              undefined,
+              0,
+              0, // if 120 bpm but we only use that
+              0,
+              null
+            );
+            controlColor(padlighting, true, 1, get(selectedMeloColors)[padlighting - 36])
             padlighting = e
-            controlColor(e, true, 3, 3) //
+            controlColor(e, true, 3, get(selectedMeloColors)[value]) //
             let melody = get(meloselected)[value][2]
-            console.log(melody)
+            mutil.playMelody(
+              melody.melody.notes,
+              false,
+              undefined,
+              0,
+              0, // if 120 bpm but we only use that
+              0,
+              melody,
+              {
+                melody: melody?.melody?.uniqueID,
+                melodyID: melody?.uniqueID,
+                user: melody?.userspecific,
+              },
+            );
+          } else if (padlighting === -1) {
+            padlighting = e
+            controlColor(e, true, 3, get(selectedMeloColors)[value]) //
+            let melody = get(meloselected)[value][2]
 
             mutil.playMelody(
               melody.melody.notes,
@@ -569,7 +601,7 @@ export const midiMapping =
             );
           } else {
             padlighting = -1
-            controlColor(e, true, 1, 3)
+            controlColor(e, true, 1, get(selectedMeloColors)[value])
             mutil.playMelody(
               null,
               null,

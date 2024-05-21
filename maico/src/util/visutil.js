@@ -136,7 +136,7 @@ export function calcAllColorScales(alldata) {
   result.push({
     name: 'Models', scale: (data, a) => {
       const value = modelutil.getIndexbyModelname(data?.model?.name)
-      return value !== null && value !== undefined ? modelColor10(value) : '#444'
+      return value !== null && value !== undefined ? modelColor10(value) : '#444444'
     }
   })
 
@@ -391,10 +391,12 @@ export function getFillForVoronoi(data) {
     if (s === 0) {
       return getColor(data.data[2], 1)
     } else if (s === 1) {
+      /*
       const temp1 = get(clusterdata).filter((element, index) => {
         return element.containpoints.filter((cpoint) => { return data.data[2].index === cpoint[2].index }).length > 0
       })
       return temp1[0].color
+      */
     } else if (s === 2) {
       return getColor(data.data[2], 2)
     } else if (s === 3) {
@@ -657,3 +659,108 @@ export function pearsonCorrelation(prefs, p1, p2) {
 
 }
 
+function componentFromStr(numStr, percent) {
+  var num = Math.max(0, parseInt(numStr, 10));
+  return percent ?
+    Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+}
+
+function rgbToHex(rgb) {
+  var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+  var result, r, g, b, hex = "";
+  if ((result = rgbRegex.exec(rgb))) {
+    r = componentFromStr(result[1], result[2]);
+    g = componentFromStr(result[3], result[4]);
+    b = componentFromStr(result[5], result[6]);
+    console.log(r, g, b)
+    hex = "#" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+  return hex;
+}
+
+export function hexToHSL(hex) {
+  console.log(hex, hex[0] === '#', hex[0] === 'r')
+  let result = null
+  if (hex[0] === '#') {
+    result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  } else if (hex[0] === 'r') {
+    let rgb = rgbToHex(hex)
+    console.log(rgb)
+    result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(rgb);
+  } else {
+    return null
+  }
+
+  if (!result) {
+    throw new Error("Could not parse Hex Color");
+  }
+
+  const rHex = parseInt(result[1], 16);
+  const gHex = parseInt(result[2], 16);
+  const bHex = parseInt(result[3], 16);
+
+  const r = rHex / 255;
+  const g = gHex / 255;
+  const b = bHex / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+
+  let h = (max + min) / 2;
+  let s = h;
+  let l = h;
+
+  if (max === min) {
+    // Achromatic
+    return { h: 0, s: 0, l };
+  }
+
+  const d = max - min;
+  s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  switch (max) {
+    case r:
+      h = (g - b) / d + (g < b ? 6 : 0);
+      break;
+    case g:
+      h = (b - r) / d + 2;
+      break;
+    case b:
+      h = (r - g) / d + 4;
+      break;
+  }
+  h /= 6;
+
+  s = s * 100;
+  s = Math.round(s);
+  l = l * 100;
+  l = Math.round(l);
+  h = Math.round(360 * h);
+
+  return { h, s, l };
+}
+
+
+
+export function hToPadColor(h) {
+  let c = 0
+  if (h > 330 && h < 20) {
+    c = 72
+  } else if (h > 20 && h < 45) {
+    c = 84
+  } else if (h > 45 && h < 65) {
+    c = 74
+  } else if (h > 65 && h < 150) {
+    c = 87
+  } else if (h > 150 && h < 185) {
+    c = 77
+  } else if (h > 185 && h < 210) {
+    c = 78
+  } else if (h > 210 && h < 265) {
+    c = 79
+  } else if (h > 265 && h < 275) {
+    c = 80
+  } else if (h > 275 && h < 330) {
+    c = 82
+  }
+  return c
+}

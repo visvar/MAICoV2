@@ -1,5 +1,5 @@
 // @ts-ignore
-import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession, pointcolorselect, vorcolorselect, glyphselect, edgeBundlingPoly } from '../stores/stores.js'
+import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession, pointcolorselect, vorcolorselect, glyphselect, edgeBundlingPoly, exclude, excludePoly } from '../stores/stores.js'
 import { iter, genlength } from '../stores/devStores.js'
 import { get } from 'svelte/store';
 // @ts-ignore
@@ -418,7 +418,7 @@ export function exportModelJson(modelname) {
             strangers: get(strangers), genlength: get(genlength),
             filterextents: get(filterextents), mvaesim: get(mvaesim), iter: get(iter), similarityweight: get(similarityweight),
             DRumap: get(DRumap), emotionbased: get(emotionbased), numpoly: get(numpoly), axisselect: get(axisselect), selectedKeys: get(selectedKeys), selectedBaseKeys: get(selectedBaseKeys),
-            pointcolorselect: get(pointcolorselect), vorcolorselect: get(vorcolorselect), glyphselect: get(glyphselect), edgeBundlingPoly: get(edgeBundlingPoly)
+            pointcolorselect: get(pointcolorselect), vorcolorselect: get(vorcolorselect), glyphselect: get(glyphselect), edgeBundlingPoly: get(edgeBundlingPoly), exclude: get(exclude), excludePoly: get(excludePoly)
         }
     }, replace, 2)
     const blob = new Blob([complete], { type: 'application/json' })
@@ -465,6 +465,10 @@ export async function uploadDatasetFile(event) {
                     vorcolorselect.set(obj.variables.vorcolorselect)
                     glyphselect.set(obj.variables.glyphselect)
                     edgeBundlingPoly.set(obj.variables.edgeBundlingPoly)
+                }
+                if (obj?.variables?.exclude !== undefined) {
+                    exclude.set(obj.variables.exclude)
+                    excludePoly.set(obj.variables.excludePoly)
                 }
             }
         }

@@ -59,7 +59,7 @@
 
     function selectOption(option, melody) {
         log("rating changed", {
-            melody: melody.melody.uniqueID,
+            melody: melody?.melody?.uniqueID,
             user: melody.userspecific,
             rating: option,
         });
@@ -74,7 +74,7 @@
 
     function exportChange(melody, add) {
         log(!add ? "added toExport:" : "removed Export:", {
-            id: melody.melody.uniqueID,
+            id: melody?.melody?.uniqueID,
         });
         !add ? exportList.addMelo(melody) : exportList.deleteMelo(melody);
         return !add;

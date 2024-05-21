@@ -113,7 +113,7 @@
 
     function changeColor() {
         if (svg !== undefined) {
-            svg.selectAll("rect").attr(
+            svg.selectAll("rect#note").attr(
                 "fill",
                 visutil.getColor(melody, $currentcolor, $selectedBaseKeys),
             );
@@ -176,7 +176,7 @@
         excludePoly.set($excludePoly.concat(temp.map((p) => p[2].index)));
     }
 
-    function listenToMelody(e) {
+    export function listenToMelody(e) {
         e.preventDefault();
 
         if (playbackline === undefined) playbackline = svg.append("line");
@@ -188,7 +188,6 @@
             .attr("y2", y(extend[1]))
             .attr("stroke", "blue");
 
-        console.log(melody);
         muutil.playMelody(
             shownmelody.notes,
             false,
@@ -406,6 +405,7 @@
                 .data(shownmelody.notes)
                 .enter()
                 .append("rect")
+                .attr("class", "note")
                 .attr(
                     "transform",
                     `translate(0,${-(y(extend[0]) - y(extend[0] + 1)) / 2})`,

@@ -143,8 +143,13 @@
   // if colors etc change log it -> also glyphs;
   // set selected melodies in function log
   glyphselect.subscribe((v) => log("glyph changed: ", { v }));
-  pointcolorselect.subscribe((v) => log("pointcolor changed: ", { v }));
-  vorcolorselect.subscribe((v) => log("voronoicolor changed: ", { v }));
+  pointcolorselect.subscribe((v) => {
+    melodyColors($meloselected === null, $meloselected);
+    log("pointcolor changed: ", { v });
+  });
+  vorcolorselect.subscribe((v) => {
+    log("voronoicolor changed: ", { v });
+  });
   //  filtersim.subscribe((v)=>log("filtersim: " ,{v}))
   //  filternumbernotes.subscribe((v)=>log("filter number of notes: " ,{v}))
   //  filtervarint.subscribe((v)=>log("filter variance: " ,{v}))

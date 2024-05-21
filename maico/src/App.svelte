@@ -519,8 +519,8 @@
   }
 
   function handleInputControls(e) {
-    console.log(e);
     let map = midiMapping[e.currentTarget.name];
+    if (map.length === 0) return null;
     let func = map.filter((m) => m.message[0] === e.data[0]);
     let value = null;
     if (map.length !== 0 && map.length < 7) {
@@ -546,7 +546,6 @@
         value = e.data[2];
       }
     }
-    console.log(value, func[0]);
     if (func[0] !== undefined)
       value !== null ? func[0].call(value) : func[0].call();
   }
@@ -985,7 +984,9 @@
         </button>
         <div>--</div>
         <div class="select">
-          <label for="selmidi">Format to export as MIDI</label>
+          <label for="selmidi"
+            >Format for Midiexport of {$exportList.length} Melodies
+          </label>
           <Select
             class="select"
             id="selmidi"

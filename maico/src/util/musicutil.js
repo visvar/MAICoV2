@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew } from '../stores/stores.js'
+import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew, meloselected } from '../stores/stores.js'
 import { playing, playingHighlight } from "../stores/devStores.js"
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
@@ -721,6 +721,7 @@ export function isPolyphonic(mel) {
 import { getAxisScale } from '../util/visutil.js'
 import { allPrimer, keysLookup, oktaveLookup, quintcircle } from '../stores/globalValues.js';
 import { log, makeid } from './fileutil.js';
+import { melodyColors } from './midiutil.js';
 
 export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
   let player1 = get(player)
@@ -741,8 +742,8 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
     log("stopped listening", {})
     player1.stop()
     changePlay(false)
-    if (playline !== undefined)
-      playbackline.transition().attr("stroke", null).attr("x1", reset)
+    if (playbackline !== undefined)
+      playbackline?.transition().attr("stroke", null).attr("x1", reset)
         .attr("x2", reset)
     return null
   }
@@ -800,7 +801,7 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
 
   // play melody
   if (player1 !== undefined && player1 !== null) {
-    if (playline !== undefined)
+    if (playbackline !== undefined)
       player1.callbackObject = {
         run: (note) => {
           if (!playline)
@@ -820,9 +821,11 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
       player1.playClick = get(playclick)
       //player1.loadSamples(seq).then(() => {
       player1.start(seq, get(bpm)).then(() => {
-        if (playline !== undefined)
+        if (playbackline !== undefined)
           playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
             ?.attr("x2", reset)
+        melodyColors(get(meloselected) === null, get(meloselected))
+        console.log(get(meloselected))
       })
 
       if (playbackline !== undefined) {

@@ -10,7 +10,7 @@ import { WebMidi } from "webmidi";
 const synth = new Tone.PolySynth().toDestination()
 import * as Tone from 'tone'
 import { oktaveLookup } from '../stores/globalValues.js';
-import { getColor } from './visutil.js';
+import { getColor, hToPadColor, hexToHSL } from './visutil.js';
 
 export function initRecorder() {
     let rec = new mm.Recorder()//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
@@ -182,7 +182,6 @@ export function controlColor(note, on, mode = 1, color = null) {
 }
 
 export function melodyColors(reset, melos = null) {
-    console.log(reset)
     if (reset) {
         for (let i = 36; i < 70; i++) {
             controlColor(i, false)
@@ -192,10 +191,17 @@ export function melodyColors(reset, melos = null) {
         if (melos !== null) {
             let temp = []
             melos.forEach((m, i) => {
-                let color = getColor(m, get(currentcolor), get(selectedBaseKeys));
-                console.log(m, color)
-                temp.push(color)
-                controlColor(36 + i, true, 1, 3)
+                let color = getColor(m[2], get(currentcolor), get(selectedBaseKeys));
+                if (color === '#444' || color === "#444444") {
+                    temp.push(1)
+                    controlColor(36 + i, true, 1, 1)
+                } else {
+                    let h = hexToHSL(color).h
+                    let c = hToPadColor(h)
+                    temp.push(c)
+                    controlColor(36 + i, true, 1, c)
+                }
+
                 selectedMeloColors.set(temp)
             })
         }
