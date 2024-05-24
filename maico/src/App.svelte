@@ -79,6 +79,9 @@
     sortedexport,
     player,
     brushOrdering,
+    clickRecording,
+    adjustPrimer,
+    adjustGenerated,
   } from "./stores/stores.js";
 
   import {
@@ -741,6 +744,13 @@
             />
             play sound during recording
           </label>
+          <div>
+            <input
+              type="checkbox"
+              bind:checked={$clickRecording}
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            /> play click during recording
+          </div>
 
           <h5>Record Midiinput</h5>
           <div
@@ -926,6 +936,20 @@
         >
           Adjust Melodies to Filters
         </button>
+        <div>
+          <input
+            type="checkbox"
+            bind:checked={$adjustPrimer}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          /> Adjust primer
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            bind:checked={$adjustGenerated}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          /> Adjust generated
+        </div>
 
         <div>-</div>
         <h5>Play arrangement:</h5>

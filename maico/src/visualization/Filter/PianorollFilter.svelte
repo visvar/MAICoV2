@@ -87,67 +87,68 @@
         ) {
             svg.selectAll("*").remove();
 
-            svg.call(
-                d3
-                    .drag()
-                    .on("start", (d, i) => svgdragstart(d, i, svg))
-                    .on("drag", (d, i) => svgdrag(d, i, svg))
-                    .on("end", (d, i) => svgdragend(d, i, svg))
-            );
-
-            let noteheight = y(extent[0]) - y(extent[0] + 1);
-
-            const xticks = [];
-            for (let t = 0; t <= length; t++) {
-                if (t % 16 === 0) {
-                    xticks.push(t);
-                }
-            }
-
-            function xAxis(g) {
-                g.attr("transform", `translate(${0},${margin.top})`).call(
+            try {
+                svg.call(
                     d3
-                        .axisTop(x)
-                        .tickValues(xticks)
-                        .tickSize(-height + margin.bottom + margin.top)
-                        .tickFormat((t) => {
-                            return Math.round(t / 16);
-                        })
+                        .drag()
+                        .on("start", (d, i) => svgdragstart(d, i, svg))
+                        .on("drag", (d, i) => svgdrag(d, i, svg))
+                        .on("end", (d, i) => svgdragend(d, i, svg)),
                 );
-            }
 
-            function yAxis(g) {
-                g.attr("transform", `translate(${margin.left},${0})`)
-                    .style("font", "11px times")
-                    .call(
+                let noteheight = y(extent[0]) - y(extent[0] + 1);
+
+                const xticks = [];
+                for (let t = 0; t <= length; t++) {
+                    if (t % 16 === 0) {
+                        xticks.push(t);
+                    }
+                }
+
+                function xAxis(g) {
+                    g.attr("transform", `translate(${0},${margin.top})`).call(
                         d3
-                            .axisLeft(y)
-                            .ticks(extent[1] - extent[0])
+                            .axisTop(x)
+                            .tickValues(xticks)
+                            .tickSize(-height + margin.bottom + margin.top)
                             .tickFormat((t) => {
-                                if (
-                                    t % 12 === 0 ||
-                                    t % 12 === 4 ||
-                                    t % 12 === 7
-                                ) {
-                                    return oktaveLookup[t].label;
-                                }
-                            })
-                            .tickSize(2)
+                                return Math.round(t / 16);
+                            }),
                     );
-            }
+                }
 
-            svg.append("g")
-                .call(xAxis)
-                .call((g) => {
-                    g.selectAll("line")
-                        .attr("opacity", 0.1)
-                        .attr("stroke", "#111");
-                });
-            svg.append("g").call(yAxis);
+                function yAxis(g) {
+                    g.attr("transform", `translate(${margin.left},${0})`)
+                        .style("font", "11px times")
+                        .call(
+                            d3
+                                .axisLeft(y)
+                                .ticks(extent[1] - extent[0])
+                                .tickFormat((t) => {
+                                    if (
+                                        t % 12 === 0 ||
+                                        t % 12 === 4 ||
+                                        t % 12 === 7
+                                    ) {
+                                        return oktaveLookup[t].label;
+                                    }
+                                })
+                                .tickSize(2),
+                        );
+                }
 
-            let filtg = svg.append("g");
+                svg.append("g")
+                    .call(xAxis)
+                    .call((g) => {
+                        g.selectAll("line")
+                            .attr("opacity", 0.1)
+                            .attr("stroke", "#111");
+                    });
+                svg.append("g").call(yAxis);
 
-            /*
+                let filtg = svg.append("g");
+
+                /*
             makeSlider(
                 svg,
                 margin.left,
@@ -158,25 +159,26 @@
             makeSlider(svg, 5, margin.top, 15, height - margin.bottom);
             */
 
-            for (let i = 0; i < length; i++) {
-                filtg
-                    .append("circle")
-                    .attr("id", "upper" + i)
-                    .attr("cx", x(i))
-                    .attr("cy", y(filtertemp[i][1]))
-                    .attr("r", Math.max(1, notewidth / 3))
-                    .attr("fill", "red")
-                    .attr("opacity", 0.3);
+                for (let i = 0; i < length; i++) {
+                    filtg
+                        .append("circle")
+                        .attr("id", "upper" + i)
+                        .attr("cx", x(i))
+                        .attr("cy", y(filtertemp[i][1]))
+                        .attr("r", Math.max(1, notewidth / 3))
+                        .attr("fill", "red")
+                        .attr("opacity", 0.3);
 
-                filtg
-                    .append("circle")
-                    .attr("id", "lower" + i)
-                    .attr("cx", x(i))
-                    .attr("cy", y(filtertemp[i][0]))
-                    .attr("r", Math.max(1, notewidth / 3))
-                    .attr("fill", "blue")
-                    .attr("opacity", 0.3);
-            }
+                    filtg
+                        .append("circle")
+                        .attr("id", "lower" + i)
+                        .attr("cx", x(i))
+                        .attr("cy", y(filtertemp[i][0]))
+                        .attr("r", Math.max(1, notewidth / 3))
+                        .attr("fill", "blue")
+                        .attr("opacity", 0.3);
+                }
+            } catch (e) {}
         }
     }
     //code for svg slider? maybe slider defined in function for recusive. do extent for each step
@@ -191,7 +193,10 @@
             Math.round(x.invert(d.sourceEvent.offsetX)), //+ notewidth / 2,
             Math.max(
                 extent[0],
-                Math.min(extent[1], Math.round(y.invert(d.sourceEvent.offsetY)))
+                Math.min(
+                    extent[1],
+                    Math.round(y.invert(d.sourceEvent.offsetY)),
+                ),
             ),
         ];
         // check for lower or upper

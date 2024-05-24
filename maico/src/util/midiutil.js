@@ -1,4 +1,4 @@
-import { recorder, bpm, primerList, player, exportList, meloselected, currentcolor, selectedBaseKeys } from '../stores/stores.js'
+import { recorder, bpm, primerList, player, exportList, meloselected, currentcolor, selectedBaseKeys, clickRecording } from '../stores/stores.js'
 import { recording, midiinputs, selectedMidiInput, recordedNotes, playrecord, midiplayer, playingHighlight, lastidPrimer, selectedMeloColors } from "../stores/devStores.js";
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
@@ -54,6 +54,7 @@ export function startRecording(record) {
         rec.setTempo(get(bpm))
         recording.set(true);
         rec.setTempo(get(bpm))
+        rec.enablePlayClick(get(clickRecording))
         recordedNotes.set([])
 
         let selected = get(selectedMidiInput)
@@ -182,30 +183,37 @@ export function controlColor(note, on, mode = 1, color = null) {
 }
 
 export function melodyColors(reset, melos = null) {
-    if (reset) {
-        for (let i = 36; i < 70; i++) {
-            controlColor(i, false)
-        }
-        selectedMeloColors.set(null)
-    } else {
-        if (melos !== null) {
-            let temp = []
-            melos.forEach((m, i) => {
-                let color = getColor(m[2], get(currentcolor), get(selectedBaseKeys));
-                if (color === '#444' || color === "#444444") {
-                    temp.push(1)
-                    controlColor(36 + i, true, 1, 1)
-                } else {
-                    let h = hexToHSL(color).h
-                    let c = hToPadColor(h)
-                    temp.push(c)
-                    controlColor(36 + i, true, 1, c)
-                }
+    WebMidi.enable().then(() => {
+        let ou = WebMidi.getOutputByName("MIDIOUT2 (LPMiniMK3 MIDI)");
+        if (ou === undefined || ou.state !== "connected") return null;
+        if (reset) {
+            for (let i = 36; i < 70; i++) {
+                controlColor(i, false)
+            }
+            selectedMeloColors.set(null)
+        } else {
+            if (melos !== null) {
+                let temp = []
+                melos.forEach((m, i) => {
+                    let color = getColor(m[2], get(currentcolor), get(selectedBaseKeys));
+                    if (color === '#444' || color === "#444444") {
+                        temp.push(1)
+                        controlColor(36 + i, true, 1, 1)
+                    } else {
+                        let c = 0
+                        if (color !== null) {
+                            let h = hexToHSL(color).h
+                            c = hToPadColor(h)
+                        }
+                        temp.push(c)
+                        controlColor(36 + i, true, 1, c)
+                    }
 
-                selectedMeloColors.set(temp)
-            })
+                    selectedMeloColors.set(temp)
+                })
+            }
         }
-    }
+    });
 
 
 }

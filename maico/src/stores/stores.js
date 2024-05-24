@@ -167,6 +167,7 @@ export const brushOrdering = writable(true)
 
 export const opacityVoronoi = writable(0.1)
 
+export const clickRecording = writable(false)
 
 
 function createAxis() {                                                                              // 1 == DR, 2== Timbre
@@ -307,6 +308,10 @@ export const strangers = writable(0)
 export const importedSession = writable(0)
 
 export const adjustMode = writable(false)
+
+export const adjustPrimer = writable(false)
+
+export const adjustGenerated = writable(false)
 
 export const correlationData = derived(
     [points, models, primerList],

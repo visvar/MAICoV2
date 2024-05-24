@@ -105,7 +105,7 @@
             </div>
         {/if}
         <div class="global">
-            {#if $meloselected !== null}
+            {#if $meloselected !== null && $meloselected !== undefined}
                 <div class="float">
                     <p class="option">All Selected:</p>
                     <button
@@ -181,7 +181,8 @@
             {/if}
         </div>
         <div class="list" style="height={h100}px">
-            {#if $meloselected !== null}
+            {#if $meloselected !== null && $meloselected !== undefined}
+                {console.log($meloselected)}
                 {#each $meloselected as data, index}
                     <div>
                         <Pianoroll

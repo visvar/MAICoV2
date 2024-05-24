@@ -555,7 +555,6 @@ export const midiMapping =
     },
     {
       message: [144, null, 127], call: (e) => {
-        console.log(e)
         let value = null
         if (e < 70)
           value = e - 36

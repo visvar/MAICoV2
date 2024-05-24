@@ -25,101 +25,102 @@ export function getSelectedMelodies(x, y, points) {
       log("delete brush")
     return null
   }
-  let brush = get(brushselection)
-  let selpoints = points.filter((point) => isBrushed(x(point[0][get(axisselect)[0].value]), y(point[1][get(axisselect)[1].value]), get(brushselection), point))
-  let newpoints = []
-  selpoints.forEach(p => {
-    if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
-      p[2].userspecific.seen = 1
-      newpoints.push(p)
-    }
-  })
-  seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
-  log("select brush results in points", { brush, selected: selectedpoints })
-  return selpoints
+  try {
+    let brush = get(brushselection)
+    let selpoints = points.filter((point) => isBrushed(x(point[0][get(axisselect)[0].value]), y(point[1][get(axisselect)[1].value]), get(brushselection), point))
+    let newpoints = []
+    selpoints.forEach(p => {
+      if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
+        p[2].userspecific.seen = 1
+        newpoints.push(p)
+      }
+    })
+    seen.set(get(seen).concat(newpoints))
+    const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
+    log("select brush results in points", { brush, selected: selectedpoints })
+    return selpoints === undefined ? null : selpoints
+  } catch (e) { console.log(e) }
 }
 
 export function getTimbreKeySelectedMelodies(x, y, points, spoints, ordering, maxsame) {
-  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null) {
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null || y === undefined || x === undefined) {
     if (get(meloselected) !== null)
       log("delete brush")
     return null
   }
-  let brush = get(brushselection)
-  let keyindizes = [...Array(maxsame).keys()].filter((v, i) => x(v) > get(brushselection)[0][0] && x(v) < get(brushselection)[1][0]) // 4,5,6
-  let selpoints = spoints.filter((point, i) => {
-    if (y(point[3]) > get(brushselection)[0][1] && y(point[3]) < get(brushselection)[1][1] && keyindizes.indexOf(i - ordering[point[3]]) !== -1)
-      return true
-    else
-      return false
-  })
-  let newpoints = []
-  selpoints.forEach(p => {
-    if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
-      p[2].userspecific.seen = 1
-      newpoints.push(p)
-    }
-  })
-  seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
-  log("select brush results in timbrekey", { brush, selected: selectedpoints })
-  return selpoints
+  try {
+    let brush = get(brushselection)
+    let keyindizes = [...Array(maxsame).keys()].filter((v, i) => x(v) > get(brushselection)[0][0] && x(v) < get(brushselection)[1][0]) // 4,5,6
+    let selpoints = spoints.filter((point, i) => {
+      if (y(point[3]) > get(brushselection)[0][1] && y(point[3]) < get(brushselection)[1][1] && keyindizes.indexOf(i - ordering[point[3]]) !== -1)
+        return true
+      else
+        return false
+    })
+    let newpoints = []
+    selpoints.forEach(p => {
+      if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
+        p[2].userspecific.seen = 1
+        newpoints.push(p)
+      }
+    })
+    seen.set(get(seen).concat(newpoints))
+    const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
+    log("select brush results in timbrekey", { brush, selected: selectedpoints })
+    return selpoints === undefined ? null : selpoints
+  } catch (e) { }
 }
 
 export function getTimbreSelectedMelodies(x, y, points, ordering) {
-  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null) {
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null || y === undefined || x === undefined) {
     if (get(meloselected) !== null)
       log("delete brush")
     return null
   }
-  let brush = get(brushselection)
-  let keyindizes = ordering.filter((v, i) => x(i) > get(brushselection)[0][0] && x(i) < get(brushselection)[1][0])
-  let selpoints = points.filter((point) => {
-    let r = false
-    keyindizes.forEach((v) => {
-      if (y(point[2].timbre[v]) > get(brushselection)[0][1] && y(point[2].timbre[v]) < get(brushselection)[1][1])
-        r = true
+  try {
+    let brush = get(brushselection)
+    let keyindizes = ordering.filter((v, i) => x(i) > get(brushselection)[0][0] && x(i) < get(brushselection)[1][0])
+    let selpoints = points.filter((point) => {
+      let r = false
+      keyindizes.forEach((v) => {
+        if (y(point[2].timbre[v]) > get(brushselection)[0][1] && y(point[2].timbre[v]) < get(brushselection)[1][1])
+          r = true
+      })
+      return r
     })
-    return r
-  })
-  let newpoints = []
-  selpoints.forEach(p => {
-    if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
-      p[2].userspecific.seen = 1
-      newpoints.push(p)
-    }
-  })
-  seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
-  log("select brush results in timbre", { brush, selected: selectedpoints })
-  return selpoints
+    let newpoints = []
+    selpoints.forEach(p => {
+      if (get(seen).filter(p1 => p1[2].index === p[2].index).length === 0) {
+        p[2].userspecific.seen = 1
+        newpoints.push(p)
+      }
+    })
+    seen.set(get(seen).concat(newpoints))
+    const selectedpoints = selpoints.map((m) => { return { primer: m[2].isPrimer, poly: m[2].isPolymix, melody: m[2].melody.uniqueID } })
+    log("select brush results in timbre", { brush, selected: selectedpoints })
+    return selpoints === undefined ? null : selpoints
+  } catch (e) { }
 }
 
 export function getExportSelectedMelodies(x, y, points, ordering) {
-  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null) {
+  if (get(brushselection) === null || get(brushselection) === undefined || points === undefined || points === null || y === undefined || x === undefined) {
     if (get(meloselected) !== null)
       log("delete brush")
     return null
   }
-  let brush = get(brushselection)
+  try {
+    let brush = get(brushselection)
 
-  let selpoints = points.filter((point, index) => {
-    if (y(Math.floor(index / 10)) > get(brushselection)[0][1] && y(Math.floor(index / 10)) < get(brushselection)[1][1] && x(index % 10) > get(brushselection)[0][0] && x(index % 10) < get(brushselection)[1][0])
-      return true
-    return false
-  })
-  let newpoints = []
-  selpoints.forEach(p => {
-    if (get(seen).filter(p1 => p1.index === p.index).length === 0) {
-      p.userspecific.seen = 1
-      newpoints.push(p)
-    }
-  })
-  seen.set(get(seen).concat(newpoints))
-  const selectedpoints = selpoints.map((m) => { return { primer: m?.isPrimer, poly: m?.isPolymix, melody: m?.melody?.uniqueID } })
-  log("select brush results in export", { brush, selected: selectedpoints })
-  return selpoints.map(p => [0, 0, p])
+    let selpoints = points.filter((point, index) => {
+      if (y(Math.floor(index / 10)) > get(brushselection)[0][1] && y(Math.floor(index / 10)) < get(brushselection)[1][1] && x(index % 10) > get(brushselection)[0][0] && x(index % 10) < get(brushselection)[1][0])
+        return true
+      return false
+    })
+    const selectedpoints = selpoints.map((m) => { return { primer: m?.isPrimer, poly: m?.isPolymix, melody: m?.melody?.uniqueID } })
+    log("select brush results in export", { brush, selected: selectedpoints })
+    selpoints = selpoints?.map(p => [0, 0, p])
+    return selpoints === undefined ? null : selpoints
+  } catch (e) { }
 }
 
 export function getColor(data, currentcolor, basenote) {
@@ -742,25 +743,27 @@ export function hexToHSL(hex) {
 
 
 export function hToPadColor(h) {
+  console.log(h)
   let c = 0
-  if (h > 330 && h < 20) {
+  if (h >= 330 || h < 20) {
     c = 72
-  } else if (h > 20 && h < 45) {
+  } else if (h >= 20 && h < 45) {
     c = 84
-  } else if (h > 45 && h < 65) {
+  } else if (h >= 45 && h < 65) {
     c = 74
-  } else if (h > 65 && h < 150) {
+  } else if (h >= 65 && h < 150) {
     c = 87
-  } else if (h > 150 && h < 185) {
+  } else if (h >= 150 && h < 185) {
     c = 77
-  } else if (h > 185 && h < 210) {
+  } else if (h >= 185 && h < 210) {
     c = 78
-  } else if (h > 210 && h < 265) {
+  } else if (h >= 210 && h < 265) {
     c = 79
-  } else if (h > 265 && h < 275) {
+  } else if (h >= 265 && h < 275) {
     c = 80
-  } else if (h > 275 && h < 330) {
+  } else if (h >= 275 && h < 330) {
     c = 82
   }
+  console.log(c)
   return c
 }

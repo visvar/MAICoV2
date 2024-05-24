@@ -1,5 +1,5 @@
 import * as tonal from 'tonal'
-import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew, meloselected } from '../stores/stores.js'
+import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew, meloselected, adjustGenerated, adjustPrimer, primerList } from '../stores/stores.js'
 import { playing, playingHighlight } from "../stores/devStores.js"
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
@@ -814,18 +814,53 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
     if (notes?.length > 0) {
       const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
       seq.notes = notes
+      const unseq = mm.sequences.unquantizeSequence(seq, get(bpm))
+      unseq.notes.forEach((n, i) => {
+        n.index = notes[i].index
+      })
+
+
       log("listening", logseq)
       if (playbackline !== undefined)
         playbackline.transition().attr("stroke", "blue")
 
       player1.playClick = get(playclick)
+      player1.callbackObject = {
+        run: (note) => {
+          // color of the played melody
+          let index = unseq.notes.filter((n) => n.pitch === note.pitch && n.startTime === note.startTime && n.endTime === note.endTime)[0].index
+          playingHighlight.set(index)
+        },
+        stop: () => {
+          // everything back to previous
+          playing.set(false)
+          playingHighlight.set(null)
+          player1.callbackObject = {
+            run: (note) => {
+              if (!playline)
+                changePlay(true)
+            },
+            stop: () => {
+              changePlay(false)
+            }
+          }
+        }
+      }
       //player1.loadSamples(seq).then(() => {
       player1.start(seq, get(bpm)).then(() => {
         if (playbackline !== undefined)
           playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
             ?.attr("x2", reset)
         melodyColors(get(meloselected) === null, get(meloselected))
-        console.log(get(meloselected))
+        player1.callbackObject = {
+          run: (note) => {
+            if (!playline)
+              changePlay(true)
+          },
+          stop: () => {
+            changePlay(false)
+          }
+        }
       })
 
       if (playbackline !== undefined) {
@@ -917,7 +952,6 @@ export function playExportArrangement() {
       }
 
       player1.start(seq, get(bpm)).then(() => {
-        console.log()
         player1.callbackObject = {
           run: (note) => {
             if (!playline)
@@ -1199,26 +1233,36 @@ export function adaptMelodiesWithRules(data, steps, adjustMode) {
 
 export function adjustMelodiesToFilters() {
   log("adjust with filters", { pitchmap: get(filterextents), keys: get(selectedKeys) })
-  if (get(emotionbased).value === 0) {
-    let temp = []
-    get(models).forEach(model => {
-      temp = []
-      model.melodies.forEach(melody => {
-        temp.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
-      })
-      models.addMelodiesToModel(model.name, temp)
+  if (get(adjustPrimer)) {
+    let prim = []
+    get(primerList).forEach(melody => {
+      console.log(melody)
+      prim.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
     })
-  } else if (get(emotionbased).value === 2) {
-    let temp = [[], [], []]
-    get(polyoptions).forEach((voice, i) => {
-      voice.forEach(p => {
-        temp[i].push(adaptMelodiesWithRules(p, p.totalQuantizedSteps, true))
-        if (p.basemelody === 145)
-          console.log(p)
+    primerList.set(prim)
+  }
+  if (get(adjustGenerated)) {
+    if (get(emotionbased).value === 0) {
+      let temp = []
+      get(models).forEach(model => {
+        temp = []
+        model.melodies.forEach(melody => {
+          temp.push(adaptMelodiesWithRules(melody, melody.totalQuantizedSteps, true))
+        })
+        models.addMelodiesToModel(model.name, temp)
       })
-    })
-    console.log(temp)
-    polyoptions.set(temp)
+    } else if (get(emotionbased).value === 2) {
+      let temp = [[], [], []]
+      get(polyoptions).forEach((voice, i) => {
+        voice.forEach(p => {
+          temp[i].push(adaptMelodiesWithRules(p, p.totalQuantizedSteps, true))
+          if (p.basemelody === 145)
+            console.log(p)
+        })
+      })
+      console.log(temp)
+      polyoptions.set(temp)
+    }
   }
 }
 
