@@ -182,7 +182,6 @@
         </div>
         <div class="list" style="height={h100}px">
             {#if $meloselected !== null && $meloselected !== undefined}
-                {console.log($meloselected)}
                 {#each $meloselected as data, index}
                     <div>
                         <Pianoroll

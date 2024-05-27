@@ -742,13 +742,16 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
     log("stopped listening", {})
     player1.stop()
     changePlay(false)
+    playingHighlight.set(null)
     if (playbackline !== undefined)
       playbackline?.transition().attr("stroke", null).attr("x1", reset)
         .attr("x2", reset)
     return null
   }
 
+  console.log(sample)
   let notes = e
+  let index = sample?.index
   let closest
   if (event) {
     let axis = getAxisScale()
@@ -771,10 +774,13 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
       return (Math.abs(curr[0][curaxisx] - selx) + Math.abs(curr[1][curaxisy] - sely) < Math.abs(prev[0][curaxisx] - selx) + Math.abs(prev[1][curaxisy] - sely) ? curr : prev);
     });
 
-    if (Math.abs(closest[0][curaxisx] - selx) < margin[0] && Math.abs(closest[1][curaxisy] - sely) < margin[1])
+    if (Math.abs(closest[0][curaxisx] - selx) < margin[0] && Math.abs(closest[1][curaxisy] - sely) < margin[1]) {
       notes = closest[2].melody.notes
-    else
+      index = closest[2].index
+    } else {
+      playingHighlight.set(null)
       notes = []
+    }
 
   }
   // sample holds the point so it is in seen already -> just edit seen
@@ -812,14 +818,12 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
         }
       }
     if (notes?.length > 0) {
+
       const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
       seq.notes = notes
-      const unseq = mm.sequences.unquantizeSequence(seq, get(bpm))
-      unseq.notes.forEach((n, i) => {
-        n.index = notes[i].index
-      })
-
-
+      console.log(index)
+      if (index !== undefined)
+        playingHighlight.set(index)
       log("listening", logseq)
       if (playbackline !== undefined)
         playbackline.transition().attr("stroke", "blue")
@@ -828,13 +832,15 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
       player1.callbackObject = {
         run: (note) => {
           // color of the played melody
-          let index = unseq.notes.filter((n) => n.pitch === note.pitch && n.startTime === note.startTime && n.endTime === note.endTime)[0].index
-          playingHighlight.set(index)
+          if (!playline)
+            changePlay(true)
+
         },
         stop: () => {
           // everything back to previous
           playing.set(false)
           playingHighlight.set(null)
+          changePlay(false)
           player1.callbackObject = {
             run: (note) => {
               if (!playline)
@@ -852,15 +858,6 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
           playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
             ?.attr("x2", reset)
         melodyColors(get(meloselected) === null, get(meloselected))
-        player1.callbackObject = {
-          run: (note) => {
-            if (!playline)
-              changePlay(true)
-          },
-          stop: () => {
-            changePlay(false)
-          }
-        }
       })
 
       if (playbackline !== undefined) {
