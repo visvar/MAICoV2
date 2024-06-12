@@ -196,6 +196,7 @@ export function makeid(length) {
 }
 
 export function log(action, data) {
+  console.log(data)
   if (get(progress) !== 100 || get(progress) !== 0)
     actionlog.add(new Date().toISOString().substring(11, 23), action, data)
 }

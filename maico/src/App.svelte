@@ -1065,7 +1065,9 @@
           type="file"
           id="datasetFiles"
           on:change={(event) => {
-            flutil.log("import dataset");
+            flutil.log("import dataset", {
+              filename: event.target.files[0].name,
+            });
             mu.uploadDatasetFile(event);
           }}
         />
