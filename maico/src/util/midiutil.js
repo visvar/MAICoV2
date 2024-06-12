@@ -74,7 +74,7 @@ function showTrimResult(result, lastid) {
         result = mm.sequences.quantizeNoteSequence(result, 4)
         if (result.notes.length > 0) {
             let max = 0
-            result = transformNotesToStart(result) // mm.sequences.trim(result, 17, result.notes[result.notes.length - 1].quantizedEndStep)
+            result = transformNotesToSeq(result) // mm.sequences.trim(result, 17, result.notes[result.notes.length - 1].quantizedEndStep)
             result.uniqueID = makeid(3)
             result.id = lastid
             result.recorded = true
@@ -91,13 +91,14 @@ function showTrimResult(result, lastid) {
     }
 }
 
-function transformNotesToStart(result) {
+function transformNotesToSeq(result) {
     try {
         let min = Math.min(...result.notes.map((n) => n.quantizedStartStep))
         result.notes.forEach((note) => {
             note.quantizedStartStep -= min
             note.quantizedEndStep -= min
         })
+        result.totalQuantizedSteps = Math.max(...result.notes.map((n) => n.quantizedEndStep))
         return result
     } catch (e) {
         console.log(e)
