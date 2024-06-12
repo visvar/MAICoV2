@@ -552,8 +552,10 @@
             }
           }
         }
-        if (func[0] !== undefined)
+        if (func[0] !== undefined) {
+          console.log(func[0].action);
           value !== null ? func[0].call(value) : func[0].call();
+        }
       }
     }
   }
@@ -874,12 +876,12 @@
           <input
             type="range"
             bind:value={$mvaesim}
-            min="0.7"
+            min="0.5"
             max="1"
             step="0.01"
           />
           <span>
-            {$mvaesim}
+            {$mvaesim.toFixed(2)}
           </span>
         </div>
         <div class="label">melody length</div>

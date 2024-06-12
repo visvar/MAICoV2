@@ -871,6 +871,7 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
 }
 
 export function playExportArrangement() {
+  playing.set(false)
   let player1 = get(player)
   if (player1 === null || player1 === undefined) {
     player1 = new mm.Player(true)//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
