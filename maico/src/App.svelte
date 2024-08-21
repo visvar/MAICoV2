@@ -1319,14 +1319,13 @@
         <div class="filtercontainer">
           <div class="doubleslider">
             <DoubleRangeSlider
-              title={"Similarity to Primer"}
+              title={"Temperature"}
               values={filtertemp}
               change={(value) => {
                 flutil.log("filter temperature to primer", { value });
               }}
             />
-        </div>
-        <div class="filtercontainer">
+          </div>
           <div class="doubleslider">
             <DoubleRangeSlider
               title={"Similarity to Primer"}

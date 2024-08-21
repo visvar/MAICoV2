@@ -410,7 +410,7 @@ export const currentpoints = derived(
                 // similarity filter
                 .filter((point) => point[2].additional.similarityprimer >= $stores[3][0][0] && point[2].additional.similarityprimer <= $stores[3][0][1])
                 // filter temperature
-                .filter((point) => point[2].temperature >= $stores[15][0][0] && point[2].temperature <= $stores[15][0][1])
+                .filter((point) => point[2].temperature >= $stores[15][0][0] && point[2].temperature <= $stores[15][0][1] || point[2].temperature === undefined)
                 // number notes
                 .filter((point) => point[2].melody.notes.length >= $stores[4][0][0] && point[2].melody.notes.length <= $stores[4][0][1])
                 // variance of intervals filter
