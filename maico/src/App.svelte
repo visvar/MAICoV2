@@ -82,6 +82,9 @@
     clickRecording,
     adjustPrimer,
     adjustGenerated,
+    playmidiOutFlag,
+    selectedOutput,
+    allOutputs,
   } from "./stores/stores.js";
 
   import {
@@ -413,8 +416,6 @@
   let midiAccess = null;
   let isWaitingForMIDIMessage = false;
   let storedMIDIMessage = null;
-  let allOutputs = [];
-  let selectedOutput = { label: "none", value: 0 };
 
   async function initializeMIDI() {
     try {
@@ -434,11 +435,12 @@
     for (let output of outputs) {
       if (output && output !== null) temp.push(output);
     }
-    selectedOutput =
+    selectedOutput.set(
       temp.length > 0
         ? { label: temp[0].name, value: 0 }
-        : { label: "none", value: 0 };
-    allOutputs = temp;
+        : { label: "none", value: 0 },
+    );
+    allOutputs.set(temp);
     if (type === "connected") {
       console.log(`MIDI controller connected: ${port.name}`);
       // Call your function when a MIDI controller is connected
@@ -579,7 +581,7 @@
       for (let output of outputs) {
         if (output && output !== null) temp.push(output);
       }
-      allOutputs = temp;
+      allOutputs.set(temp);
     }
   }
 
@@ -598,7 +600,7 @@
       for (let output of outputs) {
         if (output && output !== null) temp.push(output);
       }
-      allOutputs = temp;
+      allOutputs.set(temp);
     }
   }
 
@@ -998,17 +1000,17 @@
           <Select
             class="select"
             id="selmidi"
-            items={allOutputs.map((o, i) => {
+            items={$allOutputs.map((o, i) => {
               return { label: o.name, value: i };
             })}
-            bind:value={selectedOutput}
+            bind:value={$selectedOutput}
             clearable={false}
           />
         </div>
         <button
           on:click={() => {
-            if (selectedOutput.label !== "none")
-              midiutil.playMidiOut([allOutputs[selectedOutput.value]]);
+            if ($selectedOutput.label !== "none")
+              midiutil.playMidiOut([$allOutputs[$selectedOutput.value]]);
           }}
         >
           Play as MidiOut
@@ -1412,6 +1414,12 @@
           <span>
             BPM: {$bpm}
           </span>
+        </div>
+        <div
+          class="option {$playmidiOutFlag ? 'selected' : ''}"
+          on:click={() => playmidiOutFlag.set(!$playmidiOutFlag)}
+        >
+          Play via MidiOut
         </div>
         <div
           class="option {$playclick ? 'selected' : ''}"

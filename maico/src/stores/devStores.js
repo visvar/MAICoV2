@@ -20,6 +20,8 @@ export const playrecord = writable(true)
 
 export const midiplayer = writable(null)
 
+export const midiplayerSingle = writable(null)
+
 export const lastidPrimer = writable(0)
 
 export const selectedMeloColors = writable(null)

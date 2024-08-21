@@ -1,6 +1,6 @@
 import * as tonal from 'tonal'
-import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew, meloselected, adjustGenerated, adjustPrimer, primerList } from '../stores/stores.js'
-import { playing, playingHighlight } from "../stores/devStores.js"
+import { exportList, models, player, currentpoints, axisselect, keydetectselect, seen, filterextents, selectedKeys, bpm, strangers, filterkey, playclick, points, progress, polyoptions, emotionbased, progressnew, meloselected, adjustGenerated, adjustPrimer, primerList, playmidiOutFlag, selectedOutput, allOutputs } from '../stores/stores.js'
+import { midiplayerSingle, midiplayer, playing, playingHighlight } from "../stores/devStores.js"
 import { get } from "svelte/store";
 import * as mm from '@magenta/music'
 import * as visutil from './visutil.js'
@@ -724,6 +724,10 @@ import { log, makeid } from './fileutil.js';
 import { melodyColors } from './midiutil.js';
 
 export function playMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
+  if (get(playmidiOutFlag)) {
+    playMidiMelody(e, event, playbackline, xend, time, reset, sample, logseq)
+    return null
+  }
   let player1 = get(player)
   if (player1 === null || player1 === undefined) {
     player1 = new mm.Player(true)//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
@@ -852,6 +856,157 @@ export function playMelody(e, event, playbackline, xend, time, reset, sample, lo
           }
         }
       }
+      //player1.loadSamples(seq).then(() => {
+      player1.start(seq, get(bpm)).then(() => {
+        if (playbackline !== undefined)
+          playbackline?.transition()?.attr("stroke", null)?.attr("x1", reset)
+            ?.attr("x2", reset)
+        melodyColors(get(meloselected) === null, get(meloselected))
+      })
+
+      if (playbackline !== undefined) {
+        pbl = playbackline
+        t = time
+        xe = xend
+      }
+      //})
+    }
+  }
+}
+
+export function playMidiMelody(e, event, playbackline, xend, time, reset, sample, logseq = {}) {
+  if (!get(playmidiOutFlag)) {
+    return null
+  }
+  let player1 = get(midiplayerSingle)
+  if (player1 === null || player1 === undefined) {
+    player1 = new mm.MIDIPlayer()//SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus')
+    player1.callbackObject = {
+      run: (note) => {
+        if (!playline)
+          changePlay(true)
+      },
+      stop: () => {
+        changePlay(false)
+      }
+    }
+    //player1.loadAllSamples(1, false).then(() => { console.log('playerLoaded'); player.set(player1) })
+    midiplayerSingle.set(player1)
+  } else if (player1.isPlaying()) {
+    log("stopped listening", {})
+    player1.stop()
+    changePlay(false)
+    playingHighlight.set(null)
+    if (playbackline !== undefined)
+      playbackline?.transition().attr("stroke", null).attr("x1", reset)
+        .attr("x2", reset)
+    return null
+  }
+
+  console.log(sample)
+  let notes = e
+  let index = sample?.index
+  let closest
+  if (event) {
+    let axis = getAxisScale()
+    const x = axis[0]
+    // @ts-ignore
+    const y = axis[1]
+
+    // get nearest melody
+    // get axis -> invert -> compare to all vis data and get nearest
+
+    const selx = x.invert(e.offsetX)
+    const sely = y.invert(e.offsetY)
+
+    const margin = [Math.abs(x.invert(50) - x.invert(100)), Math.abs(y.invert(50) - y.invert(100))]
+
+    const curaxisx = get(axisselect)[0].value
+    const curaxisy = get(axisselect)[1].value
+
+    closest = get(currentpoints).reduce(function (prev, curr) {
+      return (Math.abs(curr[0][curaxisx] - selx) + Math.abs(curr[1][curaxisy] - sely) < Math.abs(prev[0][curaxisx] - selx) + Math.abs(prev[1][curaxisy] - sely) ? curr : prev);
+    });
+
+    if (Math.abs(closest[0][curaxisx] - selx) < margin[0] && Math.abs(closest[1][curaxisy] - sely) < margin[1]) {
+      notes = closest[2].melody.notes
+      index = closest[2].index
+    } else {
+      playingHighlight.set(null)
+      notes = []
+    }
+
+  }
+  // sample holds the point so it is in seen already -> just edit seen
+  if (sample !== undefined) {
+    if (get(seen).filter(p1 => p1[2].index === sample.index).length === 0) {
+      sample.userspecific.seen = 2
+      seen.set(get(seen).push(sample))
+    } else {
+      sample.userspecific.seen = 2
+      get(seen).filter(p1 => p1[2].index === sample.index)[0][2].userspecific.seen = 2
+      seen.set(get(seen))
+    }
+  } else { //take closest as point -> maybe need to add to seen and value to 2
+    /*if (get(seen).filter(p1 => p1[2].index === closest[2].index).length === 0) {
+      closest[2].userspecific.seen = 2
+      seen.set(get(seen).push(sample))
+    } else {
+      closest[2].userspecific.seen = 2
+      get(seen).filter(p1 => p1[2].index === closest[2].index)[0].userspecific.seen = 2
+      seen.set(get(seen))
+    }
+    */
+  }
+
+  // play melody
+  if (player1 !== undefined && player1 !== null) {
+    if (playbackline !== undefined)
+      player1.callbackObject = {
+        run: (note) => {
+          if (!playline)
+            changePlay(true)
+        },
+        stop: () => {
+          changePlay(false)
+        }
+      }
+    if (notes?.length > 0) {
+
+      const seq = mm.sequences.createQuantizedNoteSequence(4, 120)
+      seq.notes = notes
+      console.log(index)
+      if (index !== undefined)
+        playingHighlight.set(index)
+      log("listening", logseq)
+      if (playbackline !== undefined)
+        playbackline.transition().attr("stroke", "blue")
+
+      player1.playClick = get(playclick)
+      player1.callbackObject = {
+        run: (note) => {
+          // color of the played melody
+          if (!playline)
+            changePlay(true)
+
+        },
+        stop: () => {
+          // everything back to previous
+          playing.set(false)
+          playingHighlight.set(null)
+          changePlay(false)
+          player1.callbackObject = {
+            run: (note) => {
+              if (!playline)
+                changePlay(true)
+            },
+            stop: () => {
+              changePlay(false)
+            }
+          }
+        }
+      }
+      player1.outputs = [get(allOutputs)[get(selectedOutput).value]]
       //player1.loadSamples(seq).then(() => {
       player1.start(seq, get(bpm)).then(() => {
         if (playbackline !== undefined)

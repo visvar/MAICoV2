@@ -153,6 +153,12 @@ export const primerList = createPrimerList()
 
 export const primerTodelete = writable({ label: 0, value: 0 });
 
+export const playmidiOutFlag = writable(false)
+
+export const allOutputs = writable([])
+
+export const selectedOutput = writable({ label: "none", value: 0 })
+
 export const exportmetric = writable({ label: "ID asc", value: 0 });
 
 
