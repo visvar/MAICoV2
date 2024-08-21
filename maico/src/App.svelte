@@ -41,6 +41,7 @@
     rate,
     seenratemode,
     filtersim,
+    filtertemp,
     qcorder,
     filternumbernotes,
     filterinscale,
@@ -1315,6 +1316,16 @@
         <h1 class="mb-4 text-3xl font-bold">Filter</h1>
       </div>
       {#if filter}
+        <div class="filtercontainer">
+          <div class="doubleslider">
+            <DoubleRangeSlider
+              title={"Similarity to Primer"}
+              values={filtertemp}
+              change={(value) => {
+                flutil.log("filter temperature to primer", { value });
+              }}
+            />
+        </div>
         <div class="filtercontainer">
           <div class="doubleslider">
             <DoubleRangeSlider

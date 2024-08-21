@@ -370,6 +370,9 @@ export const outercircle = writable(true)
 
 export const filtersim = writable([[0, 1], [0, 1]])
 
+export const filtertemp = writable([[0.2, 1.6], [0.2, 1.6]])
+
+
 export const filternumbernotes = writable([[0, 8], [0, 8]])
 
 export const filterinscale = writable([[0, 1], [0, 1]])
@@ -391,7 +394,7 @@ export const excludePoly = writable([])
 
 
 export const currentpoints = derived(
-    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter, exclude, excludePoly],
+    [points, modelselected, setcpoints, filtersim, filternumbernotes, filterinscale, filtervarint, filterkey, seenfilter, tufilter, tdfilter, listenfilter, expfilter, exclude, excludePoly, filtertemp],
     $stores => {
         permutation = new Array($stores[0]).fill(null)
         if ($stores[2] !== null && $stores[2] !== cpointchanged) {
@@ -406,6 +409,8 @@ export const currentpoints = derived(
                 .filter((point) => point[2]?.isPolymix && $stores[1] !== null ? polyUnselected(point[2].polyinfo.combinations.concat([point[2].polyinfo.basemelody]), $stores[1]) : true)
                 // similarity filter
                 .filter((point) => point[2].additional.similarityprimer >= $stores[3][0][0] && point[2].additional.similarityprimer <= $stores[3][0][1])
+                // filter temperature
+                .filter((point) => point[2].temperature >= $stores[15][0][0] && point[2].temperature <= $stores[15][0][1])
                 // number notes
                 .filter((point) => point[2].melody.notes.length >= $stores[4][0][0] && point[2].melody.notes.length <= $stores[4][0][1])
                 // variance of intervals filter
