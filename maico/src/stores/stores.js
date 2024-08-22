@@ -543,6 +543,7 @@ export const repSwitch = createbcScwitch()
 export const clusterdata = derived(
     [currentpoints, cluster, axisselect],
     $stores => {
+        console.log('clusterdata', $stores)
         if ($stores[0] !== null && $stores[0] !== undefined && $stores[1].numberCluster > 0) {
             let temp = new Array($stores[1].numberCluster)
 

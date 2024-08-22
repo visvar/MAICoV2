@@ -32,6 +32,7 @@
     const maxultcluster = 2; // soehow 3 does not work in info
 
     onMount(() => {
+        console.log("draw hull", $clusterdata);
         drawHulls();
     });
 
@@ -53,16 +54,16 @@
                             r,
                             e.offsetX,
                             e.offsetY,
-                            $repsize * 45
+                            $repsize * 45,
                         )
                     ) {
                         let selecttemp = $clusterdata.filter(
-                            (hull) => hull.clusterindex === cr.clusterindex
+                            (hull) => hull.clusterindex === cr.clusterindex,
                         );
                         select = [[selecttemp[0], selecttemp[0].clusterindex]];
                     }
                 }
-            })
+            }),
         );
         return select;
     }
@@ -114,8 +115,8 @@
             let rep = $representatives.filter(
                 (rep) =>
                     select.filter(
-                        (sel) => rep.clusterindex === sel[0].clusterindex
-                    ).length === 1
+                        (sel) => rep.clusterindex === sel[0].clusterindex,
+                    ).length === 1,
             );
 
             /// here problem with adding undefined to select
@@ -126,24 +127,24 @@
                             r,
                             e.offsetX,
                             e.offsetY,
-                            $repsize * 45
-                        )
+                            $repsize * 45,
+                        ),
                     );
                     if (
                         visutil.hitDetection(
                             r,
                             e.offsetX,
                             e.offsetY,
-                            $repsize * 45
+                            $repsize * 45,
                         )
                     ) {
                         if (e.ctrlKey)
                             select = $clusterdata.filter(
-                                (hull) => hull.clusterindex === cr.clusterindex
+                                (hull) => hull.clusterindex === cr.clusterindex,
                             );
                         select = [[select[0], select[0][1]]];
                     }
-                })
+                }),
             );
 
             if (!e.ctrlKey && select.length > 1) {
