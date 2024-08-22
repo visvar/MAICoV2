@@ -134,10 +134,10 @@
 
   $: $models, testMeloPoints();
   $: $primerList, testMeloPoints();
-  //$: $distMatrix, calcClusters();
-  //$: $clusterslicer, calcClusters();
-  //$: $distMatrix, calcRepresentative();
-  //$: $clusterrepresentative, calcRepresentative();
+  $: $distMatrix, calcClusters();
+  $: $clusterslicer, calcClusters();
+  $: $distMatrix, calcRepresentative();
+  $: $clusterrepresentative, calcRepresentative();
   $: $recompute, testMeloPoints();
   $: $keydetectselect, recalcKeyInfo();
   $: $keymode, recalcKeyInfo();
