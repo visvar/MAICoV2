@@ -337,16 +337,17 @@ export function calcVariancesCluster(points, color) {
   return deviation
 }
 
-export function calcInformation(points) {
+export function calcInformation(points, key) {
 
   // key distribution
 
+  /*
   let keyDist = sortKeys(objDist(points.map((p, i) => {
     if (p[2].additional.key === null)
       return 'none'
     return p[2].additional.key.tonic + ' ' + p[2].additional.key.type
   })))
-
+  */
 
   // piano heatmap
   // needs array of melodies
@@ -355,12 +356,15 @@ export function calcInformation(points) {
   // model distribution
   let modDist = objDist(points.map((p) => p[2].model.name))
   // harmonic distribution -> how much inscale?
-  let harmdist = calcDistribution(points.map((p) => p[2].additional.harmonicInfo))
+  //let harmdist = calcDistribution(points.map((p) => p[2].additional.harmonicInfo))
+  let harmdist = calcDistributionWithBaseKey(points.map((p) => p[2].melody), key)
+  /*
   let inScaPerc = 0
   if (points.length > 0)
     inScaPerc = points.map(p => muutil.getInScalePercent(p[2].additional.harmonicInfo)).reduce((a, b) => a + b) / points.length
+*/
 
-
+/*
   let modekeystack =
     addupOcc(keyDist.map(k => {
       let obj = { x: k.name }
@@ -369,8 +373,11 @@ export function calcInformation(points) {
       })
       return obj
     }), points)
+    */
 
-  let info = { keydist: keyDist, pheatmap: pheatmap, moddist: modDist, harmdist: harmdist, inScaPerc: inScaPerc, modkeystack: modekeystack }
+  //let info = { keydist: keyDist, pheatmap: pheatmap, moddist: modDist, harmdist: harmdist, inScaPerc: inScaPerc, modkeystack: modekeystack }
+  let info = { pheatmap: pheatmap, moddist: modDist, harmdist: harmdist }
+  console.log(info)
   return info
 }
 
@@ -384,6 +391,31 @@ function calcDistribution(data) {
     }
   }
   return temp
+}
+
+function calcDistributionWithBaseKey(data, key) {
+  let harmonics = [0, 0, 0, 0, 0]
+  data.map(mel => mel.notes).forEach(notes => {
+    notes.map(note1 => (note1.pitch - key) % 12).forEach((note, i) => {
+      if(key !== -1){
+        if (note === 0)
+          harmonics[0]++
+        else if (note === 7)
+          harmonics[1]++
+        else if (note === 5)
+          harmonics[2]++
+        else if(note === 2 || note === 4 || note === 9 || note === 11)
+          harmonics[3]++
+        else
+          harmonics[4]++
+      }else{
+        harmonics[4]++
+      }
+    })
+  })
+  console.log(harmonics)
+
+  return harmonics
 }
 
 function addupOcc(data, p) {

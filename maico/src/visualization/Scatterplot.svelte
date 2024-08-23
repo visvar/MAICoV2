@@ -581,7 +581,7 @@
       updateFilterExtent(filtervarint, intfilter);
       visutil.calcAllColorScales(pointarray);
       points.set(pointarray);
-      //calcClusters();
+      calcClusters();
     }
   }
 
@@ -819,7 +819,7 @@
       updateFilterExtent(filtervarint, intfilter);
       visutil.calcAllColorScales(pointarray);
       points.set(pointarray);
-      //calcClusters();
+      calcClusters();
     }
   }
 

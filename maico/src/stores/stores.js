@@ -543,7 +543,6 @@ export const repSwitch = createbcScwitch()
 export const clusterdata = derived(
     [currentpoints, cluster, axisselect],
     $stores => {
-        console.log('clusterdata', $stores)
         if ($stores[0] !== null && $stores[0] !== undefined && $stores[1].numberCluster > 0) {
             let temp = new Array($stores[1].numberCluster)
 
@@ -647,20 +646,20 @@ export const representatives = derived(
 export const clusterSelect = writable(null)
 
 export const selectedClusterData = derived(
-    [clusterdata, clusterSelect],
+    [clusterdata, clusterSelect, selectedBaseKeys],
     $stores => {
         if ($stores[0]?.length > 0 && $stores[1] !== null) {
             const cluster = $stores[0]
             const select = $stores[1]
+            const selectedKey = $stores[2]
             let temp = []
 
             cluster.forEach((v, i) => {
                 if (select.filter(cs => cs[1] === i).length > 0) {
-                    v.clusterData = calcInformation(v.containpoints)
+                    v.clusterData = calcInformation(v.containpoints, selectedKey)
                     temp.push(v)
                 }
             })
-
             return temp
         } else {
             return []
