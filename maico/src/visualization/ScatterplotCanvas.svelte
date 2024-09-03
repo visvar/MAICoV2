@@ -663,6 +663,59 @@
                   r={$repsize * selectedSize}
                   information={data[2]}
                 />
+              {:else if $glyphselect.value === 7}
+                <RhythmPie
+                  x={x(data[2].repposition[0][currentaxis[0].value])}
+                  y={y(data[2].repposition[1][currentaxis[1].value])}
+                  r={$repsize * selectedSize}
+                  information={data[2]}
+                />
+              {:else if $glyphselect.value === 8}
+                <Flowerglyph
+                  {opacity}
+                  x={x(data[2].repposition[0][currentaxis[0].value])}
+                  y={y(data[2].repposition[1][currentaxis[1].value])}
+                  fill={data[2].repcolor}
+                  r={$repsize * selectedSize}
+                  information={data[2].starglyphRhythm.data}
+                  drawbounds={$outercircle}
+                />
+              {:else if $glyphselect.value === 9}
+                {#if $repSwitch}
+                  <Pianorollheatmap
+                    x={x(data[2].repposition[0][currentaxis[0].value])}
+                    y={y(data[2].repposition[1][currentaxis[1].value])}
+                    fill={data[2].repcolor}
+                    r={$repsize * selectedSize}
+                    information={data[2]}
+                  />
+                {:else}
+                  <Melodyline
+                    {opacity}
+                    x={x(data[2].repposition[0][currentaxis[0].value])}
+                    y={y(data[2].repposition[1][currentaxis[1].value])}
+                    r={$repsize * selectedSize}
+                    information={data[2]}
+                  />
+                {/if}
+              {:else if $glyphselect.value === 10}
+                {#if $repSwitch}
+                  <Pianorollheatmap
+                    x={x(data[2].repposition[0][currentaxis[0].value])}
+                    y={y(data[2].repposition[1][currentaxis[1].value])}
+                    fill={data[2].repcolor}
+                    r={$repsize * selectedSize}
+                    information={data[2]}
+                  />
+                {:else}
+                  <MelodylineIntervals
+                    {opacity}
+                    x={x(data[2].repposition[0][currentaxis[0].value])}
+                    y={y(data[2].repposition[1][currentaxis[1].value])}
+                    r={$repsize * selectedSize}
+                    information={data[2]}
+                  />
+                {/if}
               {/if}
             {/each}
           {/if}

@@ -1,7 +1,8 @@
 # MaicoV2
  
 ## Find the Website here:
-https://visvar.github.io/MAICoV2/
+https://visvar.github.io/MAICoV2/ for an older version or
+https://maicomidi.web.app/ for the current version.
 
 ## How to use
 Best use is in fullmode on 1900 x 1080 px in the browser (tested in Chrome and Edge).
