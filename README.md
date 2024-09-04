@@ -29,6 +29,10 @@ The Map in the middle of the screen shows all samples. The Primer is a black dot
 1. Click on "Import/Export" and then on "Polyphony" to open the Menu.
 2. Select the rule that is used to combine the monophonic samples and press generate.
 
+### Session
+It is helpful/advised to export the session under "Import/Export", in order to use the same samples later on or if a bug appears.
+Here you also are allowed to open the session file.
+
 ### Models
 In the part "Model Description", we can see which model produces how many melodies (number next to the name), as well as how many melodies you saw, listened to, and liked/disliked.
 The colors of the names also reference the colors in the scatterplot, when "Model" is selected in Visualizations.
@@ -54,6 +58,11 @@ Under "Features & Metrics" you can toggle whether melodies should be played via 
 
 ### Clustering
 
+Click on "Clustering" to open the Menu. By clicking on the first Button, you can enable hierarchical clustering and see the convex hulls of clusters with a representative.
+One can also show the glyphs for all points via toggle and adjust the sizes of points and representatives in the main view.
+Adjusting the thresholds for clusters and represantatives seperately to create clusters or multiple representatifves of one cluster. 
+While by default the most center element is used as representative one can also use an average glyph of the cluster.
+
 ### Filter
 In the filter section you can filter all shown melodies by values like number of notes etc.
 Click the icons to show all melodies you have interacted with. The background of the icon indicates the mode.
@@ -69,3 +78,4 @@ Go to "Import/Export" and select the Format on how to export your selected melod
 - seperate Tracks: Export a single Midi file where each track is one of your selected melody
 - sucessivly: Export all melodies, played after another, in a single track and MIDI file.
 Then click export.
+
