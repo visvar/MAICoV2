@@ -25,3 +25,7 @@ export const midiplayerSingle = writable(null)
 export const lastidPrimer = writable(0)
 
 export const selectedMeloColors = writable(null)
+
+export const ableton = writable(false)
+
+export const ngrokUrl = writable(null)

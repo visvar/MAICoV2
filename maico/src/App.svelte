@@ -98,6 +98,8 @@
     recordedNotes,
     playrecord,
     lastidPrimer,
+    ableton,
+    ngrokUrl,
   } from "./stores/devStores.js";
 
   import { Progressbar, Fileupload, Label } from "flowbite-svelte";
@@ -653,6 +655,22 @@
             class="mb-8"
           />
         </div>
+        <div>
+          <input
+            type="checkbox"
+            bind:checked={$ableton}
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          /> Ableton Live Connection
+        </div>
+        {#if $ableton}
+          <label for="ngrokUrl">Enter Ngrok URL:</label>
+          <input
+            type="text"
+            id="ngrokUrl"
+            placeholder="https://your-ngrok-url.ngrok.io"
+            bind:value={$ngrokUrl}
+          />
+        {/if}
         <div on:click={() => (poly = !poly)}>
           <h1 class="mb-4 text-l font-bold">Polyphony</h1>
         </div>

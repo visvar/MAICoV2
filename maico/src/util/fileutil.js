@@ -1,9 +1,11 @@
 import { saveAs } from 'file-saver'
 import { Midi } from '@tonejs/midi'
 import * as mm from '@magenta/music'
-import models, { actionlog, exportList, modelselected, points, polyoptions, primerList, progress } from '../stores/stores'
+import models, { actionlog, bpm, exportList, modelselected, points, polyoptions, primerList, progress } from '../stores/stores'
 import { get } from 'svelte/store'
 import * as mu from "./modelutil"
+import { getExtentOfMelody } from './musicutil'
+import { ngrokUrl } from '../stores/devStores'
 
 export function writeToMidi(melodies1, bpm, mode) {
   if (melodies1.length === 0)
@@ -196,7 +198,6 @@ export function makeid(length) {
 }
 
 export function log(action, data) {
-  console.log(data)
   if (get(progress) !== 100 || get(progress) !== 0)
     actionlog.add(new Date().toISOString().substring(11, 23), action, data)
 }
@@ -257,4 +258,79 @@ export function polyUnselected(index, ms) {
     indexlow += model.melodies.length
   })
   return ret
+}
+
+function convertToMaxFormat(melody) {
+  let extent = getExtentOfMelody(melody)
+  let data = {
+    notes: [], clip: {
+      time_selection_start: 0.0,
+      time_selection_end: 4.0,
+      first_note_start: 0.0,
+      last_note_end: 4.083655927405927,
+      lowest_pitch: extent[0],
+      highest_pitch: extent[1]
+    }
+    ,
+    scale: {
+      scale_mode: 1,
+      root_note: 0,
+      scale_intervals: [0, 2, 4, 5, 7, 9, 11],
+      scale_name: "Major"
+    }
+    ,
+    grid: {
+      interval: 0.25,
+      enabled: 1
+    }
+  }
+  let newSec = mm.sequences.createQuantizedNoteSequence(4, get(bpm))
+  newSec.notes = melody.notes.sort((a, b) => a.quantizedStartStep - b.quantizedStartStep)
+  let sec = mm.sequences.unquantizeSequence(newSec, get(bpm))
+  sec.notes.forEach((note, i) => {
+    if (i === 0)
+      data.clip.first_note_start = note.startTime
+    data.notes.push({
+      note_id: 34 + i,
+      pitch: note.pitch,
+      start_time: note.startTime,
+      duration: note.endTime - note.startTime,
+      velocity: 100,
+      mute: 0,
+      probability: 1.0,
+      velocity_deviation: 0.0,
+      release_velocity: 64.0,
+    })
+    data.clip.time_selection_end < note.endTime ? data.clip.time_selection_end = note.endTime : null
+    data.clip.last_note_end < note.endTime ? data.clip.last_note_end = note.endTime : null
+  })
+
+  return data
+}
+
+
+export async function sendDataToBridgeServer(melody) {
+  const ngrokurl = get(ngrokUrl)
+  if (ngrokurl === null) {
+    console.log('no Link')
+    return null
+  }
+  let data = convertToMaxFormat(melody)
+  try {
+    const response = await fetch(ngrokurl + "/send-to-amxd", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: data })
+    });
+
+    if (response.ok) {
+      console.log("Data sent to bridge server successfully!");
+    } else {
+      console.error("Failed to send data to bridge server:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error connecting to bridge server:", error);
+  }
 }

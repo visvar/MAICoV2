@@ -20,10 +20,11 @@
         currentpoints,
         excludePoly,
     } from "../../stores/stores.js";
+    import { ableton } from "../../stores/devStores.js";
     import { keysLookup, oktaveLookup } from "../../stores/globalValues.js";
     import * as glutil from "../../util/glyphutil.js";
     import { melodies } from "@magenta/music";
-    import { log } from "../../util/fileutil.js";
+    import { log, sendDataToBridgeServer } from "../../util/fileutil.js";
     import { forEach } from "mathjs";
 
     const margin = { top: 20, right: 10, bottom: 10, left: 25 };
@@ -619,6 +620,9 @@
             class="option {melody.userspecific.export ? 'selected' : ''}"
             on:click={() => {
                 selectOption(1);
+                if (ableton && !melody.userspecific.export) {
+                    sendDataToBridgeServer(melody.melody);
+                }
                 melody.userspecific.export = exportChange(
                     melody,
                     melody.userspecific.export,
