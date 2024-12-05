@@ -4,6 +4,9 @@
 https://visvar.github.io/MAICoV2/ for an older version or
 https://maicomidi.web.app/ for the current version.
 
+## Soundexamples:
+Find some soundexamples from the commissioned works with explanations in the "Mosi_example" folder: https://github.com/visvar/MAICoV2/tree/main/Mosi_example
+
 ## How to use
 Best use is in fullmode on 16x10 Format (minimum1900 x 1080 px) in the browser (tested in Chrome and Edge).
 Normal Browser window should work as well, as long as it keeps the size mentioned before.
