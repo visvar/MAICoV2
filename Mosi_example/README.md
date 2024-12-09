@@ -37,3 +37,4 @@ Now the samples are synthesized live as a result from Brachtel's work.
 load primer -> generate variations -> generate poly -> select and export
 -> example exported for session (30_12) -> maybe primer, images, monophonic samples, poly combinations exported (one example) -> unclear how much influence this specific sample has on the composition
 
+example: [121, 60], [121,366,486], [121,486,509,389]
