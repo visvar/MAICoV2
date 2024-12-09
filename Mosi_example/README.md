@@ -31,3 +31,9 @@ A self synthesized form of the previous file, so others can easily listen to it.
 
 The same section as the "Maico_Output.mid" but as live recording from the play. 
 Now the samples are synthesized live as a result from Brachtel's work.
+
+## Session example:
+
+load primer -> generate variations -> generate poly -> select and export
+-> example exported for session (30_12) -> maybe primer, images, monophonic samples, poly combinations exported (one example) -> unclear how much influence this specific sample has on the composition
+
