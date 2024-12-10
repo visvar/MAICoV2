@@ -18,7 +18,7 @@ We also uploaded the midi files for others to test different combinations.
 
 Brachtel started by loading the primer and generated around 1000 monophonic samples with AI, which results in the overview shown in the image "Monophonic.png". 
 He then generated the polyphonic combinations and stuck to 3 voices ("Polyphonic.png"). 
-Then he explored the dataset using the correlation for number of notes and intervals and the two timbre visualizations ("CorrelationLineglyph", "TImbrePCP", "TimbreRootD").
+Then he explored the dataset using the correlation for number of notes and intervals and the two timbre visualizations ("CorrelationLineglyph", "TimbrePCP", "TimbreRootD").
 He mainly stuck to the melodylineglyph and looked for interesting melodies regarding the root note D. 
 During this exploration he added some melodies to the export folder and exported them as midi files, including the three examples from above.
 
