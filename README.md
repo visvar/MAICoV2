@@ -1,14 +1,14 @@
 # MaicoV2
- 
-## Find the Website here:
-https://visvar.github.io/MAICoV2/ for an older version or
-https://maicomidi.web.app/ for the current version.
 
 ## Soundexamples:
 Find some soundexamples from the commissioned works with explanations in the "Example_Mosi" folder: https://github.com/visvar/MAICoV2/tree/main/Example_Mosi
 
 ## Sessionexamples:
 Find a session example from Brachtel in the "Example_Session" folder: https://github.com/visvar/MAICoV2/tree/main/Example_Session
+ 
+## Find the Website here:
+https://visvar.github.io/MAICoV2/ for an older version or
+https://maicomidi.web.app/ for the current version.
 
 ## How to use
 Best use is in fullmode on 16x10 Format (minimum1900 x 1080 px) in the browser (tested in Chrome and Edge).
