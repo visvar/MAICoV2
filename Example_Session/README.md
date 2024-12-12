@@ -18,12 +18,15 @@ We also uploaded the midi files for others to test different combinations.
 
 Brachtel started by loading the primer and generated around 1000 monophonic samples with AI, which results in the overview shown in the image "Monophonic.png". 
 ![Overview of Monophonic Samples](https://github.com/visvar/MAICoV2/blob/main/Example_Session/Monophonic.PNG)
+
 He then generated the polyphonic combinations and stuck to 3 voices ("Polyphonic.png"). 
 ![Overview of Polyphonic Samples](https://github.com/visvar/MAICoV2/blob/main/Example_Session/Polyphonic.PNG)
+
 Then he explored the dataset using the correlation for number of notes and intervals and the two timbre visualizations ("CorrelationLineglyph", "TimbrePCP", "TimbreRootD").
 ![CorrelationLineglyph](https://github.com/visvar/MAICoV2/blob/main/Example_Session/CorrelationLineglyph.PNG)
 ![TimbrePCP](https://github.com/visvar/MAICoV2/blob/main/Example_Session/TimbrePCP.PNG)
 ![TimbreRootD](https://github.com/visvar/MAICoV2/blob/main/Example_Session/TimbreRootD.PNG)
+
 He mainly stuck to the melodylineglyph and looked for interesting melodies regarding the root note D. 
 During this exploration he added some melodies to the export folder and exported them as midi files, including the three examples from above.
 
