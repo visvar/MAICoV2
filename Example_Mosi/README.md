@@ -7,7 +7,7 @@ These sound files are direct results of the work from Benedikt Brachtel, who use
 One of Mosi's main requirements was using a monophonic synthesizer fed with long Midi sequences and live sound generation during the play. 
 To this end, Maico provided a strong support, as he could easily generate long sequences of Midi data.
 
-Therefore, he used Maico mainly to generate multiple variations for a single primer melody and export it as a longer sequence, lining up the chosen samples from MAICO into a single track. 
+Therefore, he used Maico mainly to generate multiple variations for a single primer melody and exported it as a longer sequence, lining up the chosen samples from MAICO into a single track. 
 One of these parts from his files is the "Maico_Output.mid" file, which we synthesized using a simple piano in the corresponding ".wav" file to listen to.
 
 Similar to the workflow in the session example, Brachtel generated around 300 monophonic samples using one of his primer ideas and scimmed the space using the piano roll glyphs. He then marked all interesting samples and exported them in a single file successivly. 
