@@ -1,5 +1,5 @@
 // @ts-ignore
-import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession, pointcolorselect, vorcolorselect, glyphselect, edgeBundlingPoly } from '../stores/stores.js'
+import { adjustMode, models, modelselected, primerList, progress, samplingstatus, selectedKeys, strangers, mvaesim, polyoptions, filterextents, similarityweight, DRumap, emotionbased, numpoly, axisselect, selectedBaseKeys, importedSession, pointcolorselect, vorcolorselect, glyphselect, edgeBundlingPoly, glyphsize, qcorder } from '../stores/stores.js'
 import { iter, genlength } from '../stores/devStores.js'
 import { get } from 'svelte/store';
 // @ts-ignore
@@ -465,6 +465,13 @@ export async function uploadDatasetFile(event) {
                     vorcolorselect.set(obj.variables.vorcolorselect)
                     glyphselect.set(obj.variables.glyphselect)
                     edgeBundlingPoly.set(obj.variables.edgeBundlingPoly)
+
+                }
+                if (obj?.variables?.glyphsize) {
+                    glyphsize.set(obj.variables.glyphsize)
+                }
+                if (obj?.variables?.qcorder) {
+                    qcorder.set(obj.variables.qcorder)
                 }
             }
         }

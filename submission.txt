@@ -1,0 +1,5 @@
+Submission
+
+Title:          MAICO: A Visualization Design Study on AI-Assisted Music Composition
+Authors:        Simeon Rau, Frank Heyen, Benedikt Brachtel, and Michael Sedlmair
+Op-system:      Windows 10

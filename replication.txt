@@ -1,0 +1,28 @@
+Steps to Generate the Representative Figure
+
+1. Open the Application
+
+Ensure the application is running by running the installation "run.bat".
+Alternativly after installation, one can go to the folder maico "cd maico" and then run "npm run dev".
+Open the application in a web browser: "http://localhost:5173/" (or a different port).
+
+
+2. Load the Dataset and Visual Presets
+
+Click on "Import/Export" located at the top left of the interface.
+Scroll down the menu that appears.
+Click on "Open Session" to bring up the file selection window.
+Select "replicationFigure.json" and confirm the selection.
+
+
+3. Explanation of the Figure
+
+This process loads a predefined dataset along with visual settings.
+The dataset and settings have been chosen to reproduce Figure 9 from the paper ("rau-fig9.png").
+The visualization will appear exactly as described in the paper, given the same input conditions.
+Note: If needed, the figure can be fine-tuned manually by adjusting the settings.
+
+
+Additional:
+
+A short demo of the previous steps is also provided in the "replicationFigure.mkv" video.

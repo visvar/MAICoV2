@@ -1,5 +1,13 @@
 # MaicoV2
 
+## Replicability
+Submission details:        'submission.txt'
+Installing script:         'run.bat'
+replication figure:        'rau-fig9.png'
+script for replication:    'replication.txt'
+   dataset:                'replicationFigure.json'
+   demovideo:              'replicationFigure.mkv'
+
 ## Soundexamples:
 Find some soundexamples from the commissioned works with explanations in the "Example_Mosi" folder: https://github.com/visvar/MAICoV2/tree/main/Example_Mosi
 

@@ -1,0 +1,18 @@
+Liability and Permission Form
+
+Title: Permission for Code Review and Public Disclosure
+
+Date: 04.02.2025
+
+Name of Applicant: Simeon Rau
+Email: Simeon.Rau@visus.uni-stuttgart.de
+Project Name: MAICO
+Repository/Code Location: https://github.com/visvar/MAICoV2
+
+Agreement Terms
+I, Simeon Rau, the owner and/or authorized representative of the above-mentioned project, grant permission to the Replicability Committee and its designated reviewers to:
+
+Review the Code: Access, evaluate, and test the provided code to verify its replicability and compliance with the requirements for the Replicability Stamp.
+Publicly Advertise the Review: If the replicability stamp is approved, the committee may publicly share the review results, including a summary of the evaluation, approval status, and relevant details about the project.
+Confidentiality Prior to Approval: Until the stamp is granted, all submitted materials will be reviewed confidentially and will not be publicly disclosed.
+I affirm that I hold the necessary rights to grant this permission and understand that once the review is published, it cannot be retracted.
