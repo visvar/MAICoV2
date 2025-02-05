@@ -2,7 +2,7 @@ Steps to Generate the Representative Figure
 
 1. Open the Application
 
-Ensure the application is running by running the installation "run.bat".
+Ensure the application is running by running the installation "run.bat" as an Administrator.
 Alternativly after installation, one can go to the folder maico "cd maico" and then run "npm run dev".
 Open the application in a web browser: "http://localhost:5173/" (or a different port).
 
