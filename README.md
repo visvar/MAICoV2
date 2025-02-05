@@ -11,6 +11,7 @@ script for replication:    'replication.txt'
 
 ## Supplemental Mateiral:
 Find some supplemental material with more extended information (as mentioned in the paper) and an example video.
+https://github.com/visvar/MAICoV2/tree/main/SupplementalMaterial
 
 ## Soundexamples:
 Find some soundexamples from the commissioned works with explanations in the "Example_Mosi" folder: https://github.com/visvar/MAICoV2/tree/main/Example_Mosi
