@@ -8,6 +8,10 @@ script for replication:    'replication.txt'
    dataset:                'replicationFigure.json'
    demovideo:              'replicationFigure.mkv'
 
+
+## Supplemental Mateiral:
+Find some supplemental material with more extended information (as mentioned in the paper) and an example video.
+
 ## Soundexamples:
 Find some soundexamples from the commissioned works with explanations in the "Example_Mosi" folder: https://github.com/visvar/MAICoV2/tree/main/Example_Mosi
 
