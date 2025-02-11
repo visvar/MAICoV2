@@ -1,12 +1,12 @@
 # MaicoV2
 
 ## Replicability
-Submission details:        'submission.txt'
-Installing script:         'run.bat'
-replication figure:        'rau-fig9.png'
-script for replication:    'replication.txt'
-   dataset:                'replicationFigure.json'
-   demovideo:              'replicationFigure.mkv'
+- Submission details:        'submission.txt'
+- Installing script:         'run.bat'
+- replication figure:        'rau-fig9.png'
+- script for replication:    'replication.txt'
+   - dataset:                'replicationFigure.json'
+   - demovideo:              'replicationFigure.mkv'
 
 
 ## Supplemental Mateiral:
