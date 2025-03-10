@@ -1,5 +1,11 @@
 # MaicoV2
 
+## Find the paper here:
+https://doi.org/10.1109/TVCG.2025.3539779
+https://doi.ieeecomputersociety.org/10.1109/TVCG.2025.3539779
+https://visvar.github.io/pdf/rau2025maico.pdf
+
+
 ## Replicability
 - Submission details:        'submission.txt'
 - Installing script:         'run.bat'
